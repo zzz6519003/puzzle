@@ -38,3 +38,6 @@ nosetests.xml
 
 # site setup files
 settings.personality.py
+
+# vim swap files
+*.swp
