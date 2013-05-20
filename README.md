@@ -15,4 +15,9 @@ iOS管理发布平台
 ###开发周期
 5/20～6/20
 
+###环境要求
+* Python2.7
+* web.py (`easy_install web.py`)
+* MySQLdb (`easy_install MySQL-python`)
 
+run `python server.py` 
