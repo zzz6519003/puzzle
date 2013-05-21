@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from config.url import urls
 import web
 

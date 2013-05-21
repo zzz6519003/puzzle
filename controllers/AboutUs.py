@@ -8,7 +8,7 @@ render = settings.render
 class AboutUs:
     ''' 关于我们 '''
     def GET(self):
-        return render.index("about us")
+        return render.aboutUs("here is about us")
 
     def POST(self):
         pass
