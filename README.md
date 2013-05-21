@@ -21,3 +21,5 @@ iOS管理发布平台
 * MySQLdb (`easy_install MySQL-python`)
 
 run `python server.py` 
+
+###模块划分
