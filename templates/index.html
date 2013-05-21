@@ -2,34 +2,32 @@ $def with (content)
 
 $:render.header()
 
-	<div class="row-fluid">
-		<div class="span4 offset1">	
-		<pre>
-@autoreleasepool {
-	NSString *welcomeInfo = @"Welcome To iOS Development Department!";
-    [iOSDevelopment sendInfo:welcomeInfo];
-}			
-			</pre>		
-			<p>iOS开发部常用链接：</p>
-			<ol>
-				<li><a target="blank" href="http://pmt.corp.anjuke.com">PMT -- 项目开发管理平台</a></li>
-				<li><a target="blank" href="http://ios.dev.anjuke.com/wordpress/">iOS博客 -- 帮助他人，帮助自己</a></li>
-				<li><a target="blank" href="http://wiki.corp.anjuke.com/index.php?title=Mobile:main#Iphone">wiki -- iOS业务整理</a></li>
-				<li><a target="blank" href="http://git.corp.anjuke.com/mobile/iShare">iShare -- iOS团队分享仓库</a></li>
-			</ol>
-		</div>
-		<div class="span6">
-			<div class="hero-unit ">
-			<h4><i class="icon-home"></i>关于iOS开发发布平台：</h4>
-			<p>
-				iOS开发平台专注于解决目前开发部门日常的Daily Build以及渠道包及将来appstore发布的人为问题，
-				通过对git仓库的版本进行严格控制，保证测试团队在进行RC测试及渠道包的发布是同一第三方包依赖以及主分支是可发布版本。
-			</p>
-			</div>
-		</div>
-
-	</div>
-	<hr/>
-
+    <div class="row-fluid">
+        <div class="span4 offset1">    
+        <pre>
+  @autoreleasepool {
+      NSString *welcomeInfo = @"Welcome To iOS Development Department!";
+      [iOSDevelopment sendInfo:welcomeInfo];
+  }
+        </pre>        
+            <p>iOS开发部常用链接：</p>
+            <ol>
+                <li><a target="blank" href="http://pmt.corp.anjuke.com">PMT -- 项目开发管理平台</a></li>
+                <li><a target="blank" href="http://ios.dev.anjuke.com/wordpress/">iOS博客 -- 帮助他人，帮助自己</a></li>
+                <li><a target="blank" href="http://wiki.corp.anjuke.com/index.php?title=Mobile:main#Iphone">wiki -- iOS业务整理</a></li>
+                <li><a target="blank" href="http://git.corp.anjuke.com/mobile/iShare">iShare -- iOS团队分享仓库</a></li>
+            </ol>
+        </div>
+        <div class="span6">
+            <div class="hero-unit ">
+            <h4><i class="icon-home"></i>关于iOS开发发布平台：</h4>
+            <p>
+                iOS开发平台专注于解决目前开发部门日常的Daily Build以及渠道包及将来appstore发布的人为问题，
+                通过对git仓库的版本进行严格控制，保证测试团队在进行RC测试及渠道包的发布是同一第三方包依赖以及主分支是可发布版本。
+            </p>
+            </div>
+        </div>
+    </div>
+    <hr/>
 
 $:render.foot()
