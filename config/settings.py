@@ -1,7 +1,7 @@
 #encoding=utf8
 
 import web
-import settings.personality
+import settingsPersonality
 
 render = web.template.render('templates/',cache=False)
 
