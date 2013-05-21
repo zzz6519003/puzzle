@@ -1,8 +1,8 @@
 #encoding=utf8
+
 import web
+import settings.personality
 
-
-db = web.database(dbn='mysql',db='www',user='www',pw='www')
 render = web.template.render('templates/',cache=False)
 
 web.config.debug = True
