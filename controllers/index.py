@@ -1,13 +1,14 @@
 #encoding=utf8
 
 from config import settings
-
+data = {'pageIndex':'home'}
 render = settings.render
 
 class Index:
     ''' 主页 '''
     def GET(self):
-        return render.index("Hello World!")
+        data['name'] = "hello"
+        return render.index(data=data)
 
     def POST(self):
         pass

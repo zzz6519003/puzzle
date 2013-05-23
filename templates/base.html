@@ -1,13 +1,18 @@
+## base.html
+<%
+	if data == None:
+		return "";
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset='utf-8'>
-        <title>$config.site_name</title>
+        <title>iOS发布平台 </title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <link href="$config.static/css/bootstrap.css" rel="stylesheet">
+        <link href="static/css/bootstrap.css" rel="stylesheet">
         <style type="text/css">
             body {
                 padding-top:60px;
@@ -18,8 +23,8 @@
                 padding: 9px 0;
             }
         </style>
-        <link href="$config.static/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="$config.static/css/main.css" rel="stylesheet">
+        <link href="static/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="static/css/main.css" rel="stylesheet">
 
         <!--[if lt IE9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -39,14 +44,43 @@
                     Logged in as <a href="#" class="navbar-link">LenyeMeng</a>
                 </p>
                 <ul class="nav">
-                    <li class="active">
-                        <a href="/index">Home</a>
-                    </li>
-                    <li>
-                        <a href="/aboutUs">About Us</a>
-                    </li>
+                	
+                    <%def name="generateNavigation()"> 
+                		<%
+                		navData = [
+                			["Home","/index"],
+                			["DailyBuild","/dailyBuild"],
+                			["RcBuild","/rcBuild"],
+                			["AboutUs","/aboutUs"],
+                		]
+                		%>
+                		
+                		% for item in navData:
+                			<li class="
+                			% if data['pageIndex'].lower() == item[0].lower():
+                				active
+                			% endif
+                			">
+                				<a href="${item[1]}">${item[0]}</a>
+                			</li>
+                		% endfor	
+                	</%def>
+                	
+                	${generateNavigation()}
                 </ul>
             </div>
         </div>
     </div>
 </div>
+
+${self.body()}
+
+</div>
+<footer>
+	<p>&copy; Anjuke Inc iOS Development Department 2013</p>
+</footer>
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+
+</body>
+</html>

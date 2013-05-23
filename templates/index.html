@@ -1,7 +1,5 @@
-$def with (content)
-
-$:render.header()
-
+<%inherit file='base.html'/>
+<%block name="body">
     <div class="row-fluid">
         <div class="span4 offset1">    
         <pre>
@@ -29,5 +27,5 @@ $:render.header()
         </div>
     </div>
     <hr/>
+</%block>
 
-$:render.foot()

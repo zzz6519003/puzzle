@@ -19,7 +19,7 @@ iOS管理发布平台
 * Python2.7
 * web.py (`easy_install web.py`)
 * MySQLdb (`easy_install MySQL-python`)
-
+  Mako (`cd Mako-0.8.0 && python setup.py install`)
 run `python server.py` 
 
 ###模块划分

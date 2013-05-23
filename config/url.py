@@ -4,5 +4,8 @@ urls = (
 		"/", pre_fix + "index.Index",
 		"/index", pre_fix + "index.Index",
 		"/login", pre_fix + "index.Login",
+		
+		"/dailyBuild", pre_fix + "DailyBuild.Index",
+		
 		"/aboutUs", pre_fix + "AboutUs.AboutUs",
 		)
