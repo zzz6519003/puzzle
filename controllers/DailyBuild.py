@@ -7,6 +7,6 @@ data = {'pageIndex':'dailyBuild'}
 class Index:
     
     def GET(self):
-
+        #获取数据
         return render.dailyBuild(data=data);
     
