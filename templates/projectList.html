@@ -1,0 +1,36 @@
+<%inherit file='base.html'/>
+
+<%block name='body'>
+<div class='row-fluid'>
+	<div class='offset1 span10'>
+	<h4>Tody is ${data['currentDate']}</h4>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>应用名称</th>
+				<th>项目标识</th>
+				<th>最后提交时间</th>
+				<th>SHA1</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+	
+			% for  item in data['projectList']:
+			<tr>
+				<td>${item['id']}</td>
+				<td>${item['appName']}</td>
+				<td>${item['identifier']}</td>
+				<td>${item['lastUpdate']}</td>
+				<td>12ffdede34343</td>
+				<td><button class='btn btn-success' type='button' >操作</button></td>
+			</tr>
+			% endfor
+
+		</tbody>
+	</table>
+	</div>
+</div>
+
+</%block>
