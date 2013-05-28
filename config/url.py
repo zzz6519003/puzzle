@@ -10,4 +10,6 @@ urls = (
 		"/dailyBuild", pre_fix + "DailyBuild.Index",
 		
 		"/aboutUs", pre_fix + "AboutUs.AboutUs",
+
+		"/timeline", pre_fix + "TimeLine.Index",
 		)

@@ -1,7 +1,7 @@
 ## base.html
 <%
-	if data == None:
-		return "";
+if data == None:
+    return "";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,63 +31,63 @@
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 
-		<!-- jQuery -->
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-		<!-- BEGIN TimelineJS -->
-		<script type="text/javascript" src="../compiled/js/storyjs-embed.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="static/js/jquery.min.js"></script>
+        <!-- BEGIN TimelineJS -->
+        <script type="text/javascript" src="static/timeline/js/storyjs-embed.js"></script>
 
     </head>
 
-<body>
-<div class = "navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class = "btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+    <body>
+        <div class = "navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class = "btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
 
-            <a class = "brand" href="#">$config.site_name</a>
-            <div class="nav-collapse collapse">
-                <p class="navbar-text pull-right">
-                    Logged in as <a href="#" class="navbar-link">LenyeMeng</a>
-                </p>
-                <ul class="nav">
-                	
-                    <%def name="generateNavigation()"> 
-                		<%
-                		navData = [
-                			["Home","/index"],
-                			["Project","/project"],
-                			["DailyBuild","/dailyBuild"],
-                			["RcBuild","/rcBuild"],
-                			["AboutUs","/aboutUs"],
-                		]
-                		%>
-                		
-                		% for item in navData:
-                			<li class="
-                			% if data['pageIndex'].lower() == item[0].lower():
-                				active
-                			% endif
-                			">
-                				<a href="${item[1]}">${item[0]}</a>
-                			</li>
-                		% endfor	
-                	</%def>
-                	
-                	${generateNavigation()}
-                </ul>
+                    <a class = "brand" href="#">$config.site_name</a>
+                    <div class="nav-collapse collapse">
+                        <p class="navbar-text pull-right">
+                        Logged in as <a href="#" class="navbar-link">LenyeMeng</a>
+                        </p>
+                        <ul class="nav">
+
+                            <%def name="generateNavigation()"> 
+                            <%
+                            navData = [
+                            ["Home","/index"],
+                            ["Project","/project"],
+                            ["DailyBuild","/dailyBuild"],
+                            ["RcBuild","/rcBuild"],
+                            ["AboutUs","/aboutUs"],
+                            ]
+                            %>
+
+                            % for item in navData:
+                            <li class="
+                            % if data['pageIndex'].lower() == item[0].lower():
+                            active
+                            % endif
+                            ">
+                            <a href="${item[1]}">${item[0]}</a>
+                            </li>
+                            % endfor    
+                            </%def>
+
+                            ${generateNavigation()}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
+
+        ${self.body()}
+
     </div>
-</div>
-
-${self.body()}
-
-</div>
-<footer>
-	<p>&copy; Anjuke Inc iOS Development Department 2013</p>
-</footer>
-<script src="static/js/jquery.min.js"></script>
-<script src="static/js/bootstrap.min.js"></script>
+    <footer>
+    <p>&copy; Anjuke Inc iOS Development Department 2013</p>
+    </footer>
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
 
 </body>
 </html>
