@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    alert("here i am");
     timeline = new TimeLine();
     timeline.init();
 });
@@ -15,13 +14,13 @@ function TimeLine()
     }
 
     function generateTimeLine(){
-       createStoryJS({
-           type:"timeline",
-           width:"800",
-           height:"600",
-           source:"static/example_json.json",
-           embed_id:"J_timeline",
-           debug:false
-       }); 
+       //createStoryJS({
+       //    type:"timeline",
+       //    width:"1280",
+       //    height:"800",
+       //    source:"static/example_json.json",
+       //    embed_id:"J_timeline",
+       //    debug:false
+       //}); 
     }
 }

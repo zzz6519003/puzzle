@@ -1,6 +1,72 @@
 <%inherit file='base.html'/>
 <%block name="body">
-    <script type="text/javascript" src="static/self_developed_js/timeline.js"></script>
-    <div id="J_timeline"></div>
+<script type="text/javascript" src="static/self_developed_js/timeline.js"></script>
+<div id="J_timeline"></div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<style type="text/css">
+    ol, li {list-style:none;}
+    .timeline li:after {clear:both;content:" ";display:block;font-size:0;height:0;line-height:0;visibility:hidden;}
+    .timeline li {position:relative;margin-bottom:10px;padding-left:5px;border-left:1px solid #ccc;zoom:1;}
+    .timeline .line {display:block;position:absolute;top:50%;width:20px;height:0;border-top:1px solid #ccc;}
+    .timeline .detail {float:left;display:inline;padding:5px 10px;margin-left:25px;line-height:1.6em;border:1px solid #ccc;box-shadow:#dbdbdb 1px 2px 2px;border-radius:3px;}
+    .selfcontent {float:left;display:inline;padding:225px 350px;margin:-484px 0 0 300px;line-height:1.6em;border:1px solid #ccc;box-shadow:#dbdbdb 1px 2px 2px;border-radius:3px;}
+</style>
+<br>
+<div>
+    <ol class="timeline">
+        <li>
+        <i class="line"></i>
+        <div class="detail">
+            我是时间轴123456678889
+        </div>
+        </li>
+
+        <li>
+        <i class="line"></i>
+        <div class="detail">
+            我是时间轴2<br/>
+            我是时间轴2
+        </div>
+        </li>
+
+        <li>
+        <i class="line"></i>
+        <div class="detail">
+            我是时间轴3<br/>
+            我是时间轴3<br/>
+            我是时间轴3</div>
+        </li>
+
+        <li>
+        <i class="line"></i>
+        <div class="detail">
+            我是时间轴4<br/>
+            我是时间轴4<br/>
+            我是时间轴4<br/>
+            我是时间轴4<br/>
+            我是时间轴4
+        </div>
+        </li>
+
+        <li>
+        <i class="line"></i>
+        <div class="detail">
+            我是时间轴5<br/>
+            我是时间轴5<br/>
+            我是时间轴5<br/>
+            我是时间轴5<br/>
+            我是时间轴5<br/>
+            我是时间轴5
+        </div>
+        </li>
+    </ol>
+    <div class="selfcontent">asdfasdfsa</div>
+</div>
+<br>
+<br>
 </%block>
 
