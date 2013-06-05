@@ -22,7 +22,7 @@ function TimeLine()
     };
 
     function bindEvent(){
-        $(".J_content").on("click", function(){
+        $("#J_timeLine").on("click", ".J_content", function(){
             timelineEventClicked($(this));
         });
 
