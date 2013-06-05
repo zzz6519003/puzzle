@@ -11,7 +11,7 @@ function TimeLine()
     };
 
     function bindEvent(){
-        $(".J_content").click(function(){
+        $(".J_content").on("click", function(){
             timelineEventClicked($(this));
         });
     }
@@ -29,5 +29,9 @@ function TimeLine()
 
     function timelineEventClicked(actionItem){
         $("#J_detail").html(actionItem.html());
+        $.colorbox({
+            opacity:0.5,
+            html:actionItem.html()
+        });
     }
 }
