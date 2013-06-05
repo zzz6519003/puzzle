@@ -11,6 +11,9 @@ function TimeLine()
     };
 
     function bindEvent(){
+        $(".J_content").click(function(){
+            timelineEventClicked($(this));
+        });
     }
 
     function generateTimeLine(){
@@ -22,5 +25,9 @@ function TimeLine()
        //    embed_id:"J_timeline",
        //    debug:false
        //}); 
+    }
+
+    function timelineEventClicked(actionItem){
+        $("#J_detail").html(actionItem.html());
     }
 }
