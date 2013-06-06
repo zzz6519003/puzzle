@@ -29,11 +29,16 @@ function TimeLine()
         $("#J_addEventButton").on("click", function(){
             addEvent($(this));
         });
+
+        $("#J_deleteButton").on("click", function(){
+            deleteEvent($(this));
+        });
     }
 
 
     function timelineEventClicked(actionItem){
         $("#J_detail").html(actionItem.html());
+        $("#J_deleteButton").attr("data-id", actionItem.attr("data-id"));
     }
 
     function addEvent(actionItem){
@@ -57,5 +62,13 @@ function TimeLine()
         $("#J_timeLine").append(Template_event);
 
         $.colorbox.close();
+    }
+
+    function deleteEvent(actionItem){
+        var data_id = actionItem.attr("data-id");
+        $li = $("div[data-id="+data_id+"]").parents("li:first");
+        $li.slideUp('slow', function(){
+            $li.remove();
+        });
     }
 }
