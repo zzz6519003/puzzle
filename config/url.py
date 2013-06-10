@@ -12,4 +12,8 @@ urls = (
 		"/aboutUs", pre_fix + "AboutUs.AboutUs",
 
 		"/timeline", pre_fix + "TimeLine.Index",
+		
+		"/clipAdd", pre_fix + "UiClipper.clipAdd",
+		"/addPicture", pre_fix + "UiClipper.addPicture",
+		"/mobileUi", pre_fix + "UiClipper.mobileUi",
 		)

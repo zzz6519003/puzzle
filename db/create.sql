@@ -54,3 +54,27 @@ index `projectId`(`projectId`),
 index `repoId`(`repoId`)
 ) ENGINE=innoDb default charset=utf8 comment='项目仓库对应关系表';
 
+-- projectEvent
+create table `projectEvent`(
+`id` int auto_increment not null comment '主键',
+`name` varchar(100) not null comment '事件名称',
+`category` enum('1','2','3') comment '类型，1:kickoff， 2:api伪接口, 3:api正式移交, 4:切片交付,5:daily build, 6:rc build, 7:真机, 8:Release ',
+`projectId` int not null comment '项目id',
+`startDate` int not null comment '开始时间',
+`endDate` int not null comment '结束时间',
+`created` int not null comment '创建时间',
+`updated` int not null comment '更新时间',
+primary key `id`(`id`)
+) engine=innodb default charset=utf8 comment='项目事件集';
+
+-- uiClipper
+create table `uiClipper`(
+`id` int auto_increment not null comment '主键',
+`name` varchar(100) not null comment '切片名称',
+`category` enum('1','2') not  null comment '切片类型',
+`picMd5` varchar(100) not null comment '图片MD5码',
+`created` int not null comment '创建时间',
+`updated` int not null comment '更新时间',
+primary key `id`(`id`)
+) engine=innodb default charset=utf8 comment='切片列表';
+

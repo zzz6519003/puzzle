@@ -1,0 +1,29 @@
+<%inherit file='base.html'/>
+<%block name="header">
+<script type="text/javascript" src="static/swfupload/vendor/swfupload/swfupload.js"></script>
+<script type="text/javascript" src="static/swfupload/src/jquery.swfupload.js"></script>
+<script type="text/javascript" src="static/js/uiclipper.js"></script>
+
+</%block>
+<%block name="body">
+    <div class="row-fluid">
+       <div class='span8 offset1'>
+       	<h4>UED亲，从这里上传你的切片</h4>
+       	<hr/>
+       		
+       		<form action="/clipAdd" methond="post">
+       			${data['form'].render()}
+       			<div id="swfupload-control">
+       			<ol id="log"></ol>
+       			<input type='button' id="button"/>
+       		    </div>
+       		    <div id="uploadTips"></div>
+       			<br/>
+       			<input type='submit' value='保存到仓库!' class="btn btn-meduim btn-primary"/>	
+       		</form>
+       		
+       </div>
+    </div>
+    <hr/>
+</%block>
+

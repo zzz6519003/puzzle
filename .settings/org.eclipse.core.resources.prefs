@@ -3,4 +3,6 @@ encoding//config/settings.py=utf8
 encoding//controllers/AboutUs.py=utf8
 encoding//controllers/DailyBuild.py=utf8
 encoding//controllers/Project.py=utf8
+encoding//controllers/TimeLine.py=utf8
+encoding//controllers/UiClipper.py=utf8
 encoding//controllers/index.py=utf8

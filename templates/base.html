@@ -7,7 +7,7 @@ if data == None:
 <html lang="en">
     <head>
         <meta charset='utf-8'>
-        <title>iOS发布平台 </title>
+        <title>Puzzle - 安居客移动协作平台 </title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
@@ -25,7 +25,6 @@ if data == None:
         </style>
         <link href="static/css/bootstrap-responsive.css" rel="stylesheet">
         <link href="static/css/main.css" rel="stylesheet">
-        <link href="static/timeline/css/timeline.css" rel="stylesheet">
 
         <!--[if lt IE9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -35,7 +34,7 @@ if data == None:
         <script type="text/javascript" src="static/js/jquery.min.js"></script>
         <!-- BEGIN TimelineJS -->
         <script type="text/javascript" src="static/timeline/js/storyjs-embed.js"></script>
-
+	 	${self.header()}
     </head>
 
     <body>
@@ -44,7 +43,7 @@ if data == None:
                 <div class="container-fluid">
                     <a class = "btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
 
-                    <a class = "brand" href="#">$config.site_name</a>
+                    <a class = "brand" href="#">Puzzle - 安居客移动协作平台</a>
                     <div class="nav-collapse collapse">
                         <p class="navbar-text pull-right">
                         Logged in as <a href="#" class="navbar-link">LenyeMeng</a>
@@ -56,8 +55,8 @@ if data == None:
                             navData = [
                             ["Home","/index"],
                             ["Project","/project"],
-                            ["DailyBuild","/dailyBuild"],
-                            ["RcBuild","/rcBuild"],
+                     
+                            ['UIComponent',"/mobileUi"],
                             ["AboutUs","/aboutUs"],
                             ]
                             %>
@@ -86,8 +85,7 @@ if data == None:
     <footer>
     <p>&copy; Anjuke Inc iOS Development Department 2013</p>
     </footer>
-    <script src="static/js/jquery.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
+   
 
 </body>
 </html>

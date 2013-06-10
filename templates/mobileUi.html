@@ -1,0 +1,141 @@
+<%inherit file='base.html'/>
+<%block name="header">
+<script type="text/javascript" src="static/js/bootstrap-tab.js"></script>
+<script type="text/javascript" src="static/js/bootstrap-tooltip.js"></script>
+
+<script type="text/javascript" src="static/js/bootstrap-popover.js"></script>
+
+<script type="text/javascript" src="static/js/uiclipper.js"></script>
+<style>
+	.dl-horizontal dt{
+		width:60px;
+	}
+</style>
+</%block>
+<%block name="body">
+
+    <div class="row">
+       <div class='span11 offset1'>
+       	<ul id="uiComponentTab" class="nav nav-tabs">
+  	    	<li class="active"><a href="#Intro" data-toggle="tab">Introduce</a></li>
+ 		 	<li><a href="#tab" data-toggle="tab">Tab</a></li>
+ 		 	<li><a href="#title" data-toggle="tab">Title</a></li>
+ 		 	<li><a href="#other" data-toggle="tab">Others</a></li>
+		</ul>     		
+		<div class="tab-content">
+			<div class="tab-pane active" id="Intro">
+		       	<h4>移动UComponent规范简介</h4>  
+				<hr/>
+				<div class="well"><span class="label label-inverse">Tips: </span>为了更加专业的对安居客移动事业部产品UI进行统一管理，我们对移动App的公用组建进行统一设计，请大家遵循UIComponent规范：</div>
+				<div>
+					<table class='table table-hover  table-striped'>
+						<tr>
+							<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td><td>这里是关于左边图片的描述，左边放一些UI规范，包括我们标准色是什么，常规的尺寸是什么样的</td>
+						</tr>
+						<tr>
+							<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td><td>这里是描述</td>
+						</tr>
+						<tr>
+							<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td><td>这里是描述</td>
+						</tr>
+						<tr>
+							<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td><td>这里是描述</td>
+						</tr>
+				
+					</table>
+					We can add something else here!!
+				</div>
+			</div>
+			<div class="tab-pane" id="tab">
+				<div class="well">What is tab?<br/>
+					In the area of graphical user interfaces (GUI), a tabbed document interface (TDI) or a Tab is one that allows multiple documents to be contained within a single window, using tabs as a navigational widget for switching between sets of documents. It is an interface style most commonly associated with web browsers, web applications, text editors, and preference panes.
+				</div>
+				<div>
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>
+									<div>Name: AndroidTab1</div><br/>
+									<div>
+									<img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/>
+									</div>
+								</td>
+								<td>
+									<div>Name: AndroidTab2</div><br/>
+									<div>
+									<img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/>
+									</div>
+								</td>
+								<td>
+									<div>Name: AndroidTab3</div><br/>
+									<div>
+									<img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/>
+									</div>
+								</td>
+								
+							</tr>
+							<tr>
+								<td>
+									<div>
+									<img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/>
+									</div>
+									<div>
+									<dl class="">
+										<dt>Name：</dt><dd>iOS Tab1</dd>
+										<dt>Desc</dt><dd>This tab will display if we open the app. it is located at the bottom of the mainscreen!</dd>
+										<dt>Designer:</dt><dd>BBO</dd>
+									</dl>
+									</div>
+								</td>
+								<td>
+									<div>
+									<img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/>
+									</div>
+									<div>
+									<dl>
+										<dt>Name：</dt><dd>iOS Tab1</dd>
+										<dt>Desc:</dt><dd>This tab will display if we open the app. it is located at the bottom of the mainscreen!</dd>
+										<dt>Designer:</dt><dd>BBO</dd>
+									</dl>
+									</div>
+								</td>
+								<td>
+									<div>
+									<img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/>
+									</div>
+									<div><i class="label label-info">Name:</i> iOS Tab1<br/>
+										<i class="label label-info">Info:</i> This tab will display if we open the app. it is located at the bottom of the mainscreen!<br/>
+										Designed By <i class="label label-inverse">BBo</i>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+								<a href='#'
+								
+								>
+								<img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/>
+								</a>
+								
+								</td>
+								<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td>
+								<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td>
+							</tr>
+							<tr>
+								<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td>
+								<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td>
+								<td><img class="img-polaroid" src="/static/img/uicomponent-demo1.png"/></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+			</div>
+			<div class="tab-pane" id="title">Title</div>
+			<div class="tab-pane" id="other">Others</div>
+		</div>
+       </div>
+    </div>
+    <hr/>
+</%block>
+
