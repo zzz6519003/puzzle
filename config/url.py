@@ -6,7 +6,8 @@ urls = (
 		"/login", pre_fix + "index.Login",
 		
 		"/project", pre_fix + "Project.Index",
-		
+		"/project/add", pre_fix + "Project.Add",
+
 		"/dailyBuild", pre_fix + "DailyBuild.Index",
 		
 		"/aboutUs", pre_fix + "AboutUs.AboutUs",

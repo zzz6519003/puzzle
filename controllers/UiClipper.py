@@ -3,7 +3,7 @@ from config import settings
 from web import form
 render = settings.render
 db = settings.db
-data = {'pageIndex':'uiclipper'}
+data = {'pageIndex':'uicomponent'}
 
 
 class Index:

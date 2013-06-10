@@ -1,0 +1,47 @@
+<%inherit file='base.html'/>
+<%block name='header'></%block>
+<%block name='body'>
+<div class="row-fluid">
+	<div class="span10 offset1">
+		<div class="well">
+			请在这里填写这个项目的所有时间结点，包括Backlog，prd时间，切片时间，api伪接口，api正式交付时间，dailybuild时间，rcbuild时间，release时间。
+		</div>
+	</div>
+	<div class="span5 offset1" style="border-right:1px solid gray">
+		
+		<form class="form-horizontal" method="post" action="/project/add">
+			<div class="control-group">
+				<label class="control-label" for="inputName">项目名称:</label>
+				<div class="controls">
+					<input type="text" id="inputName" placeholder="填写项目名称" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inputCategory">所属项目集:</label>
+				<div class="controls">
+					<input type="text" id="inputCategory" placeholder="填写项目所属项目集" />
+				</div>
+			</div>	
+			<div class="control-group">
+				<label class="control-label" for="inputBackLog">BackLog时间:</label>
+				<div class="controls">
+					<input type="text" id="inputBackLog" placeholder="填写项目BackLog时间" />
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<div class="controls">
+					<input type="submit" value="提交" class="btn btn-meduim"/>
+				</div>
+			</div>
+		</form>
+		
+	</div>
+	<div class="span3">
+		<div>
+			<h4>关于项目</h4>
+			<p>在这里填写完项目的相关属性后，我们就可以很好的监控项目的进度，如果每天项目未按照制定进度的话，项目会自动变红，提示延期。</p>
+		</div>
+	</div>
+</div>
+</%block>

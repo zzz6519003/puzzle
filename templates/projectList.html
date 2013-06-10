@@ -1,6 +1,12 @@
 <%inherit file='base.html'/>
-
+<%block name='header'></%block>
 <%block name='body'>
+<div class='row-fluid'>
+	<div class='offset1 span1'>
+		<a class='btn btn-primary' href="/project/add">添加</a>
+	</div>
+	<div class="span9"><i class="icon-th"></i>我们把一次新的kickoff当作一个项目，在每个项目中，我们需要把每个项目的相关属性定义好</div>
+</div>
 <div class='row-fluid'>
 	<div class='offset1 span10'>
 	<h4>Tody is ${data['currentDate']}</h4>

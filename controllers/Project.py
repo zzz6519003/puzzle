@@ -22,3 +22,7 @@ class Index:
         #获取数据
         return render.projectList(data=data);
     
+class Add:
+    def GET(self):
+        return render.projectAdd(data=data);
+    
