@@ -46,11 +46,16 @@ function TimeLine()
 
         $.colorbox({
             opacity:0.5,
-            html:Template_add
+            html:Template_add,
+            close:""
         });
 
         $("#cboxLoadedContent .J_addEventConfirmButton").on("click", function(){
             confirmToAddEvent($(this));
+        });
+
+        $("#cboxLoadedContent #J_cbClose").on("click", function(){
+            $.colorbox.close();
         });
     }
 
