@@ -51,9 +51,10 @@ function AddProject()
         var selector = actionItem.children("select");
         var selectedValue = selector.val();
 
-        var selectedOption = $(selector[0][selector[0].selectedIndex]);
+        var selectedOption = actionItem.find("option:selected");
+        console.log(selectedOption);
 
-        var replacedHtml = "<label>"+selectedOption.html()+":</label>";
+        var replacedHtml = "<label>"+selectedOption.text()+":</label>";
 
         console.log(selectedOption);
         actionItem.html(replacedHtml);
