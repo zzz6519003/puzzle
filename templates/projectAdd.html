@@ -1,5 +1,8 @@
 <%inherit file='base.html'/>
 <%block name='header'>
+    <link href="/static/js/plugins/jgrowl/jquery.jgrowl.min.css" rel="stylesheet">
+    <script type="text/javascript" src="/static/js/plugins/jgrowl/jquery.jgrowl.min.js"></script>
+    <script type="text/javascript" src="/static/js/pages/common/notice.js"></script>
     <script type="text/javascript" src="/static/js/pages/project_add.js"></script>
 </%block>
 <%block name='body'>
@@ -26,12 +29,12 @@
                 </div>
             </div>    
 
-            <div class="control-group">
+            <div class="control-group J_mileStoneRow">
                 <span class="control-label J_selectMileStone">
                     <label>BackLog时间:</label>
                 </span>
                 <div class="controls J_timeRow">
-                    <input type="text" class="J_pickTime" name="backlog_time" placeholder="填写项目BackLog时间" />
+                    <input type="text" class="J_pickTime" name="backlog_time" placeholder="填写完成时间" />
                     <span class="J_operations hide">
                         <a class="icon-plus-sign J_addTime" href="javascript:void(0);"></a>
                         <a class="icon-minus-sign J_delTime" href="javascript:void(0);"></a>
@@ -48,19 +51,6 @@
         </form>
     </div>
 
-    <div id="J_addProjectTimeTemplate" class="hide">
-        <div class="control-group">
-            <label class="control-label">___item___时间:</label>
-            <div class="controls J_timeRow">
-                <input type="text" class="J_pickTime" name="___name___" placeholder="填写项目___item___时间" />
-                <span class="J_operations hide">
-                    <a class="icon-plus-sign J_addTime" href="javascript:void(0);"></a>
-                    <a class="icon-minus-sign J_delTime" href="javascript:void(0);"></a>
-                </span>
-            </div>
-        </div>
-    </div>
-
     <div id="J_selectorTemplate">
         <select name="_" style="width:100px">
             <option value="1">BackLog</option>
@@ -72,6 +62,21 @@
             <option value="8">RC build时间</option>
             <option value="9">release时间</option>
         </select>
+    </div>
+
+    <div id="J_milestoneTemplate">
+        <div class="control-group J_mileStoneRow">
+            <span class="control-label J_selectMileStone">
+                <label>BackLog时间:</label>
+            </span>
+            <div class="controls J_timeRow">
+                <input type="text" class="J_pickTime" name="backlog_time" placeholder="填写完成时间" />
+                <span class="J_operations hide">
+                    <a class="icon-plus-sign J_addTime" href="javascript:void(0);"></a>
+                    <a class="icon-minus-sign J_delTime" href="javascript:void(0);"></a>
+                </span>
+            </div>
+        </div>
     </div>
 
     <div class="span3">

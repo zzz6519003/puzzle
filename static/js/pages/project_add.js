@@ -5,30 +5,68 @@ $(document).ready(function(){
 
 function AddProject()
 {
+    var body = $("body");
+
     this.init = function(){
         bindEvent();
     }
 
     function bindEvent(){
-        $(".J_pickTime").datepicker({
-            dateFormat:"yy-mm-dd"
+
+        body.on("click", ".J_addTime", function(){
+            clickAddTime($(this));
+        });
+
+        body.on("click", ".J_delTime", function(){
+            if($("form .J_mileStoneRow").length > 1){
+                deleteTime($(this));
+            }else{
+                warningPopout("别赶尽杀绝啊，留一条生路嘛。");
+            }
+        });
+
+        body.on("focusin", ".J_pickTime", function(){
+            $(this).datepicker({
+                dateFormat:"yy-mm-dd",
+                inline:true
+            });
         });
 
         $("#J_submitButton").on("click", function(){
             clickSubmitButton($(this));
         });
 
-        $(".J_timeRow").hover(function(){
+        body.on("mouseenter", ".J_timeRow", function(){
             hoverInTimePicker($(this));
-        },function(){
+        });
+
+        body.on("mouseleave", ".J_timeRow", function(){
             hoverOutTimePicker($(this));
         });
 
-        $(".J_selectMileStone").hover(function(){
-            hoverInSelectMileStone($(this));
-        },function(){
-            hoverOutSelectMileStone($(this));
+        body.on("click", ".J_selectMileStone", function(){
+            if($(this).children("label").length > 0){
+                switchMilestoneToSelector($(this));
+            }
         });
+
+        body.on("mouseleave", ".J_selectMileStone", function(){
+            if($(this).children("select").length > 0){
+                switchSelectorToMilestone($(this));
+            }
+        });
+    }
+
+    function deleteTime(actionItem){
+        actionItem.closest(".J_mileStoneRow").slideUp("slow", function(){
+            $(this).remove();
+        });
+    }
+
+    function clickAddTime(actionItem){
+        var milestoneHTML = $("#J_milestoneTemplate").html();
+        actionItem.closest(".J_mileStoneRow").after(milestoneHTML);
+        console.log(actionItem.closest(".J_mileStoneRow").html());
     }
 
     function clickSubmitButton(actionItem){
@@ -42,12 +80,12 @@ function AddProject()
         actionItem.children(".J_operations").addClass("hide");
     }
 
-    function hoverInSelectMileStone(actionItem){
+    function switchMilestoneToSelector(actionItem){
         var selectorHtml = $("#J_selectorTemplate").html();
         actionItem.html(selectorHtml);
     }
 
-    function hoverOutSelectMileStone(actionItem){
+    function switchSelectorToMilestone(actionItem){
         var selector = actionItem.children("select");
         var selectedValue = selector.val();
 
@@ -56,7 +94,6 @@ function AddProject()
 
         var replacedHtml = "<label>"+selectedOption.text()+":</label>";
 
-        console.log(selectedOption);
         actionItem.html(replacedHtml);
     }
 }
