@@ -1,5 +1,7 @@
 <%inherit file='base.html'/>
-<%block name='header'></%block>
+<%block name='header'>
+    <script type="text/javascript" src="/static/js/pages/project.js"></script>
+</%block>
 <%block name='body'>
 <div class='row-fluid'>
 	<div class='offset1 span1'>
@@ -23,14 +25,14 @@
 		</thead>
 		<tbody>
 	
-			% for  item in data['projectList']:
+			% for item in data['projectList']:
 			<tr>
 				<td>${item['id']}</td>
 				<td>${item['appName']}</td>
 				<td>${item['identifier']}</td>
 				<td>${item['lastUpdate']}</td>
 				<td>12ffdede34343</td>
-				<td><button class='btn btn-success' type='button' >操作</button></td>
+                <td><button class='btn btn-success J_operationButton' type='button' data-id="${item['id']}">操作</button></td>
 			</tr>
 			% endfor
 
