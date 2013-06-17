@@ -26,3 +26,6 @@ class Add:
     def GET(self):
         return render.projectAdd(data=data);
     
+    def POST(self):
+        
+    
