@@ -31,5 +31,4 @@ class Add:
     def POST(self):
         postData = web.data()
         jsonData = json.dumps(postData)
-        print postData
-        return "hello"
+        return jsonData
