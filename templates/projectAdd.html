@@ -18,29 +18,18 @@
             <div class="control-group">
                 <label class="control-label">项目名称:</label>
                 <div class="controls">
-                    <input type="text" placeholder="填写项目名称" />
+                    <input type="text" class="J_formData" data-type="projectName" placeholder="填写项目名称" />
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label">所属项目集:</label>
                 <div class="controls">
-                    <input type="text" placeholder="填写项目所属项目集" />
+                    <input type="text" class="J_formData" data-type="appId" placeholder="填写项目所属项目集" />
                 </div>
             </div>    
 
-            <div class="control-group J_mileStoneRow">
-                <span class="control-label J_selectMileStone">
-                    <label>BackLog:</label>
-                </span>
-                <div class="controls J_timeRow">
-                    <input type="text" class="J_pickTime" name="backlog_time" placeholder="填写完成时间" />
-                    <span class="J_operations hide">
-                        <a class="icon-plus-sign J_addTime" href="javascript:void(0);"></a>
-                        <a class="icon-minus-sign J_delTime" href="javascript:void(0);"></a>
-                    </span>
-                </div>
-            </div>
+            <%include file='components/milestoneTemplate.html'/>
             
             <div class="control-group">
                 <div class="controls">
@@ -51,8 +40,13 @@
         </form>
     </div>
 
+    <div id="J_selectorTemplate" class="hide">
     <%include file='components/selectorTemplate.html'/>
+    </div>
+
+    <div id="J_milestoneTemplate" class="hide">
     <%include file='components/milestoneTemplate.html'/>
+    </div>
 
     <div class="span3">
         <div>

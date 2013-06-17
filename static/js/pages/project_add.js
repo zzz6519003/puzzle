@@ -55,6 +55,19 @@ function AddProject()
                 switchSelectorToMilestone($(this));
             }
         });
+
+        $("#J_submitButton").on("click", function(){
+            submitButtonClicked($(this));
+        });
+    }
+
+    function submitButtonClicked(actionItem){
+        var data = generateFormData();
+        console.log(data);
+        alert();
+        $.post("/project/add", {data:data}, function(returnValue){
+            warningPopout(returnValue);
+        }, 'json');
     }
 
     function deleteTime(actionItem){
@@ -87,13 +100,25 @@ function AddProject()
 
     function switchSelectorToMilestone(actionItem){
         var selector = actionItem.children("select");
-        var selectedValue = selector.val();
+        var datePicker = actionItem.closest(".J_mileStoneRow").find(".J_pickTime");
 
+        var selectedValue = selector.val();
         var selectedOption = actionItem.find("option:selected");
-        console.log(selectedOption);
 
         var replacedHtml = "<label>"+selectedOption.text()+":</label>";
+        datePicker.attr("data-type", selectedValue);
 
         actionItem.html(replacedHtml);
+    }
+
+    function generateFormData(){
+        var data = [];
+        $("form .J_formData").each(function(index, value){
+            var dataItem = {};
+            var type = $(value).attr("data-type");
+            dataItem[type]=$(value).val();
+            data.push(dataItem);
+        });
+        return data;
     }
 }

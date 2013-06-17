@@ -1,5 +1,7 @@
 #encoding=utf8
 from config import settings
+import json
+import web
 render = settings.render
 db = settings.db
 data = {'pageIndex':'project'}
@@ -25,4 +27,9 @@ class Index:
 class Add:
     def GET(self):
         return render.projectAdd(data=data);
-    
+
+    def POST(self):
+        postData = web.data()
+        jsonData = json.dumps(postData)
+        print postData
+        return "hello"
