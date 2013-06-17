@@ -2,4 +2,7 @@
 
 import web
 
-db = web.database(dbn='mysql',db='www',user='www',pw='www')
+def getConnection():
+    '''get connection of database'''
+    db = web.database(dbn='mysql',db='puzzle',user='root',pw='casacasa',host='localhost',port=3306);
+    return db

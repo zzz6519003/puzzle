@@ -2,6 +2,7 @@
 
 import web
 from web.contrib.template import render_mako
+from settingsPersonality import getConnection
 
 
 render = render_mako(
@@ -18,7 +19,9 @@ config = web.storage(
         static = '/static',
         )
 
-db = web.database(dbn='mysql',db='MobilePuzzle',user='mobilePuzzle',pw='mobilepuzzle123456',host='192.168.1.57',port=3306);
+#db = web.database(dbn='mysql',db='puzzle',user='root',pw='casacasa',host='localhost',port=3306);
+db = getConnection()
+
 
 web.template.Template.globals['config'] = config
 web.template.Template.globals['render'] = render
@@ -28,4 +31,3 @@ allowed = (
         ('test','test')
         )
 
-import settingsPersonality
