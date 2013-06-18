@@ -63,8 +63,6 @@ function AddProject()
 
     function submitButtonClicked(actionItem){
         var data = generateFormData();
-        console.log(data);
-        alert();
         $.post("/project/add", {data:data}, function(returnValue){
             warningPopout(returnValue);
         }, 'json');
@@ -79,7 +77,6 @@ function AddProject()
     function clickAddTime(actionItem){
         var milestoneHTML = $("#J_milestoneTemplate").html();
         actionItem.closest(".J_mileStoneRow").after(milestoneHTML);
-        console.log(actionItem.closest(".J_mileStoneRow").html());
     }
 
     function clickSubmitButton(actionItem){
@@ -112,12 +109,17 @@ function AddProject()
     }
 
     function generateFormData(){
-        var data = [];
+        var data = {};
         $("form .J_formData").each(function(index, value){
-            var dataItem = {};
             var type = $(value).attr("data-type");
-            dataItem[type]=$(value).val();
-            data.push(dataItem);
+            var value = $(value).val();
+
+            data[type] = value;
+
+            //var dataItem = {};
+            //dataItem.category = $(value).val();
+            //dataItem.category = type;
+            //data.push(dataItem);
         });
         return data;
     }

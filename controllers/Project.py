@@ -8,7 +8,6 @@ data = {'pageIndex':'project'}
 
 
 class Index:
-    
     def GET(self):
         #获取当前日期
         import time
@@ -29,6 +28,5 @@ class Add:
         return render.projectAdd(data=data);
 
     def POST(self):
-        postData = web.data()
-        jsonData = json.dumps(postData)
-        return jsonData
+        postData = web.input()
+        print postData['data[1]']

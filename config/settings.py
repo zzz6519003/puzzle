@@ -22,7 +22,6 @@ config = web.storage(
 #db = web.database(dbn='mysql',db='puzzle',user='root',pw='casacasa',host='localhost',port=3306);
 db = getConnection()
 
-
 web.template.Template.globals['config'] = config
 web.template.Template.globals['render'] = render
 web.template.Template.globals['pageIndex'] = "index"
