@@ -63,7 +63,7 @@ function AddProject()
 
     function submitButtonClicked(actionItem){
         var data = generateFormData();
-        $.post("/project/add", {data:data}, function(returnValue){
+        $.post("/project/add", data, function(returnValue){
             warningPopout(returnValue);
         }, 'json');
     }
@@ -121,6 +121,7 @@ function AddProject()
             //dataItem.category = type;
             //data.push(dataItem);
         });
+        console.log(data);
         return data;
     }
 }

@@ -2,6 +2,9 @@
 from config import settings
 import json
 import web
+import string
+import time
+
 render = settings.render
 db = settings.db
 data = {'pageIndex':'project'}
@@ -28,5 +31,39 @@ class Add:
         return render.projectAdd(data=data);
 
     def POST(self):
-        postData = web.input()
-        print postData['data[1]']
+        data = web.input()
+
+        #squenceId = db.insert('projectEvent', category="1", projectId='2', startDate='3', endDate='4', created='5', updated='6')
+        #print squenceId
+
+        projectId = '1'
+        projectName = 'casaProject'
+
+        for index in range(1,11):
+            attr = "%d" % index
+            if hasattr(data, attr):
+                mileStoneTime = time.mktime(time.strptime(data[attr], "%Y-%m-%d"))
+                db.insert('projectEvent', category=attr, projectId=projectId, startDate=mileStoneTime, endDate='0', created='0', updated='0')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

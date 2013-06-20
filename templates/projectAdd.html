@@ -23,8 +23,11 @@
             </div>
 
             <div class="control-group">
-                <label class="control-label">所属项目集:</label>
+                <label class="control-label">所属项目集:${pageIndex}</label>
                 <div class="controls">
+                    <select class="J_formData" data-type="appId">
+                        <option value="${pageIndex}">RC build</option>
+                    </select>
                     <input type="text" class="J_formData" data-type="appId" placeholder="填写项目所属项目集" />
                 </div>
             </div>    
