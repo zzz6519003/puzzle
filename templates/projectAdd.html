@@ -9,7 +9,8 @@
 <div class="row-fluid">
     <div class="span10 offset1">
         <div class="well">
-            请在这里填写这个项目的所有时间结点，包括Backlog，prd时间，切片时间，api伪接口，api正式交付时间，dailybuild时间，rcbuild时间，release时间。
+            <p>请在这里填写这个项目的所有时间结点，包括Backlog，prd时间，切片时间，api伪接口，api正式交付时间，dailybuild时间，rcbuild时间，release时间。</p>
+            <p>点击<font color="pink">粉色标题</font>选择事件。</p>
         </div>
     </div>
     <div class="span5 offset1" style="border-right:1px solid gray">
@@ -23,12 +24,13 @@
             </div>
 
             <div class="control-group">
-                <label class="control-label">所属项目集:${pageIndex}</label>
+                <label class="control-label">所属项目集:</label>
                 <div class="controls">
                     <select class="J_formData" data-type="appId">
-                        <option value="${pageIndex}">RC build</option>
+                        % for item in data['appList']:
+                        <option value="${item['id']}">${item['appName']}</option>
+                        % endfor
                     </select>
-                    <input type="text" class="J_formData" data-type="appId" placeholder="填写项目所属项目集" />
                 </div>
             </div>    
 
@@ -39,7 +41,6 @@
                     <input type="button" id="J_submitButton" value="提交" class="btn btn-meduim"/>
                 </div>
             </div>
-
         </form>
     </div>
 

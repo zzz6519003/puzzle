@@ -32,10 +32,6 @@ function AddProject()
             });
         });
 
-        $("#J_submitButton").on("click", function(){
-            clickSubmitButton($(this));
-        });
-
         body.on("mouseenter", ".J_timeRow", function(){
             hoverInTimePicker($(this));
         });
@@ -59,13 +55,19 @@ function AddProject()
         $("#J_submitButton").on("click", function(){
             submitButtonClicked($(this));
         });
+
+        body.on("click", "input", function(){
+            $(this).closest(".control-group").removeClass("error");
+        });
     }
 
     function submitButtonClicked(actionItem){
-        var data = generateFormData();
-        $.post("/project/add", data, function(returnValue){
-            warningPopout(returnValue);
-        }, 'json');
+        if(isAvailable()){
+            var data = generateFormData();
+            $.post("/project/add", data, function(returnValue){
+                warningPopout(returnValue);
+            }, 'json');
+        }
     }
 
     function deleteTime(actionItem){
@@ -77,9 +79,6 @@ function AddProject()
     function clickAddTime(actionItem){
         var milestoneHTML = $("#J_milestoneTemplate").html();
         actionItem.closest(".J_mileStoneRow").after(milestoneHTML);
-    }
-
-    function clickSubmitButton(actionItem){
     }
 
     function hoverInTimePicker(actionItem){
@@ -102,7 +101,7 @@ function AddProject()
         var selectedValue = selector.val();
         var selectedOption = actionItem.find("option:selected");
 
-        var replacedHtml = "<label>"+selectedOption.text()+":</label>";
+        var replacedHtml = "<label><font color=\"pink\">"+selectedOption.text()+":</font></label>";
         datePicker.attr("data-type", selectedValue);
 
         actionItem.html(replacedHtml);
@@ -115,13 +114,25 @@ function AddProject()
             var value = $(value).val();
 
             data[type] = value;
-
-            //var dataItem = {};
-            //dataItem.category = $(value).val();
-            //dataItem.category = type;
-            //data.push(dataItem);
         });
-        console.log(data);
         return data;
+    }
+
+    function isAvailable(data){
+        var result = true;
+
+        $("form .control-group").each(function(index, value){
+            item = $(value);
+            formData = item.find(".J_formData");
+
+            if(typeof formData.val() != "undefined"){
+                if(formData.val().length == 0){
+                    item.addClass('error');
+                    result = false;
+                }
+            }
+        });
+
+        return result;
     }
 }

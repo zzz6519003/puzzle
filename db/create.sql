@@ -9,7 +9,7 @@ CREATE TABLE `appList` (
   `lastUpdate` int(11) NOT NULL COMMENT '最后更新时间 时间戳',
   `created` int(11) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='应用列表'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='应用列表';
 
 insert into appList values(1,'安居客二手房','1','i-anjuke',1369652004,1369652004),(2,'安居客租房','1','i-haozu2',1369652004,1369652004),(3,'安居客新房','1','i-xinfang',1369652004,1369652004),(4,'安居客金铺','1','i-jinpu',1369652004,1369652004),(5,'安居客经纪人','1','i-broker',1369652004,1369652004),(6,'安居客二手房HD','1','p-anjuke',1369652004,1369652004),(7,'安居客租房HD','1','p-haozu',1369652004,1369652004),(8,'安居客新房HD','1','p-newhome',1369652004,1369652004),(9,'安居客二手房','2','a-anjuke',1369652004,1369652004),(10,'安居客租房','2','a-haozu',1369652004,1369652004),(11,'安居客新房','2','a-xinfang',1369652004,1369652004),(12,'安居客经纪人','2','a-broker',1369652004,1369652004);
 
@@ -26,16 +26,16 @@ PRIMARY KEY `id`(`id`)
 insert into projectList values(1,'安居客二手房3.5',1,1369652004,1369652004);
 
 -- projectEvent
-create table `projectEvent`(
-`id` int auto_increment not null comment '主键',
-`name` varchar(100) not null comment '事件名称',
-`category` tinyint comment '类型，1:kickoff， 2:api伪接口, 3:api正式移交, 4:切片交付,5:daily build, 6:rc build, 7:真机, 8:Release ',
-`projectId` int not null comment '项目id',
-`startDate` int not null comment '开始时间',
-`created` int not null comment '创建时间',
-`updated` int not null comment '更新时间',
-primary key `id`(`id`)
-) engine=innodb default charset=utf8 comment='项目事件集';
+-- create table `projectEvent`(
+-- `id` int auto_increment not null comment '主键',
+-- `name` varchar(100) not null comment '事件名称',
+-- `category` tinyint comment '类型，1:kickoff， 2:api伪接口, 3:api正式移交, 4:切片交付,5:daily build, 6:rc build, 7:真机, 8:Release',
+-- `projectId` int not null comment '项目id',
+-- `startDate` int not null comment '开始时间',
+-- `created` int not null comment '创建时间',
+-- `updated` int not null comment '更新时间',
+-- primary key `id`(`id`)
+-- ) engine=innodb default charset=utf8 comment='项目事件集';
 
 -- codeRepository
 create table `codeRepository`(
@@ -81,8 +81,8 @@ index `repoId`(`repoId`)
 -- projectEvent
 create table `projectEvent`(
 `id` int auto_increment not null comment '主键',
-`name` varchar(100) not null comment '事件名称',
-`category` enum('1','2','3') comment '类型，1:kickoff， 2:api伪接口, 3:api正式移交, 4:切片交付,5:daily build, 6:rc build, 7:真机, 8:Release ',
+`name` varchar(100) not null comment '事件名称', 
+`category` enum('1','2','3', '4', '5', '6', '7', '8', '9', '10') comment '类型，1:backlog, 2:KickOff, 3:PRD交付, 4:api伪接口, 5:api正式移交, 6:切片交付, 7:daily build, 8:rc build, 9:真机, 10:Release ',
 `projectId` int not null comment '项目id',
 `startDate` int not null comment '开始时间',
 `endDate` int not null comment '结束时间',
