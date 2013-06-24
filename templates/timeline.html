@@ -30,12 +30,16 @@
 <div>
     <div class="left">
         <ol class="timeline" id="J_timeLine">
+            % for item in data['eventList']:
+
             <li>
             <i class="line"></i>
             <div class="detail J_content" data-id="1">
                 我是时间轴123456678889
             </div>
             </li>
+
+            % endfor
 
             <li>
             <i class="line"></i>
@@ -44,6 +48,7 @@
                 我是时间轴2
             </div>
             </li>
+
         </ol>
     </div>
 

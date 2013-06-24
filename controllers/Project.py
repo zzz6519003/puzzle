@@ -17,12 +17,12 @@ class Index:
         data['currentDate'] = time.strftime('%Y-%m-%d,%A',time.localtime(time.time()))
         
         #获取项目列表
-        data['appList'] = db.select('appList', order="id ASC", _test=False)
+        data['projectList'] = db.select('projectList', order="id ASC", _test=False)
         temp = [];
-        for item in data['appList']:
+        for item in data['projectList']:
             item['lastUpdate'] = time.strftime('%Y-%m-%d,%H:%M',time.localtime(item['lastUpdate']))
             temp.append(item)
-        data['appList'] = temp
+        data['projectList'] = temp
 
         #获取数据
         return render.projectList(data=data)
@@ -30,14 +30,14 @@ class Index:
 class Add:
     def GET(self):
 
-        data['appList'] = db.select('appList', order="id ASC", _test=False)
+        data['projectList'] = db.select('projectList', order="id ASC", _test=False)
         temp = [];
 
-        for item in data['appList']:
+        for item in data['projectList']:
             item['lastUpdate'] = time.strftime('%Y-%m-%d,%H:%M',time.localtime(item['lastUpdate']))
             temp.append(item)
 
-        data['appList'] = temp
+        data['projectList'] = temp
 
         return render.projectAdd(data=data)
 
