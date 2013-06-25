@@ -64,9 +64,9 @@ function AddProject()
     function submitButtonClicked(actionItem){
         if(isAvailable()){
             var data = generateFormData();
-            $.post("/project/add", data, function(returnValue){
-                warningPopout(returnValue);
-            }, 'json');
+            $.post("/project/add", data).done(function(){
+                window.location.href="/project";
+            });
         }
     }
 
