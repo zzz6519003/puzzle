@@ -30,14 +30,14 @@ class Index:
 class Add:
     def GET(self):
 
-        data['projectList'] = db.select('projectList', order="id ASC", _test=False)
+        data['appList'] = db.select('appList', order="id ASC", _test=False)
         temp = [];
 
-        for item in data['projectList']:
+        for item in data['appList']:
             item['lastUpdate'] = time.strftime('%Y-%m-%d,%H:%M',time.localtime(item['lastUpdate']))
             temp.append(item)
 
-        data['projectList'] = temp
+        data['appList'] = temp
 
         return render.projectAdd(data=data)
 

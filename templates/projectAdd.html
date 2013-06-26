@@ -27,8 +27,8 @@
                 <label class="control-label">所属项目集:</label>
                 <div class="controls">
                     <select class="J_formData" data-type="appId">
-                        % for item in data['projectList']:
-                        <option value="${item['id']}">${item['projectName']}</option>
+                        % for item in data['appList']:
+                        <option value="${item['id']}">${item['appName']}</option>
                         % endfor
                     </select>
                 </div>
