@@ -43,13 +43,12 @@ class Add:
 
     def POST(self):
         data = web.input()
-        print data
-        db.insert('projectList', )
+        lastInsertedId = db.insert('projectList', projectName=data['projectName'], appId=data['appId'], lastUpdate=time.time(), created=time.time())
 
-        #for index in range(1,11):
-        #    attr = "%d" % index
-        #    if hasattr(data, attr):
-        #        print attr
-        #        mileStoneTime = time.mktime(time.strptime(data[attr], "%Y-%m-%d"))
-        #        db.insert('projectEvent', category=attr, projectId=data['appId'], name=data['projectName'], startDate=mileStoneTime, endDate='0', created='0', updated='0')
+        for index in range(1,11):
+            attr = "%d" % index
+            if hasattr(data, attr):
+                print attr
+                mileStoneTime = time.mktime(time.strptime(data[attr], "%Y-%m-%d"))
+                db.insert('projectEvent', category=attr, projectId=lastInsertedId, name=data['projectName'], startDate=mileStoneTime, endDate='0', created='0', updated='0')
         return
