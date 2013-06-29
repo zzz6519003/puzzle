@@ -33,6 +33,21 @@ import time
 </style>
 <br>
 
+<%
+    categoryList = {
+        '1' : "BackLog",
+        '2' : "KickOff",
+        '3' : "PRD交付",
+        '4' : "api伪接口",
+        '5' : "api正式移交",
+        '6' : "切片交付",
+        '7' : "Daily Build",
+        '8' : "RC Build",
+        '9' : "真机",
+        '10': "Release"
+    }
+%>
+
 <div>
     <div class="left">
         <ol class="timeline" id="J_timeLine">
@@ -42,20 +57,7 @@ import time
             <i class="line"></i>
             <div class="detail J_event" data-id="${item['id']}" data-project-id="${item['projectId']}" data-category="${item['category']}" data-time="${item['startDate']}">
                 <p>
-                ${
-                    {
-                        '1':'BackLog',
-                        '2':'KickOff',
-                        '3':'PRD交付',
-                        '4':'api伪接口',
-                        '5':'api正式移交',
-                        '6':'切片交付',
-                        '7':'Daily Build',
-                        '8':'RC Build',
-                        '9':'真机',
-                        '10':'Release',
-                    }[item['category']]
-                }
+                ${categoryList[item['category']]}
                 </p>
 
                 <p>

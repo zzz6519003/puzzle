@@ -1,11 +1,11 @@
 (function(){
     var body = $("body");
 
-    body.on("click", "#J_dailyBuildButton", function(){
-        dailyBuildButtonClicked($(this));
+    body.on("click", "#J_backLogButton", function(){
+        backLogButtonClicked($(this));
     });
 })();
 
-function dailyBuildButtonClicked(actionItem){
+function backLogButtonClicked(actionItem){
     alert("project id is "+actionItem.attr("data-project-id"));
 }

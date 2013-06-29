@@ -75,7 +75,7 @@ function TimeLine()
     }
 
     function addAPIFakeInterfaceContentIntoEventContent(actionItem){
-        var contentHtml = $('#J_APIFakeInterface').html();
+        var contentHtml = $('#J_APIFakeInterfaceTemplate').html();
         var projectId = actionItem.attr("data-project-id");
         contentHtml = contentHtml.replace("__project_id__", projectId);
         $("#J_eventContent").html(contentHtml);
