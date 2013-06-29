@@ -1,3 +1,7 @@
+<%!
+import time
+%>
+
 <%inherit file='base.html'/>
 
 <%block name="header">
@@ -30,24 +34,35 @@
 <div>
     <div class="left">
         <ol class="timeline" id="J_timeLine">
+
             % for item in data['eventList']:
-
             <li>
             <i class="line"></i>
-            <div class="detail J_content" data-id="1">
-                我是时间轴123456678889
+            <div class="detail J_content" data-id="${item['id']}" data-project-id="${item['projectId']}" data-category="${item['category']}" data-time="${item['startDate']}">
+                <p>
+                ${{
+                    '1':'BackLog',
+                    '2':'KickOff',
+                    '3':'PRD交付',
+                    '4':'api伪接口',
+                    '5':'api正式移交',
+                    '6':'切片交付',
+                    '7':'Daily Build',
+                    '8':'RC Build',
+                    '9':'真机',
+                    '10':'Release',
+                }[item['category']]}
+                </p>
+
+                <p>
+                start time:
+                ${
+                    time.strftime('%Y-%m-%d', time.localtime(item['startDate']))
+                }
+                </p>
             </div>
             </li>
-
             % endfor
-
-            <li>
-            <i class="line"></i>
-            <div class="detail J_content" data-id="2">
-                我是时间轴2<br/>
-                我是时间轴2
-            </div>
-            </li>
 
         </ol>
     </div>
