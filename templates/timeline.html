@@ -18,8 +18,9 @@ import time
 </%block>
 
 <%block name="body">
-<div id="J_timeline"></div>
+
 <br>
+
 <style type="text/css">
     ol, li {list-style:none;}
     .timeline li:after {clear:both;content:" ";display:block;font-size:0;height:0;line-height:0;visibility:hidden;}
@@ -31,6 +32,7 @@ import time
     .left {float:left;}
 </style>
 <br>
+
 <div>
     <div class="left">
         <ol class="timeline" id="J_timeLine">
@@ -38,20 +40,22 @@ import time
             % for item in data['eventList']:
             <li>
             <i class="line"></i>
-            <div class="detail J_content" data-id="${item['id']}" data-project-id="${item['projectId']}" data-category="${item['category']}" data-time="${item['startDate']}">
+            <div class="detail J_event" data-id="${item['id']}" data-project-id="${item['projectId']}" data-category="${item['category']}" data-time="${item['startDate']}">
                 <p>
-                ${{
-                    '1':'BackLog',
-                    '2':'KickOff',
-                    '3':'PRD交付',
-                    '4':'api伪接口',
-                    '5':'api正式移交',
-                    '6':'切片交付',
-                    '7':'Daily Build',
-                    '8':'RC Build',
-                    '9':'真机',
-                    '10':'Release',
-                }[item['category']]}
+                ${
+                    {
+                        '1':'BackLog',
+                        '2':'KickOff',
+                        '3':'PRD交付',
+                        '4':'api伪接口',
+                        '5':'api正式移交',
+                        '6':'切片交付',
+                        '7':'Daily Build',
+                        '8':'RC Build',
+                        '9':'真机',
+                        '10':'Release',
+                    }[item['category']]
+                }
                 </p>
 
                 <p>
@@ -67,14 +71,10 @@ import time
         </ol>
     </div>
 
-    <div class="left selfcontent">
-        <button data-id="" id="J_deleteButton">删除</button>
-        <div class="" id="J_detail">asdfasdfsa</div>
+    <div class="left selfcontent" id="J_eventContent">
     </div>
 </div>
 <div style="clear:both;"></div>
-
-<button id="J_addEventButton" href="#J_template_add">新增</button>
 
 <%include file='components/addEventTemplate.html'/>
 <%include file='components/eventTemplate.html'/>

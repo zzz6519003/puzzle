@@ -5,75 +5,121 @@ $(document).ready(function(){
 
 function TimeLine()
 {
-    function generateTimeLine(){
-        //this is the losted timeline, but it's perfect. i'm gonna retain it for self-appreciate.:D
-//        createStoryJS({
-//            type:"timeline",
-//            width:"1280",
-//            height:"800",
-//            source:"static/example_json.json",
-//            embed_id:"J_timeline",
-//            debug:false
-//        }); 
-    }
-
     this.init = function(){
         bindEvent();
     };
 
     function bindEvent(){
-        $("#J_timeLine").on("click", ".J_content", function(){
+        $(".J_event").on('click', function(){
             timelineEventClicked($(this));
         });
-
-        $("#J_addEventButton").on("click", function(){
-            addEvent($(this));
-        });
-
-        $("#J_deleteButton").on("click", function(){
-            deleteEvent($(this));
-        });
     }
-
 
     function timelineEventClicked(actionItem){
-        $("#J_detail").html(actionItem.html());
-        $("#J_deleteButton").attr("data-id", actionItem.attr("data-id"));
+        switch(actionItem.attr('data-category')){
+            case '1':
+                addBackLogContentIntoEventContent(actionItem);
+                break;
+            case '2':
+                addKickOffContentIntoEventContent(actionItem);
+                break;
+            case '3':
+                addPRDDeliverContentIntoEventContent(actionItem);
+                break;
+            case '4':
+                addAPIFakeInterfaceContentIntoEventContent(actionItem);
+                break;
+            case '5':
+                addAPIDeliverContentIntoEventContent(actionItem);
+                break;
+            case '6':
+                addSliceDeliverContentIntoEventContent(actionItem);
+                break;
+            case '7':
+                addDailyBuildContentIntoEventContent(actionItem);
+                break;
+            case '8':
+                addRCBuildContentIntoEventContent(actionItem);
+                break;
+            case '9':
+                addRealDeviceContentIntoEventContent(actionItem);
+                break;
+            case '10':
+                addReleaseContentIntoEventContent(actionItem);
+                break;
+            default:
+                warningPopout("你是怎么点进这儿的？");
+                break;
+        }
     }
 
-    function addEvent(actionItem){
-        var Template_add = $("#J_template_add").html();
-
-        $.colorbox({
-            opacity:0.5,
-            html:Template_add,
-            close:""
-        });
-
-        $("#cboxLoadedContent .J_addEventConfirmButton").on("click", function(){
-            confirmToAddEvent($(this));
-        });
-
-        $("#cboxLoadedContent #J_cbClose").on("click", function(){
-            $.colorbox.close();
-        });
+    function addBackLogContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_BackLogTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
     }
 
-    function confirmToAddEvent(actionItem){
-        var inputContent = $("#cboxLoadedContent #J_eventInputContent").val();
-        var Template_event = $("#J_template_event").html();
-
-        Template_event = Template_event.replace("___content___", inputContent);
-        $("#J_timeLine").append(Template_event);
-
-        $.colorbox.close();
+    function addKickOffContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_KickOffTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
     }
 
-    function deleteEvent(actionItem){
-        var data_id = actionItem.attr("data-id");
-        $li = $("div[data-id="+data_id+"]").parents("li:first");
-        $li.slideUp('slow', function(){
-            $li.remove();
-        });
+    function addPRDDeliverContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_PRDDeliverTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
+    }
+
+    function addAPIFakeInterfaceContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_APIFakeInterface').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
+    }
+
+    function addAPIDeliverContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_APIDeliverTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
+    }
+
+    function addSliceDeliverContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_SliceDeliverTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
+    }
+
+    function addDailyBuildContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_DailyBuildTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
+    }
+
+    function addRCBuildContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_RCBuildTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
+    }
+
+    function addRealDeviceContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_RealDeviceTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
+    }
+
+    function addReleaseContentIntoEventContent(actionItem){
+        var contentHtml = $('#J_ReleaseTemplate').html();
+        var projectId = actionItem.attr("data-project-id");
+        contentHtml = contentHtml.replace("__project_id__", projectId);
+        $("#J_eventContent").html(contentHtml);
     }
 }
