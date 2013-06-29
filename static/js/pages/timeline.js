@@ -6,6 +6,7 @@ $(document).ready(function(){
 function TimeLine()
 {
     this.init = function(){
+        $("#J_eventContent").sticky({topSpacing:100});
         bindEvent();
     };
 
