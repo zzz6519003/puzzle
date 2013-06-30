@@ -63,7 +63,7 @@ function TimeLine()
 
             if(itemTimeStamp === timestamp){
                 //today's event
-                $item.addClass("current");
+                $item.addClass("today");
                 todayEvent = $item;
                 isToday = true;
             }
@@ -85,6 +85,9 @@ function TimeLine()
     }
 
     function timelineEventClicked(actionItem){
+        $(".current").removeClass("current");
+        actionItem.addClass("current");
+
         switch(actionItem.attr('data-category')){
             case '1':
                 addBackLogContentIntoEventContent(actionItem);
