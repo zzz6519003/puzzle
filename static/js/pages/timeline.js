@@ -1,3 +1,9 @@
+//记录时间给别的脚本用
+var date = new Date();
+//你妹！js计算月份是从0开始算的！
+var today = date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate();
+var timestamp = Date.parse(today)/1000;
+
 $(document).ready(function(){
     timeline = new TimeLine();
     timeline.init();
@@ -21,11 +27,6 @@ function TimeLine()
     }
 
     function setupMileStone(){
-        var date = new Date();
-
-        //你妹！js计算月份是从0开始算的！
-        var today = date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate();
-        var timestamp = Date.parse(today)/1000;
 
         //过去最近的事件
         var maxPastTimestamp = 0;
