@@ -88,6 +88,8 @@ function TimeLine()
         $(".current").removeClass("current");
         actionItem.addClass("current");
 
+        console.log(actionItem);
+
         switch(actionItem.attr('data-category')){
             case '1':
                 addBackLogContentIntoEventContent(actionItem);
