@@ -88,9 +88,11 @@ function TimeLine()
         $(".current").removeClass("current");
         actionItem.addClass("current");
 
-        console.log(actionItem);
+        $.smoothScroll({
+            offset:actionItem.offset().top-250,
+        });
 
-        switch(actionItem.attr('data-category')){
+        switch(actionItem.context.dataset['category']){
             case '1':
                 addBackLogContentIntoEventContent(actionItem);
                 break;
