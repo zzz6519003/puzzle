@@ -7,5 +7,8 @@
 })();
 
 function kickOffButtonClicked(actionItem){
-    alert("project id is "+actionItem.context.dataset['projectId']+"and category is "+actionItem.context.dataset['category']);
+    alert("project id is "+actionItem.context.dataset['projectId']+
+          "\ncategory is "+actionItem.context.dataset['category']+
+          "\ntimestamp is "+actionItem.context.dataset['time']
+        );
 }
