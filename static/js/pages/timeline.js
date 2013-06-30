@@ -6,9 +6,77 @@ $(document).ready(function(){
 function TimeLine()
 {
     this.init = function(){
-        $("#J_eventContent").sticky({topSpacing:100});
+        //confiuration 必须要在事件绑定的后面
         bindEvent();
+        configuration();
     };
+
+    function configuration(){
+        setupEventContent();
+        setupMileStone();
+    }
+
+    function setupEventContent(){
+        $("#J_eventContent").sticky({topSpacing:100});
+    }
+
+    function setupMileStone(){
+        var date = new Date();
+
+        //你妹！js计算月份是从0开始算的！
+        var today = date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate();
+        var timestamp = Date.parse(today)/1000;
+
+        //过去最近的事件
+        var maxPastTimestamp = 0;
+        var maxPastTimestampEvent = null;
+
+        //今天是否有事件
+        var isToday = false;
+        var todayEvent = null;
+
+        //未来最近的事件
+        var minRecentTimestamp = 99999999999999;
+        var recentEvent = null;
+
+        $(".J_event").each(function(index, value){
+            $item = $(value);
+            itemTimeStamp = parseInt($item.attr("data-time"));
+
+            if(itemTimeStamp < timestamp){
+                //this is the past event
+                $item.addClass("past");
+
+                if(itemTimeStamp > maxPastTimestamp){
+                    maxPastTimestamp = itemTimeStamp;
+                    maxPastTimestampEvent = $item;
+                }
+            }
+
+            if(itemTimeStamp > timestamp){
+                //this is the future event
+                if(itemTimeStamp < minRecentTimestamp){
+                    minRecentTimestamp = itemTimeStamp;
+                    recentEvent = $item;
+                }
+            }
+
+            if(itemTimeStamp === timestamp){
+                //today's event
+                $item.addClass("current");
+                todayEvent = $item;
+                isToday = true;
+            }
+        });
+
+        if(isToday){
+            todayEvent.trigger("click");
+        }else if(maxPastTimestampEvent != null){
+            maxPastTimestampEvent.trigger("click");
+        }else{
+            recentEvent.trigger("click");
+        }
+    }
 
     function bindEvent(){
         $(".J_event").on('click', function(){
