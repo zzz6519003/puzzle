@@ -7,5 +7,5 @@
 })();
 
 function kickOffButtonClicked(actionItem){
-    alert("project id is "+actionItem.attr("data-project-id"));
+    alert("project id is "+actionItem.context.dataset['projectId']+"and category is "+actionItem.context.dataset['category']);
 }
