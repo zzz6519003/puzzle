@@ -64,7 +64,9 @@ function AddProject()
     function submitButtonClicked(actionItem){
         if(isAvailable()){
             var data = generateFormData();
-            $.post("/project/add", data).done(function(){
+            data = JSON.stringify(data);
+            console.log(data);
+            $.post("/project/add", {data:data}).done(function(){
                 window.location.href="/project";
             });
         }
@@ -108,12 +110,23 @@ function AddProject()
     }
 
     function generateFormData(){
-        var data = {};
+        var data = {
+            eventList:[]
+        };
+
         $("form .J_formData").each(function(index, value){
-            var type = $(value).attr("data-type");
+            var item = {};
+            var type = $(value).attr('data-type');
             var value = $(value).val();
 
-            data[type] = value;
+            console.log(parseInt(type));
+
+            if(isNaN(type)){
+                data[type] = value;
+            }else{
+                item[type] = value;
+                data.eventList.push(item);
+            }
         });
         return data;
     }

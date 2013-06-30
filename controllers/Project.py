@@ -4,6 +4,7 @@ import json
 import web
 import string
 import time
+import urllib
 
 render = settings.render
 db = settings.db
@@ -42,13 +43,15 @@ class Add:
         return render.projectAdd(data=data)
 
     def POST(self):
-        data = web.input()
+        postData = web.input();
+        data = json.loads(urllib.unquote(postData['data']));
+        #data is{u'eventList': [{u'1': u'2013-06-21'}], u'appId': u'1', u'projectName': u'234'}
+
         lastInsertedId = db.insert('projectList', projectName=data['projectName'], appId=data['appId'], lastUpdate=time.time(), created=time.time())
 
-        for index in range(1,11):
-            attr = "%d" % index
-            if hasattr(data, attr):
-                print attr
-                mileStoneTime = time.mktime(time.strptime(data[attr], "%Y-%m-%d"))
-                db.insert('projectEvent', category=attr, projectId=lastInsertedId, name=data['projectName'], startDate=mileStoneTime, endDate='0', created='0', updated='0')
+        for eventItem in data['eventList']:
+            #eventItem is {u'1': u'2013-06-21'}
+            category = (eventItem.keys())[0]
+            mileStoneTime = time.mktime(time.strptime(eventItem[category], "%Y-%m-%d"))
+            db.insert('projectEvent', category=category, projectId=lastInsertedId, name=data['projectName'], startDate=mileStoneTime, endDate='0', created='0', updated='0')
         return

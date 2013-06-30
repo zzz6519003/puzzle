@@ -95,7 +95,7 @@ function TimeLine()
 
         switch(actionItem.context.dataset['category']){
             case '1':
-                replaceHtml(actionitem, $('#J_BackLogTemplate').html());
+                replaceHtml(actionItem, $('#J_BackLogTemplate').html());
                 break;
             case '2':
                 replaceHtml(actionItem, $('#J_KickOffTemplate').html());
