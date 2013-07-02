@@ -14,7 +14,6 @@ class Index:
         appId = dataGet['id']
 
         data['eventList'] = db.select('projectEvent', order='startDate ASC', where='projectId='+appId)
-        print data
 
         return render.timeline(data=data);
 
