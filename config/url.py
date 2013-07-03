@@ -17,4 +17,7 @@ urls = (
         "/clipAdd", pre_fix + "UiClipper.clipAdd",
         "/addPicture", pre_fix + "UiClipper.addPicture",
         "/mobileUi", pre_fix + "UiClipper.mobileUi",
+
+        "/packageBuild/ajaxCheckNewVersion", pre_fix + "PackageBuild.AjaxCheckNewVersion",
+        "/packageBuild/selectVersions", pre_fix + "PackageBuild.SelectVersions",
         )
