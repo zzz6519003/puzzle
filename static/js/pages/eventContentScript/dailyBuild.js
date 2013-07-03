@@ -8,11 +8,8 @@
 })();
 
 function dailyBuildButtonClicked(actionItem){
-    alert("project id is "+actionItem.attr("data-project-id"));
-}
-
-function DailyBuild()
-{
-    this.init = function(){
-    }
+    var projectId = actionItem.context.dataset['projectId'];
+    var category = actionItem.context.dataset['category'];
+    var url = "/packageBuild/selectVersions?projectId="+projectId+"&category="+category;
+    window.location.href = url;
 }
