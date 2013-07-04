@@ -20,4 +20,5 @@ urls = (
 
         "/packageBuild/ajaxCheckNewVersion", pre_fix + "PackageBuild.AjaxCheckNewVersion",
         "/packageBuild/selectVersions", pre_fix + "PackageBuild.SelectVersions",
+        "/packageBuild/buildPackage", pre_fix + "PackageBuild.BuildPackage",
         )

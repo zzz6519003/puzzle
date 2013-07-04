@@ -23,8 +23,10 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var data = getDependencySha1();
+        $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)}).done(function(){
+            //self.location = "/";
+        });
         warningPopout("打包功能还没写呢");
-
     }
 
     function versionBadgeClicked(actionItem){
