@@ -119,8 +119,6 @@ function AddProject()
             var type = $(value).attr('data-type');
             var value = $(value).val();
 
-            console.log(parseInt(type));
-
             if(isNaN(type)){
                 data[type] = value;
             }else{

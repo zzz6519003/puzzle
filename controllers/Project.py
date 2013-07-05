@@ -5,6 +5,7 @@ import web
 import string
 import time
 import urllib
+from iostools.commandLine import *
 
 render = settings.render
 db = settings.db
@@ -54,4 +55,39 @@ class Add:
             category = (eventItem.keys())[0]
             mileStoneTime = time.mktime(time.strptime(eventItem[category], "%Y-%m-%d"))
             db.insert('projectEvent', category=category, projectId=lastInsertedId, name=data['projectName'], startDate=mileStoneTime, endDate='0', created='0', updated='0')
+
+        #init project
+        """
+           initInfo indicates the information about the project which should be initialized
+           and it is a object like this:
+               bool    initInfo["openXcode"]
+                string  initInfo["projectId"]
+                string  initInfo["IP"]
+                string  initInfo["version"]
+                string  initInfo["appId"]
+                string  initInfo["projectName"]
+                string  initInfo["appName"]
+                string  initInfo["appRepoUrl"]
+        
+            output:
+                bool result
+        """
+        
+        appInfo = (db.select('appList', where="id="+data['appId']))[0]
+
+        initInfo = {
+            'appId':data['appId'],
+            'appName':appInfo['appName'],
+            'appRepoUrl':appInfo['appRepo'],
+
+            'projectName':data['projectName'],
+            'projectId':lastInsertedId,
+
+            'IP':web.ctx.ip,
+            'version':data['version']
+        }
+
+        print initInfo
+
+        initProject(initInfo)
         return

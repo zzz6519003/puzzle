@@ -91,13 +91,26 @@ function SelectVersion()
 
     function getDependencySha1(){
         var data={};
+        var dependencyArray = [];
 
         $(".J_versionBadge.badge-success").each(function(index, value){
+            var dependency = {};
             var item = $(value);
-            var repoId = item.context.dataset['repoId'];
-            var sha1 = item.context.dataset['sha1'];
-            data[repoId] = sha1;
+            dependency['repoId'] = item.context.dataset['repoId'];
+            dependency['sha1'] = item.context.dataset['sha1'];
+            dependency['repoName'] = item.context.dataset['repoName'];
+            dependencyArray.push(dependency);
         });
+
+        data['projectId'] = $("#J_projectInfo")[0].dataset['projectId'];
+        data['category'] = $("#J_projectInfo")[0].dataset['category'];
+        data['dependencyArray'] = dependencyArray;
+
+        if($("#J_isRelease")[0].checked){
+            data['isDebug'] = false;
+        }else{
+            data['isDebug'] = true;
+        }
 
         return data;
     } 

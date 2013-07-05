@@ -54,3 +54,7 @@ def getPackageInfoForBuild(projectId, category):
                 ]
             }]
     return data
+
+
+def buildPackage(packageInfo):
+    return True

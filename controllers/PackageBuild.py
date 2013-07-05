@@ -5,7 +5,7 @@ import web
 from iostools.commandLine import *
 import json
 import urllib
-from model import Package
+from model import Package as PackageModel
 
 data = {'pageIndex':'project'}
 render = settings.render
@@ -33,7 +33,7 @@ class SelectVersions:
         projectId = (web.input())['projectId']
         category = (web.input())['category']
 
-        data['packageInfoForBuild'] = Package.getPackageInfoForBuild(projectId, category)
+        data['packageInfoForBuild'] = PackageModel.getPackageInfoForBuild(projectId, category)
 
         return render.selectVersions(data=data)
 
@@ -55,15 +55,13 @@ class BuildPackage:
             should transfer these params to build a package
 
                 string  packageInfo["projectId"]
-                string  packageInfo["appId"]
-                string  packageInfo["appSHA1"]
                 array   packageInfo["dependencyArray"]=[dependency, dependency]
                 int     packageInfo["category"]
                 bool    packageInfo["isDebug"]
         """
         postData = web.input()
         data = json.loads(urllib.unquote(postData['data']));
-        print data
+        PackageModel.package(data)
         pass
 
     def GET(self):
