@@ -6,6 +6,11 @@
 
 <%block name="body">
 
+<%
+packageInfo = data['packageInfoForBuild']
+dependencyInfoArray = packageInfo['dependencyArray']
+%>
+
 <p>
     <p>usage:</p>
     <span class="badge badge-success">当前选中的版本</span>
@@ -13,40 +18,38 @@
     <span class="badge badge-important">线下版本</span>
 </p>
 
+<span id="J_projectInfo" data-project-id="${packageInfo['projectId']}" data-category="${packageInfo['category']}"></span>
+
 <table cellpadding="20">
     <tr>
         <th>依赖包名字</th>
         <th>依赖包版本</th>
     </tr>
-
-    <tr>
-        <td>RTNetwork</td>
-        <td>
-            <a data-repo-id="1" data-repo-name="RTNetwork" data-sha1="sha1" class="J_versionBadge badge">1</a>
-            <a data-repo-id="1" data-repo-name="RTNetwork" data-sha1="sha2" class="J_versionBadge badge badge-important">2</a>
-            <a data-repo-id="1" data-repo-name="RTNetwork" data-sha1="sha3" class="J_versionBadge badge">3</a>
-            <a data-repo-id="1" data-repo-name="RTNetwork" data-sha1="sha4" class="J_versionBadge badge badge-info">4</a>
-            <a data-repo-id="1" data-repo-name="RTNetwork" data-sha1="sha5" class="J_versionBadge badge badge-success">5</a>
-            <a data-repo-id="1" data-repo-name="RTNetwork" data-sha1="sha6" class="J_versionBadge badge">6</a>
-        </td>
-    </tr>
-
-    <tr>
-        <td>RTApiProxy</td>
-        <td>
-            <a data-repo-id="2" data-repo-name="RTApiProxy" data-sha1="sha1" class="J_versionBadge badge">1</a>
-            <a data-repo-id="2" data-repo-name="RTApiProxy" data-sha1="sha2" class="J_versionBadge badge">2</a>
-            <a data-repo-id="2" data-repo-name="RTApiProxy" data-sha1="sha3" class="J_versionBadge badge badge-important">3</a>
-            <a data-repo-id="2" data-repo-name="RTApiProxy" data-sha1="sha4" class="J_versionBadge badge">4</a>
-            <a data-repo-id="2" data-repo-name="RTApiProxy" data-sha1="sha5" class="J_versionBadge badge">5</a>
-            <a data-repo-id="2" data-repo-name="RTApiProxy" data-sha1="sha6" class="J_versionBadge badge badge-info">6</a>
-            <a data-repo-id="2" data-repo-name="RTApiProxy" data-sha1="sha7" class="J_versionBadge badge badge-success">7</a>
-            <a data-repo-id="2" data-repo-name="RTApiProxy" data-sha1="sha8" class="J_versionBadge badge">8</a>
-        </td>
-    </tr>
-
+    % for dependencyDict in packageInfo['dependencyArray']:
+        ${makerow(dependencyDict)}
+    % endfor
 </table>
 
 <button id="J_packageButton">打包</button>
+
+<%def name="makerow(dependencyDict)">
+<tr>
+    <td>${dependencyDict['name']}</td>
+    <td>
+        % for hashItem in dependencyDict['SHA1Array']:
+        <a
+            data-repo-id="${dependencyDict['dependencyId']}"
+            data-repo-name="${dependencyDict['name']}"
+            data-sha1="${hashItem['hash']}"
+            data-type="${hashItem['type']}"
+            data-is-current="${hashItem['isCurrent']}"
+            data-is-init="${hashItem['isInit']}"
+            data-is-off-line="${hashItem['isOffLine']}"
+            class="J_versionBadge badge"
+            >${hashItem['versionName']}</a>
+        % endfor
+    </td>
+</tr>
+</%def>
 
 </%block>

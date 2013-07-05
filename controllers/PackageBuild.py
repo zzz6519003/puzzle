@@ -2,11 +2,12 @@
 
 from config import settings
 import web
-from iostools.command_line import *
+from iostools.commandLine import *
 import json
 import urllib
+from model import Package
 
-data = {'pageIndex':'index'}
+data = {'pageIndex':'project'}
 render = settings.render
 db = settings.db
 
@@ -20,18 +21,20 @@ class AjaxCheckNewVersion:
 
 
 class SelectVersions:
-    """ select the app version and its dependicy's version """
+    """ select the app version and its dependency's version """
     def GET(self):
-        print "here i am"
+        """
+            the page need the name of dependency and SHA1 code array
+            and the project ID
+            and category
 
-        casa = "casa"
+        """
 
-        package(casa)
-        getDependencyArray(casa)
-        getVersionArray(casa, casa)
-        initProject(casa)
+        projectId = (web.input())['projectId']
+        category = (web.input())['category']
 
-        print web.input()
+        data['packageInfoForBuild'] = Package.getPackageInfoForBuild(projectId, category)
+
         return render.selectVersions(data=data)
 
     def POST(self):
