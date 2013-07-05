@@ -65,7 +65,6 @@ function AddProject()
         if(isAvailable()){
             var data = generateFormData();
             data = JSON.stringify(data);
-            console.log(data);
             $.post("/project/add", {data:data}).done(function(){
                 window.location.href="/project";
             });
