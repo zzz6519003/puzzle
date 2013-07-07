@@ -46,12 +46,10 @@ class Add:
     def POST(self):
         postData = web.input();
         data = json.loads(urllib.unquote(postData['data']));
-        #data is{u'eventList': [{u'1': u'2013-06-21'}], u'appId': u'1', u'projectName': u'234'}
 
-        lastInsertedId = db.insert('projectList', projectName=data['projectName'], appId=data['appId'], lastUpdate=time.time(), created=time.time())
+        lastInsertedId = db.insert('projectList', projectName=data['projectName'], appId=data['appId'], lastUpdate=time.time(), created=time.time(), version=data['version'])
 
         for eventItem in data['eventList']:
-            #eventItem is {u'1': u'2013-06-21'}
             category = (eventItem.keys())[0]
             mileStoneTime = time.mktime(time.strptime(eventItem[category], "%Y-%m-%d"))
             db.insert('projectEvent', category=category, projectId=lastInsertedId, name=data['projectName'], startDate=mileStoneTime, endDate='0', created='0', updated='0')

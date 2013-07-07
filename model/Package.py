@@ -7,6 +7,9 @@ import urllib
 db = settings.db
 
 def getPackageInfoForBuild(projectId, category):
+    """
+        the result of this function is used for user to choose which version need to be build
+    """
 
     data = {}
 
@@ -22,6 +25,15 @@ def getPackageInfoForBuild(projectId, category):
         1   initial node
         2   offline node
     """
+
+    projectInfo = (db.select('projectList', where="id=" + projectId))[0]
+
+    appId = "%d" % projectInfo['appId']
+    appInfo = (db.select('appList', where="id=" + appId))[0]
+
+    data['projectPath'] = projectInfo['projectPath']
+    data['appName'] = appInfo['identifier']
+    data['version'] = projectInfo['version']
     data['projectId'] = projectId
     data['category'] = category
     data['dependencyArray'] = [{

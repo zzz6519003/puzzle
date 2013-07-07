@@ -102,15 +102,19 @@ function SelectVersion()
             dependencyArray.push(dependency);
         });
 
-        data['projectId'] = $("#J_projectInfo")[0].dataset['projectId'];
-        data['category'] = $("#J_projectInfo")[0].dataset['category'];
-        data['dependencyArray'] = dependencyArray;
-
         if($("#J_isRelease")[0].checked){
             data['isDebug'] = false;
         }else{
             data['isDebug'] = true;
         }
+
+        data['projectId'] = $("#J_projectInfo")[0].dataset['projectId'];
+        data['category'] = $("#J_projectInfo")[0].dataset['category'];
+        data['version'] = $("#J_projectInfo")[0].dataset['version'];
+        data['appName'] = $("#J_projectInfo")[0].dataset['appName'];
+        data['projectPath'] = $("#J_projectInfo")[0].dataset['projectPath'];
+
+        data['dependencyArray'] = dependencyArray;
 
         return data;
     } 
