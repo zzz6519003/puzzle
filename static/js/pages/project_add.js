@@ -125,6 +125,9 @@ function AddProject()
                 data.eventList.push(item);
             }
         });
+
+        data['openXcode'] = $("#J_openXcode")[0].checked;
+
         return data;
     }
 

@@ -1,4 +1,4 @@
-from config import settings 
+from config import settings
 import web
 from iostools.commandLine import *
 import json
@@ -57,4 +57,5 @@ def getPackageInfoForBuild(projectId, category):
 
 
 def buildPackage(packageInfo):
+    package(packageInfo)
     return True

@@ -58,6 +58,25 @@ class BuildPackage:
                 array   packageInfo["dependencyArray"]=[dependency, dependency]
                 int     packageInfo["category"]
                 bool    packageInfo["isDebug"]
+
+            this is the data from POST
+            {
+                u'category': u'7',
+                u'projectId': u'4',
+                u'isDebug': True,
+                u'dependencyArray': [
+                    {
+                        u'sha1': u'90123',
+                        u'repoId': u'1',
+                        u'repoName': u'RTNetwork'
+                    },
+                    {
+                        u'sha1': u'90123',
+                        u'repoId': u'2',
+                        u'repoName': u'RTApiProxy'
+                    }
+                ]
+            }
         """
         postData = web.input()
         data = json.loads(urllib.unquote(postData['data']));
