@@ -13,7 +13,6 @@ class ShowCmdLog:
     def GET(self):
     # These headers make it work in browsers
         data = web.input()
-
         #print data
         #   'category': u'7',
         #   'appName': u'i-haozu2.0',
@@ -43,5 +42,22 @@ class ShowCmdLog:
                 else:
                     yield "<p>"+line+"</p>"+jsScrollDown
             else:   
-                time.sleep(0.1)
+                time.sleep(0.3)
                 f.seek(location)
+
+
+
+class ProgressNumber:
+    def GET(self):
+        data = web.input()
+        #print data
+        #   'category': u'7',
+        #   'appName': u'i-haozu2.0',
+        #   'projectPath': u'/var/www/projects/i-haozu2.0_5.7',
+        #   'version': u'5.7',
+        #   'projectId': u'33',
+        #   'type': u'dailybuild' or u'rc'
+
+        filePath = "/tmp/progress.log"
+        progress = open(filePath).readline()
+        return progress

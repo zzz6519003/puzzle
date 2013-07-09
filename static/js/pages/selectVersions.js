@@ -76,7 +76,7 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var data = getDependencySha1();
-        var contentHtml = getProgressContent(actionItem);
+        var contentHtml = getContentHtml(actionItem);
             
         //$.post("/packageBuild/buildPackage", {data:JSON.stringify(data)}).done(function(){
         //});
@@ -85,7 +85,20 @@ function SelectVersion()
             html:contentHtml,
             width:"1024px",
             onComplete:function(){
-                //todo start checking for prograss bar
+                //服务器那边是0.3秒读一次文件
+                progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
+
+                setInterval(function(){
+                    var progressBar = $("#J_progressBar");
+                    var currentProgress = progressBar.attr("style");
+
+                    if(currentProgress != "100%"){
+                        $.get(progressNumberUrl, function(data){
+                            $("#J_progressBar").attr("style", "width: "+data);
+                        });
+                    }
+
+                }, 200);
             },
             onClosed:function(){
                 window.location.href="/project";
@@ -93,7 +106,21 @@ function SelectVersion()
         });
     }
 
-    function getProgressContent(actionItem){
+    function getContentHtml(actionItem){
+        var contentUrl = getContentUrl(actionItem, "/showCmdLog");
+
+        var contentHtml = ""
+            +"<div class=\"progress progress-striped active\">"
+            //用来纪念所谓的专家宣布中华民族的伟大复兴进程已经62%了，哈哈哈哈
+            +"  <div class=\"bar\" style=\"width: 62%;\" id=\"J_progressBar\"></div>"
+            +"</div>"
+            +"<iframe src=\""+contentUrl+"\" style=\"width:100%;height:600px\"></iframe>"
+            ;
+
+        return contentHtml
+    }
+
+    function getContentUrl(actionItem, baseUrl){
         var projectId = actionItem.context.dataset['projectId'];
         var category = actionItem.context.dataset['category'];
         var version = actionItem.context.dataset['version'];
@@ -110,22 +137,15 @@ function SelectVersion()
             type = "rc";
         }
 
-        var contentUrl = "/showCmdLog?"
-            +"projectId="+projectId+"&"
+        var contentUrl = baseUrl
+            +"?projectId="+projectId+"&"
             +"category="+category+"&"
             +"version="+version+"&"
             +"appName="+appName+"&"
             +"projectPath="+projectPath+"&"
             +"type="+type
 
-        var contentHtml = ""
-            +"<div class=\"progress progress-striped active\">"
-            +"  <div class=\"bar\" style=\"width: 40%;\"></div>"
-            +"</div>"
-            +"<iframe src=\""+contentUrl+"\" style=\"width:100%;height:600px\"></iframe>"
-            ;
-
-        return contentHtml
+        return contentUrl;
     }
 
     function versionBadgeClicked(actionItem){
