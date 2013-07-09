@@ -94,6 +94,9 @@ function SelectVersion()
             onComplete:function(){
                 //todo start checking for prograss bar
             },
+            onClosed:function(){
+                window.location.href="/project";
+            },
         });
     }
 
