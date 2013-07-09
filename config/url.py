@@ -22,5 +22,6 @@ urls = (
         "/packageBuild/selectVersions", pre_fix + "PackageBuild.SelectVersions",
         "/packageBuild/buildPackage", pre_fix + "PackageBuild.BuildPackage",
 
-        "/showCmdLog", pre_fix + "ShowCmdLog.ShowCmdLog",
+        "/showCmdLog", pre_fix + "BuildProgress.ShowCmdLog",
+        "/progressNumber", pre_fix + "BuildProgress.ProgressNumber",
         )

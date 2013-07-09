@@ -76,18 +76,11 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var data = getDependencySha1();
-        var contentHtml = ""
-            +"<div class=\"progress progress-striped active\">"
-            +"  <div class=\"bar\" style=\"width: 40%;\"></div>"
-            +"</div>"
-            +"<iframe src=\"/showCmdLog\" style=\"width:100%;height:600px\"></iframe>"
-            ;
+        var contentHtml = getProgressContent(actionItem);
             
         //$.post("/packageBuild/buildPackage", {data:JSON.stringify(data)}).done(function(){
-        //    //self.location = "/";
         //});
 
-        warningPopout("打包功能还没写呢");
         $.colorbox({
             html:contentHtml,
             width:"1024px",
@@ -98,6 +91,41 @@ function SelectVersion()
                 window.location.href="/project";
             },
         });
+    }
+
+    function getProgressContent(actionItem){
+        var projectId = actionItem.context.dataset['projectId'];
+        var category = actionItem.context.dataset['category'];
+        var version = actionItem.context.dataset['version'];
+        var appName = actionItem.context.dataset['appName'];
+        var projectPath = actionItem.context.dataset['projectPath'];
+
+        var type = "dailybuild"
+
+        if(category == "7"){
+            type = "dailybuild";
+        }
+
+        if(category == "8"){
+            type = "rc";
+        }
+
+        var contentUrl = "/showCmdLog?"
+            +"projectId="+projectId+"&"
+            +"category="+category+"&"
+            +"version="+version+"&"
+            +"appName="+appName+"&"
+            +"projectPath="+projectPath+"&"
+            +"type="+type
+
+        var contentHtml = ""
+            +"<div class=\"progress progress-striped active\">"
+            +"  <div class=\"bar\" style=\"width: 40%;\"></div>"
+            +"</div>"
+            +"<iframe src=\""+contentUrl+"\" style=\"width:100%;height:600px\"></iframe>"
+            ;
+
+        return contentHtml
     }
 
     function versionBadgeClicked(actionItem){
