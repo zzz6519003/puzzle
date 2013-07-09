@@ -4,13 +4,13 @@ import web
 from web.contrib.template import render_mako
 from settingsPersonality import getConnection
 
-
 render = render_mako(
                     directories = ['templates'],
                     input_encoding='utf8',
                     output_encoding='utf8',
                     )
 web.config.debug = True
+web.config.cache = False
 
 config = web.storage(
         email = 'lenyemeng@anjukeinc.com',

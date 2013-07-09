@@ -76,10 +76,25 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var data = getDependencySha1();
-        $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)}).done(function(){
-            //self.location = "/";
-        });
+        var contentHtml = ""
+            +"<div class=\"progress progress-striped active\">"
+            +"  <div class=\"bar\" style=\"width: 40%;\"></div>"
+            +"</div>"
+            +"<iframe src=\"/showCmdLog\" style=\"width:100%;height:600px\"></iframe>"
+            ;
+            
+        //$.post("/packageBuild/buildPackage", {data:JSON.stringify(data)}).done(function(){
+        //    //self.location = "/";
+        //});
+
         warningPopout("打包功能还没写呢");
+        $.colorbox({
+            html:contentHtml,
+            width:"1024px",
+            onComplete:function(){
+                //todo start checking for prograss bar
+            },
+        });
     }
 
     function versionBadgeClicked(actionItem){

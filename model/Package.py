@@ -36,6 +36,7 @@ def getPackageInfoForBuild(projectId, category):
     data['version'] = projectInfo['version']
     data['projectId'] = projectId
     data['category'] = category
+
     data['dependencyArray'] = [{
             'name':'RTNetwork',
             'dependencyId':'1',
@@ -65,6 +66,7 @@ def getPackageInfoForBuild(projectId, category):
                 {'hash':'01234', 'type':'0', 'isCurrent':'0', 'versionName':'4.0', 'isInit':'0', 'isOffLine':'0'}
                 ]
             }]
+
     return data
 
 

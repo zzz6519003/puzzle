@@ -3,7 +3,7 @@
 from config import settings
 import web
 
-data = {'pageIndex':'timeline'}
+data = {'pageIndex':'project'}
 render = settings.render
 db = settings.db
 
