@@ -75,16 +75,17 @@ function SelectVersion()
     }
 
     function packageButtonClicked(actionItem){
-        var data = getDependencySha1();
         var contentHtml = getContentHtml(actionItem);
             
-        //$.post("/packageBuild/buildPackage", {data:JSON.stringify(data)}).done(function(){
-        //});
 
         $.colorbox({
             html:contentHtml,
             width:"1024px",
             onComplete:function(){
+
+                var data = getDependencySha1();
+                $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
+
                 //服务器那边是0.3秒读一次文件
                 progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
 

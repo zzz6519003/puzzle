@@ -75,5 +75,7 @@ def getPackageInfoForBuild(projectId, category):
 
 
 def buildPackage(packageInfo):
+    print "pacakge info is"
+    print packageInfo
     package(packageInfo)
     return True

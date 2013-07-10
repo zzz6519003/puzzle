@@ -3,6 +3,7 @@
 from config import settings
 import web
 import time
+import os
 
 data = {'pageIndex':'project'}
 render = settings.render
@@ -24,8 +25,10 @@ class ShowCmdLog:
         web.header('Content-type','text/html')
         web.header('Transfer-Encoding','chunked')        
 
-        filePath = "/tmp/test.log"
+        filePath = data['projectPath'] + "/output.log"
         jsScrollDown = "<script type=\"text/javascript\">document.body.scrollTop = document.body.scrollHeight</script>"
+
+        os.system("echo '' > "+filePath)
 
         f = open(filePath)
 
@@ -58,6 +61,7 @@ class ProgressNumber:
         #   'projectId': u'33',
         #   'type': u'dailybuild' or u'rc'
 
-        filePath = "/tmp/progress.log"
+        filePath = data['projectPath']+"/progress.log"
+        os.system("echo '' > " + filePath)
         progress = open(filePath).readline()
         return progress
