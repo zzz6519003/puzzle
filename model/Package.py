@@ -45,7 +45,7 @@ def getPackageInfoForBuild(projectId, category):
     #        'name':'RTNetwork',
     #        'dependencyId':'1',
     #        'SHA1Array':[
-    #            {'hash':'12345', 'type':'0', 'isCurrent':'0', 'versionName':'1.0', 'isInit':'0', 'isOffLine':'0'}, 
+    #            {'hash':'12345', 'type':'0', 'isCurrent':'0', 'versionName':'1.0', 'isInit':'0', 'isOffLine':'0'},
     #            {'hash':'23456', 'type':'0', 'isCurrent':'0', 'versionName':'1.1', 'isInit':'0', 'isOffLine':'0'},
     #            {'hash':'45678', 'type':'0', 'isCurrent':'0', 'versionName':'1.2', 'isInit':'0', 'isOffLine':'0'},
     #            {'hash':'56789', 'type':'1', 'isCurrent':'0', 'versionName':'2.0', 'isInit':'1', 'isOffLine':'0'},
@@ -54,12 +54,12 @@ def getPackageInfoForBuild(projectId, category):
     #            {'hash':'89012', 'type':'2', 'isCurrent':'0', 'versionName':'2.3', 'isInit':'0', 'isOffLine':'1'},
     #            {'hash':'90123', 'type':'0', 'isCurrent':'0', 'versionName':'3.0', 'isInit':'0', 'isOffLine':'0'},
     #            {'hash':'01234', 'type':'0', 'isCurrent':'0', 'versionName':'4.0', 'isInit':'0', 'isOffLine':'0'}
-    #            ]
+    #        ]
     #    },{
     #        'name':'RTApiProxy',
     #        'dependencyId':'2',
     #        'SHA1Array':[
-    #            {'hash':'12345', 'type':'0', 'isCurrent':'0', 'versionName':'1.0', 'isInit':'0', 'isOffLine':'0'}, 
+    #            {'hash':'12345', 'type':'0', 'isCurrent':'0', 'versionName':'1.0', 'isInit':'0', 'isOffLine':'0'},
     #            {'hash':'23456', 'type':'0', 'isCurrent':'0', 'versionName':'1.1', 'isInit':'0', 'isOffLine':'0'},
     #            {'hash':'45678', 'type':'0', 'isCurrent':'0', 'versionName':'1.2', 'isInit':'0', 'isOffLine':'0'},
     #            {'hash':'56789', 'type':'1', 'isCurrent':'0', 'versionName':'2.0', 'isInit':'1', 'isOffLine':'0'},
@@ -68,8 +68,8 @@ def getPackageInfoForBuild(projectId, category):
     #            {'hash':'289cc82d48e8e32e841c8f533af7747d8095f325', 'type':'2', 'isCurrent':'1', 'versionName':'2.3', 'isInit':'0', 'isOffLine':'1'},
     #            {'hash':'90123', 'type':'0', 'isCurrent':'0', 'versionName':'3.0', 'isInit':'0', 'isOffLine':'0'},
     #            {'hash':'01234', 'type':'0', 'isCurrent':'0', 'versionName':'4.0', 'isInit':'0', 'isOffLine':'0'}
-    #            ]
-    #        }]
+    #        ]
+    #    }]
 
     return data
 
@@ -78,4 +78,26 @@ def buildPackage(packageInfo):
     print "pacakge info is"
     print packageInfo
     package(packageInfo)
+    sendmailToQA(packageInfo)
     return True
+
+
+def sendmailToQA(packageInfo):
+    import smtplib
+    from email.mime.text import MIMEText
+
+    mailContent = "hello, world"
+    mailFrom = "AppBuildSystem@anjuke.com"
+    mailTo = ["weiyutian@anjuke.com", "wadecong@anjuke.com"]
+    msg = MIMEText(mailContent)
+    msg["Subject"] = "测试邮件"
+    msg["From"] = mailFrom
+    msg["To"] = mailTo
+
+    smtp = smtplib.SMTP()
+    smtp.connect("smtp.anjuke.com")
+    smtp.login('weiyutian', 'casaTWY789520')
+    smtp.sendmail(mailFrom, mailTo, msg.as_string())
+    smtp.quit()
+
+    pass
