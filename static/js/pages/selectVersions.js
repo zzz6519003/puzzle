@@ -65,6 +65,18 @@ function SelectVersion()
     }
 
     function bindEvent(){
+        $(".J_versionBadge").tinyTips({
+            content: function(actionItem){
+                var commit = actionItem.context.dataset['commit'];
+                return commit;
+            },
+            position: 'top',
+            spacing: 8,
+            transition: 'fade',
+            arrow: true,
+            arrowColor: 'rgba(0, 0, 0, 0.8)'
+        });
+
         body.on("click", ".J_versionBadge", function(){
             versionBadgeClicked($(this));
         });
@@ -72,6 +84,11 @@ function SelectVersion()
         body.on("click", "#J_packageButton", function(){
             packageButtonClicked($(this));
         });
+    }
+
+    function returnTipContent(actionItem){
+        var content = actionItem.context.dataset['commit'];
+        return content;
     }
 
     function packageButtonClicked(actionItem){
