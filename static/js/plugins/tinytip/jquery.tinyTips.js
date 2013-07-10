@@ -111,7 +111,6 @@
 			tip.css({top: 0, left: 0});
 
             if($.isFunction(options.content)){
-                console.log(options.content($(this)));
 			    tip.append(options.content($(this)));
             }else{
 			    tip.append($(this).attr('tt'));
