@@ -28,7 +28,8 @@ class ShowCmdLog:
         filePath = data['projectPath'] + "/output.log"
         jsScrollDown = "<script type=\"text/javascript\">document.body.scrollTop = document.body.scrollHeight</script>"
 
-        os.system("echo '' > "+filePath)
+        #os.system("echo '' > "+filePath)
+        os.system("touch "+filePath)
 
         f = open(filePath)
 
@@ -45,7 +46,6 @@ class ShowCmdLog:
                 else:
                     yield "<p>"+line+"</p>"+jsScrollDown
             else:   
-                time.sleep(0.3)
                 f.seek(location)
 
 
@@ -62,6 +62,7 @@ class ProgressNumber:
         #   'type': u'dailybuild' or u'rc'
 
         filePath = data['projectPath']+"/progress.log"
-        os.system("echo '' > " + filePath)
+        #os.system("echo '' >> " + filePath)
+        os.system("touch " + filePath)
         progress = open(filePath).readline()
         return progress
