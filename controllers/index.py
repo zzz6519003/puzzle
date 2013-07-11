@@ -1,6 +1,7 @@
 #encoding=utf8
 
 from config import settings
+from model import Package
 data = {'pageIndex':'home'}
 render = settings.render
 

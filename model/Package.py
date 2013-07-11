@@ -83,21 +83,26 @@ def buildPackage(packageInfo):
 
 
 def sendmailToQA(packageInfo):
-    import smtplib
-    from email.mime.text import MIMEText
+    from turbomail import Message, interface
 
-    mailContent = "hello, world"
-    mailFrom = "AppBuildSystem@anjuke.com"
-    mailTo = ["weiyutian@anjuke.com", "wadecong@anjuke.com"]
-    msg = MIMEText(mailContent)
-    msg["Subject"] = "测试邮件"
-    msg["From"] = mailFrom
-    msg["To"] = mailTo
+    print "sending email"
+    try:
+        mail_config = {
+            'mail.on':True,
+            'mail.manager' : 'immediate',
+            'mail.transport' : 'smtp',
+            'mail.smtp.server' : '10.10.6.209'
+        }
+        interface.start(mail_config)
 
-    smtp = smtplib.SMTP()
-    smtp.connect("smtp.anjuke.com")
-    smtp.login('weiyutian', 'casaTWY789520')
-    smtp.sendmail(mailFrom, mailTo, msg.as_string())
-    smtp.quit()
-
+        mail = Message()
+        mail.subject = "hello world"
+        mail.sender = "knowing@app10-045.i.ajkdns.com"
+        mail.to = "weiyutian@anjuke.com"
+        mail.encoding = "utf-8"
+        mail.plain = "hello, world"
+        mail.send()
+    except Exception, e:
+        print e
+    print "success"
     pass
