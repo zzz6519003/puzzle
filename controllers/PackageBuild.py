@@ -42,7 +42,7 @@ class SelectVersions:
 
 
 class BuildPackage:
-    """ 
+    """
         build package by information from post
     """
     def POST(self):
@@ -85,3 +85,8 @@ class BuildPackage:
 
     def GET(self):
         pass
+
+
+class InputCommit:
+    def GET(self):
+        data = web.input()

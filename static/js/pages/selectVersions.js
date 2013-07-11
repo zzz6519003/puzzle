@@ -93,35 +93,39 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var contentHtml = getContentHtml(actionItem);
-            
 
         $.colorbox({
-            html:contentHtml,
-            width:"1024px",
-            onComplete:function(){
-
-                var data = getDependencySha1();
-                $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
-
-                //服务器那边是0.3秒读一次文件
-                progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
-
-                setInterval(function(){
-                    var progressBar = $("#J_progressBar");
-                    var currentProgress = progressBar.attr("style");
-
-                    if(currentProgress != "100%"){
-                        $.get(progressNumberUrl, function(data){
-                            $("#J_progressBar").attr("style", "width: "+data);
-                        });
-                    }
-
-                }, 200);
-            },
-            onClosed:function(){
-                window.location.href="/project";
-            },
+            href:"/"
         });
+
+        //$.colorbox({
+        //    html:contentHtml,
+        //    fastIframe:false,
+        //    width:"1024px",
+        //    onComplete:function(){
+
+        //        var data = getDependencySha1();
+        //        $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
+
+        //        //服务器那边是0.3秒读一次文件
+        //        progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
+
+        //        setInterval(function(){
+        //            var progressBar = $("#J_progressBar");
+        //            var currentProgress = progressBar.attr("style");
+
+        //            if(currentProgress != "100%"){
+        //                $.get(progressNumberUrl, function(data){
+        //                    $("#J_progressBar").attr("style", "width: "+data);
+        //                });
+        //            }
+
+        //        }, 200);
+        //    },
+        //    onClosed:function(){
+        //        window.location.href="/project";
+        //    },
+        //});
     }
 
     function getContentHtml(actionItem){

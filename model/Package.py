@@ -97,10 +97,11 @@ def sendmailToQA(packageInfo):
 
         mail = Message()
         mail.subject = "hello world"
-        mail.sender = "knowing@app10-045.i.ajkdns.com"
-        mail.to = "weiyutian@anjuke.com"
+        mail.sender = "noreply@dm.anjuke.com"
+        mail.to = "weiyutian@anjuke.com , wadecong@anjuke.com"
         mail.encoding = "utf-8"
         mail.plain = "hello, world"
+        #mail.author = "casa"
         mail.send()
     except Exception, e:
         print e
