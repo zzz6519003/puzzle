@@ -77,7 +77,7 @@ def getPackageInfoForBuild(projectId, category):
 def buildPackage(packageInfo):
     print "buildPackage is here"
     print packageInfo
-    #package(packageInfo)
+    package(packageInfo)
     sendmailToQA(packageInfo)
     return True
 

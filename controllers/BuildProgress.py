@@ -62,7 +62,6 @@ class ProgressNumber:
         #   'type': u'dailybuild' or u'rc'
 
         filePath = data['projectPath']+"/progress.log"
-        os.system("echo '' > " + filePath)
-        #os.system("touch " + filePath)
+        os.system("touch " + filePath)
         progress = open(filePath).readline()
         return progress
