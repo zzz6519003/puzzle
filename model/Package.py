@@ -75,9 +75,9 @@ def getPackageInfoForBuild(projectId, category):
 
 
 def buildPackage(packageInfo):
-    print "pacakge info is"
+    print "buildPackage is here"
     print packageInfo
-    package(packageInfo)
+    #package(packageInfo)
     sendmailToQA(packageInfo)
     return True
 
@@ -100,7 +100,7 @@ def sendmailToQA(packageInfo):
         mail.sender = "noreply@dm.anjuke.com"
         mail.to = "weiyutian@anjuke.com , wadecong@anjuke.com"
         mail.encoding = "utf-8"
-        mail.plain = "hello, world"
+        mail.plain = packageInfo['mailContent']
         #mail.author = "casa"
         mail.send()
     except Exception, e:

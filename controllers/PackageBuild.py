@@ -47,21 +47,13 @@ class BuildPackage:
     """
     def POST(self):
         """
-            data is an dictionary.the key is dependencyId
-            and the value is the SHA1 code
-
-            dependency is a class which constructed by [id, sha1, repoAddress, name]
-
-            should transfer these params to build a package
-
-                string  packageInfo["projectId"]
-                array   packageInfo["dependencyArray"]=[dependency, dependency]
-                int     packageInfo["category"]
-                bool    packageInfo["isDebug"]
-
-            this is the data from POST
+            this is the data from POST['data']
             {
                 u'category': u'7',
+                u'version' : u'5.7',
+                u'appName' : u'haozu',
+                u'projectPath' : u'/var/www/here',
+                u'mailContent' : u'hello world',
                 u'projectId': u'4',
                 u'isDebug': True,
                 u'dependencyArray': [
@@ -80,7 +72,7 @@ class BuildPackage:
         """
         postData = web.input()
         data = json.loads(urllib.unquote(postData['data']));
-        PackageModel.package(data)
+        PackageModel.buildPackage(data)
         pass
 
     def GET(self):
@@ -88,5 +80,7 @@ class BuildPackage:
 
 
 class InputCommit:
-    def GET(self):
-        data = web.input()
+    def POST(self):
+        postData = web.input()
+        data = json.loads(urllib.unquote(postData['data']))
+        return render.inputCommit(data=data)

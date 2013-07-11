@@ -3,6 +3,9 @@
 import web
 from web.contrib.template import render_mako
 from settingsPersonality import getConnection
+import os
+
+os.chdir("/Users/casa/projects/puzzle")
 
 render = render_mako(
                     directories = ['templates'],

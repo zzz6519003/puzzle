@@ -81,8 +81,44 @@ function SelectVersion()
             versionBadgeClicked($(this));
         });
 
+        body.on("click", "#J_inputCommitButton", function(){
+            inputCommitButtonClicked($(this));
+        });
+
         body.on("click", "#J_packageButton", function(){
             packageButtonClicked($(this));
+        });
+    }
+
+    function packageButtonClicked(actionItem){
+        var contentHtml = getContentHtml(actionItem);
+        $.colorbox({
+            html:contentHtml,
+            fastIframe:false,
+            width:"1024px",
+            onComplete:function(){
+
+                var data = getDependencySha1();
+                $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
+
+                //服务器那边是0.3秒读一次文件
+                progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
+
+                setInterval(function(){
+                    var progressBar = $("#J_progressBar");
+                    var currentProgress = progressBar.attr("style");
+
+                    if(currentProgress != "100%"){
+                        $.get(progressNumberUrl, function(data){
+                            $("#J_progressBar").attr("style", "width: "+data);
+                        });
+                    }
+
+                }, 200);
+            },
+            onClosed:function(){
+                window.location.href="/project";
+            },
         });
     }
 
@@ -91,41 +127,40 @@ function SelectVersion()
         return content;
     }
 
-    function packageButtonClicked(actionItem){
-        var contentHtml = getContentHtml(actionItem);
+    function getPackageData(actionItem){
+        var data = {};
+        data['projectId'] = actionItem.context.dataset['projectId'];
+        data['category'] = actionItem.context.dataset['category'];
+        data['version'] = actionItem.context.dataset['version'];
+        data['appName'] = actionItem.context.dataset['appName'];
+        data['projectPath'] = actionItem.context.dataset['projectPath'];
+
+        var type = "dailybuild"
+
+        if(data['category'] == "7"){
+           type = "dailybuild";
+        }
+
+        if(data['category'] == "8"){
+            type = "rc";
+        }
+        data['type'] = type;
+
+        return data;
+    }
+
+    function inputCommitButtonClicked(actionItem){
+        data = getPackageData(actionItem);
 
         $.colorbox({
-            href:"/"
+            href:"/packageBuild/inputCommit",
+            closeButton:false,
+            overlayClose:false,
+            onClosed:function(){
+                window.location.href="/project";
+            },
+            data:{data:JSON.stringify(data)}
         });
-
-        //$.colorbox({
-        //    html:contentHtml,
-        //    fastIframe:false,
-        //    width:"1024px",
-        //    onComplete:function(){
-
-        //        var data = getDependencySha1();
-        //        $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
-
-        //        //服务器那边是0.3秒读一次文件
-        //        progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
-
-        //        setInterval(function(){
-        //            var progressBar = $("#J_progressBar");
-        //            var currentProgress = progressBar.attr("style");
-
-        //            if(currentProgress != "100%"){
-        //                $.get(progressNumberUrl, function(data){
-        //                    $("#J_progressBar").attr("style", "width: "+data);
-        //                });
-        //            }
-
-        //        }, 200);
-        //    },
-        //    onClosed:function(){
-        //        window.location.href="/project";
-        //    },
-        //});
     }
 
     function getContentHtml(actionItem){
@@ -133,7 +168,6 @@ function SelectVersion()
 
         var contentHtml = ""
             +"<div class=\"progress progress-striped active\">"
-            //用来纪念所谓的专家宣布中华民族的伟大复兴进程已经62%了，哈哈哈哈
             +"  <div class=\"bar\" style=\"width: 62%;\" id=\"J_progressBar\"></div>"
             +"</div>"
             +"<iframe src=\""+contentUrl+"\" style=\"width:100%;height:600px\"></iframe>"
@@ -143,29 +177,15 @@ function SelectVersion()
     }
 
     function getContentUrl(actionItem, baseUrl){
-        var projectId = actionItem.context.dataset['projectId'];
-        var category = actionItem.context.dataset['category'];
-        var version = actionItem.context.dataset['version'];
-        var appName = actionItem.context.dataset['appName'];
-        var projectPath = actionItem.context.dataset['projectPath'];
-
-        var type = "dailybuild"
-
-        if(category == "7"){
-            type = "dailybuild";
-        }
-
-        if(category == "8"){
-            type = "rc";
-        }
+        data = getPackageData(actionItem)
 
         var contentUrl = baseUrl
-            +"?projectId="+projectId+"&"
-            +"category="+category+"&"
-            +"version="+version+"&"
-            +"appName="+appName+"&"
-            +"projectPath="+projectPath+"&"
-            +"type="+type
+            +"?projectId="+data['projectId']+"&"
+            +"category="+data['category']+"&"
+            +"version="+data['version']+"&"
+            +"appName="+data['appName']+"&"
+            +"projectPath="+data['projectPath']+"&"
+            +"type="+data['type']
 
         return contentUrl;
     }
@@ -201,6 +221,7 @@ function SelectVersion()
         data['version'] = $("#J_projectInfo")[0].dataset['version'];
         data['appName'] = $("#J_projectInfo")[0].dataset['appName'];
         data['projectPath'] = $("#J_projectInfo")[0].dataset['projectPath'];
+        data['mailContent'] = $("#J_mailContent").val();
 
         data['dependencyArray'] = dependencyArray;
 

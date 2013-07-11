@@ -40,13 +40,13 @@ dependencyInfoArray = packageInfo['dependencyArray']
     <input type="checkbox" id="J_isRelease">release
 </label>
 
-<button id="J_packageButton"
+<button id="J_inputCommitButton"
     data-project-id="${packageInfo['projectId']}"
     data-category="${packageInfo['category']}"
     data-version="${packageInfo['version']}"
     data-app-name="${packageInfo['appName']}"
     data-project-path="${packageInfo['projectPath']}"
->打包</button>
+>开始打包</button>
 
 <%def name="makerow(dependencyDict)">
 <tr>

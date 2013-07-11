@@ -23,20 +23,20 @@ class ShowCmdLog:
         #   'type': u'dailybuild' or u'rc'
 
         web.header('Content-type','text/html')
-        web.header('Transfer-Encoding','chunked')        
+        web.header('Transfer-Encoding','chunked')
 
         filePath = data['projectPath'] + "/output.log"
         jsScrollDown = "<script type=\"text/javascript\">document.body.scrollTop = document.body.scrollHeight</script>"
 
-        #os.system("echo '' > "+filePath)
-        os.system("touch "+filePath)
+        os.system("echo '' > "+filePath)
+        #os.system("touch "+filePath)
 
         f = open(filePath)
 
         for line in f:
             yield "<p>"+line+"</p>"+jsScrollDown
 
-        while 1: 
+        while 1:
             location = f.tell()
             line = f.readline()
             if line:
@@ -45,7 +45,7 @@ class ShowCmdLog:
                     return
                 else:
                     yield "<p>"+line+"</p>"+jsScrollDown
-            else:   
+            else:
                 f.seek(location)
 
 
@@ -62,7 +62,7 @@ class ProgressNumber:
         #   'type': u'dailybuild' or u'rc'
 
         filePath = data['projectPath']+"/progress.log"
-        #os.system("echo '' >> " + filePath)
-        os.system("touch " + filePath)
+        os.system("echo '' > " + filePath)
+        #os.system("touch " + filePath)
         progress = open(filePath).readline()
         return progress

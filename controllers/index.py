@@ -9,7 +9,6 @@ class Index:
     ''' 主页 '''
     def GET(self):
         data['name'] = "hello"
-        Package.sendmailToQA("casa")
         return render.index(data=data)
 
     def POST(self):
