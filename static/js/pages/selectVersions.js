@@ -104,6 +104,7 @@ function SelectVersion()
                 progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
 
                 var intervalId = setInterval(function(){
+
                     var progressBar = $("#J_progressBar");
                     var currentProgress = progressBar.attr("style");
 
@@ -120,12 +121,23 @@ function SelectVersion()
                         if(isNaN(currentProgress)){
                             stop();
                         }else{
-                            if(currentProgress != "00"){
-                                currentProgress+=1;
-                                $("#J_progressBar").attr("style", "width: "+currentProgress.toString()+"%");
+                            if(currentProgress != 100){
+                                currentProgress = parseInt(currentProgress)+1;
+                                progressNumber = currentProgress + "%";
+                                $("#J_progressBar").attr("style", "width: "+progressNumber);
 
                                 $.get(progressNumberUrl, function(data){
-                                    $("#J_progressBar").attr("style", "width: "+data);
+
+                                    currentProgress = parseInt(currentProgress);
+                                    var fetchedProgress = parseInt(data);
+                                    var finallyProgress = "";
+
+                                    if(fetchedProgress < currentProgress){
+                                        finallyProgress = (currentProgress+1)+"%";
+                                    }else{
+                                        finallyProgress = data;
+                                    }
+                                    $("#J_progressBar").attr("style", "width: "+finallyProgress);
                                 });
                             }else{
                                 stop();
@@ -192,7 +204,7 @@ function SelectVersion()
 
         var contentHtml = ""
             +"<div class=\"progress progress-striped active\">"
-            +"  <div class=\"bar\" style=\"width: 62%;\" id=\"J_progressBar\"></div>"
+            +"  <div class=\"bar\" style=\"width: 0%;\" id=\"J_progressBar\"></div>"
             +"</div>"
             +"<iframe src=\""+contentUrl+"\" style=\"width:100%;height:600px\"></iframe>"
             ;

@@ -68,7 +68,7 @@ function AddProject()
             $.post("/project/add", {data:formData});
             var contentHtml = ""
                 +"<div class=\"progress progress-striped active\">"
-                +"  <div class=\"bar\" style=\"width: 62%;\" id=\"J_progressBar\"></div>"
+                +"  <div class=\"bar\" style=\"width: 0%;\" id=\"J_progressBar\"></div>"
                 +"</div>";
 
             $.colorbox({
@@ -99,11 +99,24 @@ function AddProject()
                                 stop();
                             }else{
                                 if(currentProgress != 100){
-                                    currentProgress+=1;
-                                    $("#J_progressBar").attr("style", "width: "+currentProgress.toString()+"%");
+                                    currentProgress = parseInt(currentProgress)+1;
+                                    progressNumber = currentProgress + "%";
+                                    console.log("outer " + progressNumber);
+                                    $("#J_progressBar").attr("style", "width: "+progressNumber);
 
                                     $.post(progressNumberUrl, {data:formData},function(data){
-                                        $("#J_progressBar").attr("style", "width: "+data);
+                                        currentProgress = parseInt(currentProgress);
+                                        var fetchedProgress = parseInt(data);
+                                        var finallyProgress = "";
+
+                                        if(fetchedProgress < currentProgress){
+                                            finallyProgress = (currentProgress+1)+"%";
+                                        }else{
+                                            finallyProgress = data;
+                                        }
+
+                                        console.log("inner " + data);
+                                        $("#J_progressBar").attr("style", "width: "+finallyProgress);
                                     });
                                 }else{
                                     stop();

@@ -17,7 +17,7 @@ class Index:
         #获取当前日期
         import time
         data['currentDate'] = time.strftime('%Y-%m-%d,%A',time.localtime(time.time()))
-        
+
         #获取项目列表
         data['projectList'] = db.select('projectList', order="id ASC", _test=False)
         temp = [];
@@ -66,6 +66,7 @@ class Add:
 
             'openXcode':data['openXcode'],
             'IP':web.ctx.ip,
+            'whoami':"wadecong",
             'version':data['version']
         }
 

@@ -111,5 +111,5 @@ def sendmailToQA(packageInfo):
 
 def getProjectPath(appId, version):
     appInfo = (db.select('appList', where="id="+appId))[0]
-    projectPath = getIosProjectPath(appInfo['appName'], version)
+    projectPath = getIosProjectPath(appInfo['identifier'], version)
     return projectPath

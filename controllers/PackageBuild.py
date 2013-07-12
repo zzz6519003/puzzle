@@ -6,6 +6,7 @@ from iostools.commandLine import *
 import json
 import urllib
 from model import Package as PackageModel
+import os
 
 data = {'pageIndex':'project'}
 render = settings.render
@@ -72,6 +73,8 @@ class BuildPackage:
         """
         postData = web.input()
         data = json.loads(urllib.unquote(postData['data']));
+        print data
+        os.system("echo '0%' > " + data['projectPath']+"/progress.log")
         PackageModel.buildPackage(data)
         pass
 
