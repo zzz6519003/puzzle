@@ -25,4 +25,5 @@ urls = (
 
         "/showCmdLog", pre_fix + "BuildProgress.ShowCmdLog",
         "/progressNumber", pre_fix + "BuildProgress.ProgressNumber",
+        "/initProjectProgress", pre_fix + "BuildProgress.InitProjectProgressBar",
         )

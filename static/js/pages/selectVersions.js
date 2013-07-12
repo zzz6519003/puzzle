@@ -101,20 +101,44 @@ function SelectVersion()
                 var data = getDependencySha1();
                 $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
 
-                //服务器那边是0.3秒读一次文件
                 progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
 
-                setInterval(function(){
+                var intervalId = setInterval(function(){
                     var progressBar = $("#J_progressBar");
                     var currentProgress = progressBar.attr("style");
 
-                    if(currentProgress != "100%"){
-                        $.get(progressNumberUrl, function(data){
-                            $("#J_progressBar").attr("style", "width: "+data);
-                        });
-                    }
+                    if(typeof currentProgress == "undefined"){
+                        stop();
+                    }else{
+                        currentProgress = currentProgress.match(/\d+/);
+                        if(currentProgress){
+                            currentProgress = currentProgress[0];
+                        }else{
+                            stop();
+                        }
 
-                }, 200);
+                        if(isNaN(currentProgress)){
+                            stop();
+                        }else{
+                            if(currentProgress != "00"){
+                                currentProgress+=1;
+                                $("#J_progressBar").attr("style", "width: "+currentProgress.toString()+"%");
+
+                                $.get(progressNumberUrl, function(data){
+                                    $("#J_progressBar").attr("style", "width: "+data);
+                                });
+                            }else{
+                                stop();
+                            }
+                        }
+                    }
+                }, 500);
+
+                function stop(){
+                    $.colorbox.close();
+                    clearInterval(intervalId);
+                }
+
             },
             onClosed:function(){
                 window.location.href="/project";

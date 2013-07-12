@@ -63,10 +63,63 @@ function AddProject()
 
     function submitButtonClicked(actionItem){
         if(isAvailable()){
-            var data = generateFormData();
-            data = JSON.stringify(data);
-            $.post("/project/add", {data:data}).done(function(){
-                window.location.href="/project";
+            var formData = generateFormData();
+            formData = JSON.stringify(formData);
+            $.post("/project/add", {data:formData});
+            var contentHtml = ""
+                +"<div class=\"progress progress-striped active\">"
+                +"  <div class=\"bar\" style=\"width: 62%;\" id=\"J_progressBar\"></div>"
+                +"</div>";
+
+            $.colorbox({
+                html:contentHtml,
+                fastIframe:false,
+                width:"1024px",
+                overlayClose:false,
+                escKey:false,
+                closeButton:false,
+                onComplete:function(){
+                    progressNumberUrl = "/initProjectProgress";
+
+                    var intervalId = setInterval(function(){
+                        var progressBar = $("#J_progressBar");
+                        var currentProgress = progressBar.attr("style");
+
+                        if(typeof currentProgress == "undefined"){
+                            stop();
+                        }else{
+                            currentProgress = currentProgress.match(/\d+/);
+                            if(currentProgress){
+                                currentProgress = currentProgress[0];
+                            }else{
+                                stop();
+                            }
+
+                            if(isNaN(currentProgress)){
+                                stop();
+                            }else{
+                                if(currentProgress != 100){
+                                    currentProgress+=1;
+                                    $("#J_progressBar").attr("style", "width: "+currentProgress.toString()+"%");
+
+                                    $.post(progressNumberUrl, {data:formData},function(data){
+                                        $("#J_progressBar").attr("style", "width: "+data);
+                                    });
+                                }else{
+                                    stop();
+                                }
+                            }
+                        }
+                    }, 1000);
+
+                    function stop(){
+                        clearInterval(intervalId);
+                        window.location.href="/project";
+                    }
+                },
+                onClosed:function(){
+                    window.location.href="/project";
+                }
             });
         }
     }

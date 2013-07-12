@@ -4,6 +4,9 @@ from config import settings
 import web
 import time
 import os
+import json
+import urllib
+from model import Package as PackageModel
 
 data = {'pageIndex':'project'}
 render = settings.render
@@ -62,6 +65,17 @@ class ProgressNumber:
         #   'type': u'dailybuild' or u'rc'
 
         filePath = data['projectPath']+"/progress.log"
+        os.system("touch " + filePath)
+        progress = open(filePath).readline()
+        return progress
+
+class InitProjectProgressBar:
+    def POST(self):
+        postData = web.input()
+        data = json.loads(urllib.unquote(postData['data']));
+        print data
+        projectPath = PackageModel.getProjectPath(data['appId'], data['version'])
+        filePath = projectPath + "/init_progress.log"
         os.system("touch " + filePath)
         progress = open(filePath).readline()
         return progress

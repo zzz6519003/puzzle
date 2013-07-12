@@ -107,3 +107,9 @@ def sendmailToQA(packageInfo):
         print e
     print "success"
     pass
+
+
+def getProjectPath(appId, version):
+    appInfo = (db.select('appList', where="id="+appId))[0]
+    projectPath = getIosProjectPath(appInfo['appName'], version)
+    return projectPath
