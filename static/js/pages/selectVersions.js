@@ -291,7 +291,7 @@ function SelectVersion()
             data['channelIdList'].push($(value).val());
         });
 
-        data['username'] = $.cookie("puzzleUsername");
+        data['whoami'] = $.cookie("puzzleUsername");
         data['projectPath'] = $.cookie("puzzleProjectPath");
 
         if(typeof(data['username']) == "undefined" || typeof(data['projectPath']) == "undefined"){
