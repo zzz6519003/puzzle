@@ -17,7 +17,7 @@
 			<tr>
 				<th>序号</th>
 				<th>应用名称</th>
-				<th>项目标识</th>
+				<th>版本号</th>
 				<th>最后提交时间</th>
 				<th>SHA1</th>
 				<th>操作</th>
@@ -29,15 +29,9 @@
 			<tr>
 				<td>${item['id']}</td>
 				<td>${item['projectName']}</td>
-				<td>12ffdede34343</td>
+                <td>${item['version']}</td>
 				<td>${item['lastUpdate']}</td>
-                <!--
-				<td>12ffdede34343</td>
-				<td>item['identifier']}</td>
-				<td>12ffdede34343</td>
-				<td>12ffdede34343</td>
-                -->
-				<td>12ffdede34343</td>
+                <td>${item['sha1']}</td>
                 <td><button class='btn btn-success J_operationButton' type='button' data-id="${item['id']}">操作</button></td>
 			</tr>
 			% endfor
