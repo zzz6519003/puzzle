@@ -92,12 +92,43 @@ function TimeLine()
         $("#J_copyProject").on('click', function(){
             copyProjectButtonClicked($(this));
         });
+
+        $("#J_setupButton").on('click', function(){
+            setupButtonClicked($(this));
+        })
+    }
+
+    function setupButtonClicked(actionItem){
+        var contentHtml = $("#J_templateSetup").html();
+        var username = "";
+        var projectPath = "";
+
+        if(typeof($.cookie("puzzleUsername") != "undefined") && typeof($.cookie("puzzleProjectPath") != "undefined")){
+            username = $.cookie("puzzleUsername");
+            projectPath = $.cookie("puzzleProjectPath");
+        }
+
+        contentHtml = contentHtml.replace(/__username__/g, username);
+        contentHtml = contentHtml.replace(/__projectPath__/g, projectPath);
+
+        $.colorbox({
+            html:contentHtml,
+            onCleanup:function(){
+                var username = $("#cboxContent #J_setupUsername").val();
+                var projectPath = $("#cboxContent #J_setupProjectPath").val();
+
+                if(username != '' && projectPath != ''){
+                    $.cookie('puzzleUsername', username, {expires:365});
+                    $.cookie('puzzleProjectPath', projectPath, {expires:365});
+                }
+            }
+        });
     }
 
     function copyProjectButtonClicked(actionItem){
         var projectId = actionItem.context.dataset['projectId'];
         $.post("/packageBuild/copyProject", {projectId:projectId}, function(data){
-            alert(data);
+            alert("还没写好呢");
         });
     }
 

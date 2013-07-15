@@ -111,71 +111,76 @@ function SelectVersion()
     }
 
     function packageButtonClicked(actionItem){
-        var contentHtml = getContentHtml(actionItem);
-        $.colorbox({
-            html:contentHtml,
-            fastIframe:false,
-            width:"1024px",
-            onComplete:function(){
+        var data = getDependencySha1();
+        if(data){
+            var contentHtml = getContentHtml(actionItem);
+            $.colorbox({
+                html:contentHtml,
+                fastIframe:false,
+                width:"1024px",
+                onComplete:function(){
 
-                var data = getDependencySha1();
-                $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
+                    var data = getDependencySha1();
+                    $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
 
-                progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
+                    progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
 
-                var intervalId = setInterval(function(){
+                    var intervalId = setInterval(function(){
 
-                    var progressBar = $("#J_progressBar");
-                    var currentProgress = progressBar.attr("style");
+                        var progressBar = $("#J_progressBar");
+                        var currentProgress = progressBar.attr("style");
 
-                    if(typeof currentProgress == "undefined"){
-                        stop();
-                    }else{
-                        currentProgress = currentProgress.match(/\d+/);
-                        if(currentProgress){
-                            currentProgress = currentProgress[0];
-                        }else{
-                            stop();
-                        }
-
-                        if(isNaN(currentProgress)){
+                        if(typeof currentProgress == "undefined"){
                             stop();
                         }else{
-                            if(currentProgress != 100){
-                                currentProgress = parseInt(currentProgress)+1;
-                                progressNumber = currentProgress + "%";
-                                $("#J_progressBar").attr("style", "width: "+progressNumber);
-
-                                $.get(progressNumberUrl, function(data){
-
-                                    currentProgress = parseInt(currentProgress);
-                                    var fetchedProgress = parseInt(data);
-                                    var finallyProgress = "";
-
-                                    if(fetchedProgress < currentProgress){
-                                        finallyProgress = (currentProgress+1)+"%";
-                                    }else{
-                                        finallyProgress = data;
-                                    }
-                                    $("#J_progressBar").attr("style", "width: "+finallyProgress);
-                                });
+                            currentProgress = currentProgress.match(/\d+/);
+                            if(currentProgress){
+                                currentProgress = currentProgress[0];
                             }else{
                                 stop();
                             }
+
+                            if(isNaN(currentProgress)){
+                                stop();
+                            }else{
+                                if(currentProgress != 100){
+                                    currentProgress = parseInt(currentProgress)+1;
+                                    progressNumber = currentProgress + "%";
+                                    $("#J_progressBar").attr("style", "width: "+progressNumber);
+
+                                    $.get(progressNumberUrl, function(data){
+
+                                        currentProgress = parseInt(currentProgress);
+                                        var fetchedProgress = parseInt(data);
+                                        var finallyProgress = "";
+
+                                        if(fetchedProgress < currentProgress){
+                                            finallyProgress = (currentProgress+1)+"%";
+                                        }else{
+                                            finallyProgress = data;
+                                        }
+                                        $("#J_progressBar").attr("style", "width: "+finallyProgress);
+                                    });
+                                }else{
+                                    stop();
+                                }
+                            }
                         }
+                    }, 500);
+
+                    function stop(){
+                        $.colorbox.close();
+                        clearInterval(intervalId);
                     }
-                }, 500);
 
-                function stop(){
-                    $.colorbox.close();
-                    clearInterval(intervalId);
-                }
-
-            },
-            onClosed:function(){
-                window.location.href="/project";
-            },
-        });
+                },
+                onClosed:function(){
+                    window.location.href="/project";
+                },
+            });
+        }else{
+            alert("看右边");
+        }
     }
 
     function returnTipContent(actionItem){
@@ -285,6 +290,14 @@ function SelectVersion()
         $(".J_channelBox:checked").each(function(index, value){
             data['channelIdList'].push($(value).val());
         });
+
+        data['username'] = $.cookie("puzzleUsername");
+        data['projectPath'] = $.cookie("puzzleProjectPath");
+
+        if(typeof(data['username']) == "undefined" || typeof(data['projectPath']) == "undefined"){
+            warningPopout("去时间轴那儿设置用户名和项目路径去，赶紧的。");
+            return false;
+        }
 
         return data;
     } 
