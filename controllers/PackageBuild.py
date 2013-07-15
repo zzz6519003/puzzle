@@ -87,3 +87,9 @@ class InputCommit:
         postData = web.input()
         data = json.loads(urllib.unquote(postData['data']))
         return render.inputCommit(data=data)
+
+
+class CopyProject:
+    def POST(self):
+        projectId = (web.input())['projectId']
+        return projectId

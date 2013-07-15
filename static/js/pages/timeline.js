@@ -83,6 +83,17 @@ function TimeLine()
         $(".J_event").on('click', function(){
             timelineEventClicked($(this));
         });
+
+        $("#J_copyProject").on('click', function(){
+            copyProjectButtonClicked($(this));
+        });
+    }
+
+    function copyProjectButtonClicked(actionItem){
+        var projectId = actionItem.context.dataset['projectId'];
+        $.post("/packageBuild/copyProject", {projectId:projectId}, function(data){
+            alert(data);
+        });
     }
 
     function timelineEventClicked(actionItem){

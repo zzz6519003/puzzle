@@ -22,6 +22,7 @@ urls = (
         "/packageBuild/selectVersions", pre_fix + "PackageBuild.SelectVersions",
         "/packageBuild/buildPackage", pre_fix + "PackageBuild.BuildPackage",
         "/packageBuild/inputCommit", pre_fix + "PackageBuild.InputCommit",
+        "/packageBuild/copyProject", pre_fix + "PackageBuild.CopyProject",
 
         "/showCmdLog", pre_fix + "BuildProgress.ShowCmdLog",
         "/progressNumber", pre_fix + "BuildProgress.ProgressNumber",

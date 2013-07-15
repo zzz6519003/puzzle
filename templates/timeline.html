@@ -57,6 +57,7 @@ import time
         '9' : "真机",
         '10': "Release"
     }
+    lastItem = None
 %>
 
 <div>
@@ -64,6 +65,9 @@ import time
         <ol class="timeline" id="J_timeLine">
 
             % for item in data['eventList']:
+            <%
+                lastItem = item
+            %>
             <li>
             <i class="line"></i>
             <div class="detail J_event" data-id="${item['id']}" data-project-id="${item['projectId']}" data-category="${item['category']}" data-time="${item['startDate']}">
@@ -83,6 +87,8 @@ import time
 
         </ol>
     </div>
+
+    <button id="J_copyProject" data-project-id="${lastItem['projectId']}">复制项目到本地</button>
 
     <div class="left selfcontent" id="J_eventContent">
     </div>
