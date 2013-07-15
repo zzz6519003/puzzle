@@ -66,7 +66,8 @@ class Add:
 
             'openXcode':data['openXcode'],
             'IP':web.ctx.ip,
-            'whoami':"wadecong",
+            'whoami':data['whoami'],
+            'projectPath':data["projectPath"],
             'version':data['version']
         }
 

@@ -112,6 +112,7 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var data = getDependencySha1();
+        console.log(data);
         if(data){
             var contentHtml = getContentHtml(actionItem);
             $.colorbox({
@@ -290,14 +291,6 @@ function SelectVersion()
         $(".J_channelBox:checked").each(function(index, value){
             data['channelIdList'].push($(value).val());
         });
-
-        data['whoami'] = $.cookie("puzzleUsername");
-        data['projectPath'] = $.cookie("puzzleProjectPath");
-
-        if(typeof(data['username']) == "undefined" || typeof(data['projectPath']) == "undefined"){
-            warningPopout("去时间轴那儿设置用户名和项目路径去，赶紧的。");
-            return false;
-        }
 
         return data;
     } 

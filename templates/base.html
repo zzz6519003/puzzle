@@ -50,7 +50,6 @@ if data == None:
         <!-- JGrowl -->
         <link href="/static/js/plugins/jgrowl/jquery.jgrowl.min.css" rel="stylesheet">
         <script type="text/javascript" src="/static/js/plugins/jgrowl/jquery.jgrowl.min.js"></script>
-        <script type="text/javascript" src="/static/js/pages/common/notice.js"></script>
 
         <!-- colorbox -->
         <link href="/static/js/plugins/colorbox/colorbox.css" rel="stylesheet">
@@ -59,6 +58,10 @@ if data == None:
         <!-- tinytips -->
         <link href="/static/js/plugins/tinytip/tinyTips.css" rel="stylesheet">
         <script type="text/javascript" src="/static/js/plugins/tinytip/jquery.tinyTips.js"></script>
+
+        <!-- common -->
+        <script type="text/javascript" src="/static/js/pages/common/notice.js"></script>
+        <script type="text/javascript" src="/static/js/pages/common/main.js"></script>
 
 	 	${self.header()}
     </head>
@@ -73,6 +76,7 @@ if data == None:
                     <div class="nav-collapse collapse">
                         <p class="navbar-text pull-right">
                         Logged in as <a href="#" class="navbar-link">LenyeMeng</a>
+                        <button id="J_setupButton">setup</button>
                         </p>
                         <ul class="nav">
 
@@ -107,6 +111,7 @@ if data == None:
 
         ${self.body()}
 
+        <%include file='components/setupUsernameAndPath.html'/>
     </div>
     <footer>
     <p>&copy; Anjuke Inc iOS Development Department 2013</p>

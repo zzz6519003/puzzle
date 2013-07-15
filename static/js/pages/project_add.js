@@ -194,6 +194,15 @@ function AddProject()
 
         data['openXcode'] = $("#J_openXcode")[0].checked;
 
+        data['whoami'] = $.cookie("puzzleUsername");
+        data['projectPath'] = $.cookie("puzzleProjectPath");
+
+        if(typeof(data['whoami']) == "undefined" || typeof(data['projectPath']) == "undefined"){
+            console.log("no username and project path");
+            warningPopout("去时间轴那儿设置用户名和项目路径去，赶紧的。");
+            return false;
+        }
+
         return data;
     }
 
@@ -211,6 +220,12 @@ function AddProject()
                 }
             }
         });
+
+        if(typeof($.cookie("puzzleUsername")) == "undefined" || typeof($.cookie("puzzleProjectPath")) == "undefined"){
+            console.log("no username and project path");
+            warningPopout("去时间轴那儿设置用户名和项目路径去，赶紧的。");
+            return false;
+        }
 
         return result;
     }
