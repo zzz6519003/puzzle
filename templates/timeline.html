@@ -41,6 +41,7 @@ import time
     .past {background-color:lightgray;}
     .today {background-color:lightyellow;}
     .current {background-color:lightgreen;}
+    #J_buttons {left:1250px;}
 </style>
 <br>
 
@@ -88,7 +89,9 @@ import time
         </ol>
     </div>
 
-    <button id="J_copyProject" data-project-id="${lastItem['projectId']}">复制项目到本地</button>
+    <div id="J_buttons">
+        <button id="J_copyProject" class="left" data-project-id="${lastItem['projectId']}">复制项目到本地</button>
+    </div>
 
     <div class="left selfcontent" id="J_eventContent">
     </div>
