@@ -11,7 +11,7 @@ function dailyBuildButtonClicked(actionItem){
     gotoSelectVersion(actionItem);
 }
 
-//this is the public function which will call by release.js
+//this is the public function which will be called by release.js
 function gotoSelectVersion(actionItem){
     var projectId = actionItem.context.dataset['projectId'];
     var category = actionItem.context.dataset['category'];

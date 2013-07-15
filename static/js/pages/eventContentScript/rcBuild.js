@@ -7,5 +7,5 @@
 })();
 
 function rcBuildButtonClicked(actionItem){
-    alert("project id is "+actionItem.attr("data-project-id"));
+    gotoSelectVersion(actionItem);
 }
