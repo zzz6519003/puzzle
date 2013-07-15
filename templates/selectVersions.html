@@ -26,6 +26,10 @@ dependencyInfoArray = packageInfo['dependencyArray']
     data-project-path="${packageInfo['projectPath']}"
 ></span>
 
+% if packageInfo['category'] == '100' :
+    ${selectChannelId()}
+% endif
+
 <table cellpadding="20">
     <tr>
         <th>依赖包名字</th>
@@ -67,6 +71,19 @@ dependencyInfoArray = packageInfo['dependencyArray']
         % endfor
     </td>
 </tr>
+</%def>
+
+<%def name="selectChannelId()">
+<div>
+    <%
+    channelArray = ['A%02d'%a for a in range(14)]
+    %>
+    <p>选择渠道号:</p>
+
+    % for channel in channelArray:
+    <input type="checkbox" class="J_channelBox" value="${channel}">${channel}
+    % endfor
+</div>
 </%def>
 
 </%block>

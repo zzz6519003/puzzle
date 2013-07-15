@@ -14,6 +14,16 @@ function SelectVersion()
 
     function configuration(){
         configVersionBadge();
+        configCheckBox();
+    }
+
+    function configCheckBox(){
+        $(".J_channelBox").each(function(index, value){
+            item = $(value);
+            if(item.val() == "A00" || item.val() == "A01" || item.val() == "A02" || item.val() == "A08"){
+                item[0].checked = true;
+            }
+        });
     }
 
     function cleanBadgeState(actionItem){
@@ -88,6 +98,16 @@ function SelectVersion()
         body.on("click", "#J_packageButton", function(){
             packageButtonClicked($(this));
         });
+
+        body.on("click", ".J_channelBox", function(){
+            channelBoxChanged($(this));
+        });
+    }
+
+    function channelBoxChanged(actionItem){
+        if($(".J_channelBox:checked").length == 0){
+            actionItem[0].checked = true;
+        }
     }
 
     function packageButtonClicked(actionItem){
@@ -260,6 +280,11 @@ function SelectVersion()
         data['mailContent'] = $("#J_mailContent").val();
 
         data['dependencyArray'] = dependencyArray;
+
+        data['channelIdList'] = [];
+        $(".J_channelBox:checked").each(function(index, value){
+            data['channelIdList'].push($(value).val());
+        });
 
         return data;
     } 

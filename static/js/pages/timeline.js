@@ -147,9 +147,9 @@ function TimeLine()
     }
 
     function replaceHtml(actionItem, contentHtml){
-        contentHtml = contentHtml.replace("__project_id__", actionItem.context.dataset['projectId']);
-        contentHtml = contentHtml.replace("__category__", actionItem.context.dataset['category']);
-        contentHtml = contentHtml.replace("__time__", actionItem.context.dataset['time']);
+        contentHtml = contentHtml.replace(/__project_id__/g, actionItem.context.dataset['projectId']);
+        contentHtml = contentHtml.replace(/__category__/g, actionItem.context.dataset['category']);
+        contentHtml = contentHtml.replace(/__time__/g, actionItem.context.dataset['time']);
         $("#J_eventContent").html(contentHtml);
     }
 }

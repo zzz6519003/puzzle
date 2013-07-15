@@ -1,11 +1,36 @@
 (function(){
-    var body = $("body");
-
-    body.on("click", "#J_releaseButton", function(){
-        releaseButtonClicked($(this));
-    });
+    var release = new Release();
+    release.init();
 })();
 
-function releaseButtonClicked(actionItem){
-    alert("project id is "+actionItem.attr("data-project-id"));
+function Release(){
+    var body = $("body");
+
+    this.init = function(){
+        bindEvent();
+    }
+
+    function bindEvent(){
+        body.on("click", "#J_RTreleaseButton", function(){
+            releaseButtonClicked($(this));
+        });
+
+        body.on("click", "#J_RTchannelButton", function(){
+            channelButtonClicked($(this));
+        })
+    }
+
+    function channelButtonClicked(actionItem){
+        var projectId = actionItem.context.dataset['projectId'];
+        var category = actionItem.context.dataset['category'];
+        gotoSelectVersion(actionItem);
+    }
+
+    function releaseButtonClicked(actionItem){
+        var projectId = actionItem.context.dataset['projectId'];
+        var category = actionItem.context.dataset['category'];
+        gotoSelectVersion(actionItem);
+    }
 }
+
+
