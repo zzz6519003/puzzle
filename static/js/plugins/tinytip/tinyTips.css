@@ -1,5 +1,6 @@
 ﻿@charset "utf-8";
 
+/*
 html							{ margin: 0; padding: 0; font-family: "Lucida Sans Unicode"; font-size: 14px; line-height: 21px; color: #373737; background: #e3e3e3; }
 body							{ margin: 0; padding: 0; }
 p									{ color: #373737; }
@@ -7,6 +8,7 @@ a									{ color: #000000; }
 h1								{ text-align: center; line-height: 15px; padding: 0 0 20px 0; letter-spacing: -2px; }
 .massive					{ font-size: 72px; line-height: 10px; padding: 0; letter-spacing: -6px; color: #93d700; }
 #demo_wrapper			{ width: 600px; margin: 30px auto 0 auto; }
+*/
 
 /* Tooltip style */
 #tinytip					{ position: absolute; display: block; top: 0; left: 0; max-width: 450px; color: #ffffff; font-size: 11px; display: block; z-index: 100; background: rgba(0, 0, 0, 0.8); border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; padding: 5px 8px 5px 8px; line-height: 14px; }
