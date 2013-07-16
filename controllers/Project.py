@@ -49,7 +49,7 @@ class Add:
 
         print data
 
-        lastInsertedId = db.insert('projectList', projectName=data['projectName'], appId=data['appId'], lastUpdate=time.time(), created=time.time(), version=data['version'])
+        lastInsertedId = db.insert('projectList', projectName=data['projectName'], appId=data['appId'], lastUpdate=time.time(), created=time.time(), version=data['version'], pmtId=data['pmtId'])
 
         for eventItem in data['eventList']:
             category = (eventItem.keys())[0]
