@@ -19,7 +19,7 @@ class Index:
         data['currentDate'] = time.strftime('%Y-%m-%d,%A',time.localtime(time.time()))
 
         #获取项目列表
-        data['projectList'] = db.select('projectList', order="id ASC", _test=False)
+        data['projectList'] = db.select('projectList', order="id DESC", _test=False)
         temp = [];
         for item in data['projectList']:
             item['lastUpdate'] = time.strftime('%Y-%m-%d,%H:%M',time.localtime(item['lastUpdate']))
@@ -67,7 +67,7 @@ class Add:
             'openXcode':data['openXcode'],
             'IP':web.ctx.ip,
             'whoami':data['whoami'],
-            'projectPath':data["projectPath"],
+            'clientProjectPath':data["clientProjectPath"],
             'version':data['version']
         }
 

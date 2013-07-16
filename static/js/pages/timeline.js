@@ -6,6 +6,8 @@ $(document).ready(function(){
 
 function TimeLine()
 {
+    var body = $("body");
+
     this.init = function(){
         //confiuration 必须要在事件绑定的后面
         bindEvent();
@@ -80,23 +82,33 @@ function TimeLine()
     }
 
     function bindEvent(){
-        $(".J_event").on('click', function(){
+        body.on('click', '.J_event', function(){
             timelineEventClicked($(this));
         });
 
-        $("#J_copyProject").on('click', function(){
+        body.on('click', '#J_copyProject', function(){
             copyProjectButtonClicked($(this));
         });
 
     }
 
-
-
     function copyProjectButtonClicked(actionItem){
-        var projectId = actionItem.context.dataset['projectId'];
-        $.post("/packageBuild/copyProject", {projectId:projectId}, function(data){
-            alert("还没写好呢");
-        });
+        var data = {
+            projectId:actionItem.context.dataset['projectId'],
+            whoami:$.cookie("puzzleUsername"),
+            clientProjectPath:$.cookie("puzzleProjectPath")
+        };
+
+        if(typeof(data['whoami']) != "undefined" && typeof(data['clientProjectPath']) != "undefined"){
+            var originHtml = actionItem[0].outerHTML;
+            var contentHtml = "<img src=\"/static/img/waiting.gif\" id=\"J_waiting\">";
+            actionItem[0].outerHTML = contentHtml;
+            $.post("/packageBuild/copyProject", {data:JSON.stringify(data)}, function(data){
+                $("#J_waiting")[0].outerHTML = originHtml;
+            });
+        }else{
+            warningPopout("不知道你是谁，也不知道你要把项目放在哪儿。");
+        }
     }
 
     function timelineEventClicked(actionItem){

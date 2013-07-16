@@ -91,5 +91,16 @@ class InputCommit:
 
 class CopyProject:
     def POST(self):
-        projectId = (web.input())['projectId']
-        return projectId
+        postData = web.input()
+        data = json.loads(urllib.unquote(postData['data']))
+        projectPath = (db.select("projectList", where="id = "+data['projectId']))[0]['projectPath']
+
+        projectInfo = {
+            "serverProjectPath": projectPath,
+            "clientProjectPath": data['clientProjectPath'],
+            "whoAmI": data['whoami'],
+            "IP": web.ctx.ip
+        }
+
+        scpProject(projectInfo)
+        return "呵呵"

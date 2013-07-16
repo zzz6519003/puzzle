@@ -195,7 +195,7 @@ function AddProject()
         data['openXcode'] = $("#J_openXcode")[0].checked;
 
         data['whoami'] = $.cookie("puzzleUsername");
-        data['projectPath'] = $.cookie("puzzleProjectPath");
+        data['clienProjectPath'] = $.cookie("puzzleProjectPath");
 
         if(typeof(data['whoami']) == "undefined" || typeof(data['projectPath']) == "undefined"){
             console.log("no username and project path");
