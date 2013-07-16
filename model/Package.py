@@ -85,6 +85,7 @@ def sendmailToQA(packageInfo):
         mail.to = "weiyutian@anjuke.com , wadecong@anjuke.com"
         mail.encoding = "utf-8"
         mail.plain = packageInfo['mailContent']
+        #mail.plain = "here"
         #mail.author = "casa"
         mail.send()
     except Exception, e:
