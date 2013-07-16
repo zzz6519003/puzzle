@@ -47,6 +47,8 @@ class Add:
         postData = web.input();
         data = json.loads(urllib.unquote(postData['data']));
 
+        print data
+
         lastInsertedId = db.insert('projectList', projectName=data['projectName'], appId=data['appId'], lastUpdate=time.time(), created=time.time(), version=data['version'])
 
         for eventItem in data['eventList']:

@@ -162,16 +162,15 @@ function SelectVersion()
                                         }
                                         $("#J_progressBar").attr("style", "width: "+finallyProgress);
                                     });
-                                }else{
-                                    stop();
                                 }
                             }
                         }
                     }, 500);
 
                     function stop(){
-                        $.colorbox.close();
-                        clearInterval(intervalId);
+                        //$.colorbox.close();
+                     
+                        //clearInterval(intervalId);
                     }
 
                 },

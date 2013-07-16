@@ -102,5 +102,5 @@ class CopyProject:
             "IP": web.ctx.ip
         }
 
-        scpProject(projectInfo)
+        scpFromServerToClient(projectInfo)
         return "呵呵"
