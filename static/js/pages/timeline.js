@@ -21,7 +21,7 @@ function TimeLine()
     }
 
     function setupButtons(){
-        $("#J_buttons").sticky({topSpacing:100, width:'1300px'});
+        //$("#J_buttons").sticky({topSpacing:100, width:'1300px'});
     }
 
     function setupEventContent(){
