@@ -5,7 +5,7 @@ from web.contrib.template import render_mako
 from settingsPersonality import getConnection
 import os
 
-os.chdir("/Users/casa/projects/puzzle")
+os.chdir("/Users/anjuke/project/puzzle")
 
 render = render_mako(
                     directories = ['templates'],

@@ -112,7 +112,6 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var data = getDependencySha1();
-        console.log(data);
         if(data){
             var contentHtml = getContentHtml(actionItem);
             $.colorbox({
@@ -165,7 +164,7 @@ function SelectVersion()
                                 }
                             }
                         }
-                    }, 500);
+                    }, 2000);
 
                     function stop(){
                         //$.colorbox.close();
