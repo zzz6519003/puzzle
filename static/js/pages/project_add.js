@@ -74,11 +74,12 @@ function AddProject()
     function submitButtonClicked(actionItem){
         if(isAvailable()){
             var formData = generateFormData();
-            formData = JSON.stringify(formData);
-            $.post("/project/add", {data:formData});
+            $.post("/project/add", {data:JSON.stringify(formData)});
             var contentHtml = ""
-                +"<div class=\"progress progress-striped active\">"
-                +"  <div class=\"bar\" style=\"width: 0%;\" id=\"J_progressBar\"></div>"
+                +"<div id=\"J_progressContent\">"
+                +"  <div class=\"progress progress-striped active\">"
+                +"    <div class=\"bar\" style=\"width: 0%;\" id=\"J_progressBar\"></div>"
+                +"  </div>"
                 +"</div>";
 
             $.colorbox({
@@ -137,7 +138,20 @@ function AddProject()
 
                     function stop(){
                         clearInterval(intervalId);
-                        window.location.href="/project";
+
+                        if(formData['openXcode']){
+                            window.location.href="/project";
+                        }else{
+                            var appName = formData['appName'];
+                            var version = formData['version'];
+                            var url = "/project/initScript?"
+                                +"appName="+appName
+                                +"&version="+version
+
+                            $.get(url, function(contentHtml){
+                                $("#J_progressContent").html(contentHtml);
+                            });
+                        }
                     }
                 },
                 onClosed:function(){
