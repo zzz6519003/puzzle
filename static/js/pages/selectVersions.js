@@ -122,7 +122,8 @@ function SelectVersion()
                 onComplete:function(){
 
                     var data = getDependencySha1();
-                    $.post("/packageBuild/buildPackage", {data:JSON.stringify(data)});
+                    var jsonData = $.toJSON(data);
+                    $.post("/packageBuild/buildPackage", {data:jsonData});
 
                     progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
 
@@ -169,7 +170,6 @@ function SelectVersion()
 
                     function stop(){
                         //$.colorbox.close();
-                     
                         //clearInterval(intervalId);
                     }
 

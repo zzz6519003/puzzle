@@ -140,9 +140,8 @@ function AddProject()
 
                     function stop(){
                         clearInterval(intervalId);
-
                         if(formData['openXcode']){
-                            window.location.href="/project";
+                            //window.location.href="/project";
                         }else{
                             var appName = formData['appName'];
                             var version = formData['version'];
