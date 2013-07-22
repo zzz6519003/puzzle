@@ -112,6 +112,7 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var data = getDependencySha1();
+        var intervalId = 0;
         if(data){
             var contentHtml = getContentHtml(actionItem);
             $.colorbox({
@@ -125,7 +126,7 @@ function SelectVersion()
 
                     progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
 
-                    var intervalId = setInterval(function(){
+                    intervalId = setInterval(function(){
 
                         var progressBar = $("#J_progressBar");
                         var currentProgress = progressBar.attr("style");
@@ -168,12 +169,13 @@ function SelectVersion()
 
                     function stop(){
                         //$.colorbox.close();
-                     
                         //clearInterval(intervalId);
                     }
 
                 },
                 onClosed:function(){
+                    $.colorbox.close();
+                    clearInterval(intervalId);
                     window.location.href="/project";
                 },
             });
@@ -289,6 +291,8 @@ function SelectVersion()
         $(".J_channelBox:checked").each(function(index, value){
             data['channelIdList'].push($(value).val());
         });
+
+        console.log(data);
 
         return data;
     } 

@@ -70,6 +70,10 @@ def sendmailToQA(packageInfo):
     from turbomail import Message, interface
 
     print "sending email"
+    print "here is packageInfo"
+    print packageInfo
+    print "packageInfo done"
+
     try:
         mail_config = {
             'mail.on':True,
