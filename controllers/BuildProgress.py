@@ -72,6 +72,7 @@ class ProgressNumber:
 class InitProjectProgressBar:
     def POST(self):
         postData = web.input()
+        print postData
         data = json.loads(urllib.unquote(postData['data']));
         print data
         projectPath = PackageModel.getProjectPath(data['appId'], data['version'])

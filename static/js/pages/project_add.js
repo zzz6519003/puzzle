@@ -74,7 +74,9 @@ function AddProject()
     function submitButtonClicked(actionItem){
         if(isAvailable()){
             var formData = generateFormData();
-            $.post("/project/add", {data:JSON.stringify(formData)});
+            //var jsonData = JSON.stringify(formData);
+            var jsonData = $.toJSON(formData);
+            $.post("/project/add", {data:jsonData});
             var contentHtml = ""
                 +"<div id=\"J_progressContent\">"
                 +"  <div class=\"progress progress-striped active\">"
@@ -115,7 +117,7 @@ function AddProject()
                                     console.log("outer " + progressNumber);
                                     $("#J_progressBar").attr("style", "width: "+progressNumber);
 
-                                    $.post(progressNumberUrl, {data:formData},function(data){
+                                    $.post(progressNumberUrl, {data:jsonData},function(data){
                                         currentProgress = parseInt(currentProgress);
                                         var fetchedProgress = parseInt(data);
                                         var finallyProgress = "";
