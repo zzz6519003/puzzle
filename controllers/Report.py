@@ -23,6 +23,7 @@ class Index:
         for project in project_list:
             pmt_id = project['pmtId']
             data['project_bug'][pmt_id] = {}
+            data['project_bug'][pmt_id] = {'name':project['projectName']}
             data['project_bug'][pmt_id]['count'] = puzzle_db.select('rp_projectbug',where ='pmtId = $pmt_id',vars = {'pmt_id':pmt_id})
         return render.reportIndex(data=data)
 
@@ -46,7 +47,7 @@ class Reason:
             data['project_bug_reason'][pmt_id]['reason'] ={}
             
             
-            data['project_bug_reason'][pmt_id]['project'] ={'name':project['projectName']}
+            data['project_bug_reason'][pmt_id]['project'] ={'name':project['projectName'],'pmt_id':pmt_id}
 
 
             project_bug_reason = puzzle_db.select('rp_projectbug_type',where="pmtId = $pmt_id AND type ='reason'",vars = {'pmt_id':pmt_id})
@@ -83,7 +84,7 @@ class Component:
         for project in project_list:
             pmt_id = project['pmtId']
             data['project_bug_component'][pmt_id] = {}
-            data['project_bug_component'][pmt_id]['project'] = {'name':project['projectName']}
+            data['project_bug_component'][pmt_id]['project'] = {'name':project['projectName'],'pmt_id':pmt_id}
             data['project_bug_component'][pmt_id]['component'] ={}
             project_bug_component = puzzle_db.select('rp_projectbug_type',where ="pmtId =$pmt_id AND type='component'",vars = {'pmt_id':pmt_id})
             bug_component = {}

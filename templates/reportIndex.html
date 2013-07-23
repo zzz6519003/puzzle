@@ -1,7 +1,11 @@
-<html>
+<%inherit file='base.html'/>
+<%block name='header'>
+    <script type="text/javascript" src="/static/js/pages/project.js"></script>
+</%block>
+<%block name='body'>
+    <div class='container'>
 
-
-<table class="table table-bordered">
+    <table class="table">
     <tbody>
     <tr>
         <td rowspan="2" align="center" bgcolor="#EAF1DD">PMTID</td>
@@ -33,7 +37,7 @@
         % for item in data['project_bug'][i]['count']:
         <tr>
             <td>${item['pmtId']}</td>
-            <td>xxx</td>
+            <td>${data['project_bug'][i]['name']}</td>
             <td>xxx</td>
             <td>xxx</td>
             <td>xxx</td>
@@ -56,5 +60,5 @@
     % endfor
     </tbody>
 </table>
-
-</html>
+</div>
+</%block>

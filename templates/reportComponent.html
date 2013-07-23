@@ -1,20 +1,37 @@
-<html>
-    <table>
+<%inherit file='base.html'/>
+<%block name='header'>
+    <script type="text/javascript" src="/static/js/pages/project.js"></script>
+</%block>
+<%block name='body'>
+    
+    <div class='container'>
+    <table class='table'>
         <tr>
-            <td>name</td>
+            <td>PMTID</td>
+            <td>项目名称</td>
+            <td>工程结束</td>
+            <td>开发</td>
+            <td>测试</td>
             % for id in data['th']:
                 <td>${data['th'][id]['name']}</td>
             % endfor
         <tr>
         % for pmt_id in data['project_bug_component']:
             <tr>
+                <td>${data['project_bug_component'][pmt_id]['project']['pmt_id']}</td>
+                <td>${data['project_bug_component'][pmt_id]['project']['name']}</td>
+                <td>${data['project_bug_component'][pmt_id]['project']['name']}</td>
+                <td>${data['project_bug_component'][pmt_id]['project']['name']}</td>
                 <td>${data['project_bug_component'][pmt_id]['project']['name']}</td>
                 % for id in data['project_bug_component'][pmt_id]['component']:
-                    <td>${data['project_bug_component'][pmt_id]['component'][id]}</td>
+                    <td>
+                    % if data['project_bug_component'][pmt_id]['component'][id] != 0 :
+                        ${data['project_bug_component'][pmt_id]['component'][id]}
+                    % endif
+                    </td>
                 % endfor
             <tr>
         % endfor
     </table>
-    <br>
-</html>
-
+    <div>
+</%block>
