@@ -1,6 +1,16 @@
 $(document).ready(function(){
     var addProject = new AddProject();
     addProject.init();
+    //var contentHtml = ""
+    //    +"<img src=\"/static/img/kamehameha.gif\" height=\"50px\"></img>"
+    //    +"<div class=\"progress progress-striped active\">"
+    //    +"  <div class=\"bar\" style=\"width: 100%;\" id=\"J_progressBar\"></div>"
+    //    +"</div>";
+    //$.colorbox({
+    //    html:contentHtml,
+    //    width:"1024px",
+    //    height:"300px",
+    //});
 });
 
 function AddProject()
@@ -64,11 +74,14 @@ function AddProject()
     function submitButtonClicked(actionItem){
         if(isAvailable()){
             var formData = generateFormData();
-            formData = JSON.stringify(formData);
-            $.post("/project/add", {data:formData});
+            //var jsonData = JSON.stringify(formData);
+            var jsonData = $.toJSON(formData);
+            $.post("/project/add", {data:jsonData});
             var contentHtml = ""
-                +"<div class=\"progress progress-striped active\">"
-                +"  <div class=\"bar\" style=\"width: 0%;\" id=\"J_progressBar\"></div>"
+                +"<div id=\"J_progressContent\">"
+                +"  <div class=\"progress progress-striped active\">"
+                +"    <div class=\"bar\" style=\"width: 0%;\" id=\"J_progressBar\"></div>"
+                +"  </div>"
                 +"</div>";
 
             $.colorbox({
@@ -104,7 +117,7 @@ function AddProject()
                                     console.log("outer " + progressNumber);
                                     $("#J_progressBar").attr("style", "width: "+progressNumber);
 
-                                    $.post(progressNumberUrl, {data:formData},function(data){
+                                    $.post(progressNumberUrl, {data:jsonData},function(data){
                                         currentProgress = parseInt(currentProgress);
                                         var fetchedProgress = parseInt(data);
                                         var finallyProgress = "";
@@ -127,7 +140,19 @@ function AddProject()
 
                     function stop(){
                         clearInterval(intervalId);
-                        window.location.href="/project";
+                        if(formData['openXcode']){
+                            //window.location.href="/project";
+                        }else{
+                            var appName = formData['appName'];
+                            var version = formData['version'];
+                            var url = "/project/initScript?"
+                                +"appName="+appName
+                                +"&version="+version
+
+                            $.get(url, function(contentHtml){
+                                $("#J_progressContent").html(contentHtml);
+                            });
+                        }
                     }
                 },
                 onClosed:function(){
