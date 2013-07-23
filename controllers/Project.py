@@ -82,7 +82,9 @@ class InitScript:
         print "here is init script"
         print data
 
-        projectPath = getIosProjectPath(data['projectName'], data['version'])
+        appInfo = (db.select('appList', where="id="+data['appId']))[0]
+
+        projectPath = getIosProjectPath(appInfo['identifier'], data['version'])
         print "project path is " + projectPath
 
         initScriptPath = projectPath + '/init.py'
