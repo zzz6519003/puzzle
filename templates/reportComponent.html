@@ -1,0 +1,20 @@
+<html>
+    <table>
+        <tr>
+            <td>name</td>
+            % for id in data['th']:
+                <td>${data['th'][id]['name']}</td>
+            % endfor
+        <tr>
+        % for pmt_id in data['project_bug_component']:
+            <tr>
+                <td>${data['project_bug_component'][pmt_id]['project']['name']}</td>
+                % for id in data['project_bug_component'][pmt_id]['component']:
+                    <td>${data['project_bug_component'][pmt_id]['component'][id]}</td>
+                % endfor
+            <tr>
+        % endfor
+    </table>
+    <br>
+</html>
+

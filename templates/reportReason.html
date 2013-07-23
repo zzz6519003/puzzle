@@ -1,0 +1,27 @@
+<%inherit file='base.html'/>
+<%block name='header'>
+    <script type="text/javascript" src="/static/js/pages/project.js"></script>
+</%block>
+<%block name='body'>
+
+
+    <table>
+        <tr>
+            <td>name</td>
+            % for id in data['th'] :
+                <td>${data['th'][id]['name']}</td>
+            % endfor
+        </tr>
+        % for pmt_id in data['project_bug_reason']:
+            <tr>
+                <td>${data['project_bug_reason'][pmt_id]['project']['name']}</td>
+                % for id in data['project_bug_reason'][pmt_id]['reason']:
+                    % if data['project_bug_reason'][pmt_id]['reason'][id] !=0 : 
+                    <td>${data['project_bug_reason'][pmt_id]['reason'][id]}</td>
+                    % endif
+                % endfor
+            </tr>
+        % endfor
+
+    </table>
+</%block>

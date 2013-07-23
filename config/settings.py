@@ -3,9 +3,11 @@
 import web
 from web.contrib.template import render_mako
 from settingsPersonality import getConnection
+from settingsPersonality import getConnectionV2
 import os
 
-os.chdir("/Users/casa/projects/puzzle")
+#os.chdir("/Users/casa/projects/puzzle")
+os.chdir("/home/yuetingqian/code/puzzle")
 
 render = render_mako(
                     directories = ['templates'],
@@ -24,6 +26,10 @@ config = web.storage(
 
 #db = web.database(dbn='mysql',db='puzzle',user='root',pw='casacasa',host='localhost',port=3306);
 db = getConnection()
+puzzle_db = getConnectionV2('puzzle')
+pmt_db = getConnectionV2('pmt')
+ibug_db = getConnectionV2('ibug')
+
 
 web.template.Template.globals['config'] = config
 web.template.Template.globals['render'] = render
