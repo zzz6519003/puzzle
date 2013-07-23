@@ -143,10 +143,11 @@ function AddProject()
                         if(formData['openXcode']){
                             //window.location.href="/project";
                         }else{
-                            var appName = formData['appName'];
+                            var projectName = formData['projectName'];
                             var version = formData['version'];
+                            console.log(formData);
                             var url = "/project/initScript?"
-                                +"appName="+appName
+                                +"projectName="+projectName
                                 +"&version="+version
 
                             $.get(url, function(contentHtml){

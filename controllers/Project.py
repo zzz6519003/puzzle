@@ -78,20 +78,20 @@ class Add:
 
 class InitScript:
     def GET(self):
-        #data = web.input()
-        #print "here is init script"
-        #print data
+        data = web.input()
+        print "here is init script"
+        print data
 
-        #projectPath = getIosProjectPath(data['appName'], data['version'])
-        #print "project path is " + projectPath
+        projectPath = getIosProjectPath(data['projectName'], data['version'])
+        print "project path is " + projectPath
 
-        #initScriptPath = projectPath + 'init.py'
-        #print "init script path is " + initScriptPath
+        initScriptPath = projectPath + '/init.py'
+        print "init script path is " + initScriptPath
 
-        #fileContent = ""
+        fileContent = ""
 
-        #initScript = open(initScriptPath)
-        #for line in initScript:
-        #    fileContent = fileContent + "<p>" + line + "</p>"
+        initScript = open(initScriptPath)
+        for line in initScript:
+            fileContent = fileContent + "<p>" + line + "</p>"
 
         return render.initScriptContent(data=fileContent)
