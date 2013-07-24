@@ -5,13 +5,18 @@
 <%block name='body'>
 
 <div class='container'>
+    <%include file='./components/reportSelect.html'/>
     <table class="table">
         <tr>
-            <td>PMTID</td>
-            <td>项目名称</td>
-            <td>工程结束</td>
-            <td>开发</td>
-            <td>测试</td>
+            <td rowspan="2">PMTID</td>
+            <td rowspan="2">项目名称</td>
+            <td rowspan="2" width="80px">工程结束</td>
+            <td rowspan="2" width="80px">开发</td>
+            <td rowspan="2" width="80px">测试</td>
+            <td colspan="${data['colspan']}">bug原因(APP)</td>
+        </tr>
+        <tr>
+            <td>总数</td>
             % for id in data['th'] :
                 <td>${data['th'][id]['name']}</td>
             % endfor
@@ -20,9 +25,10 @@
             <tr>
                 <td>${data['project_bug_reason'][pmt_id]['project']['pmt_id']}</td>
                 <td>${data['project_bug_reason'][pmt_id]['project']['name']}</td>
-                <td>${data['project_bug_reason'][pmt_id]['project']['name']}</td>
-                <td>${data['project_bug_reason'][pmt_id]['project']['name']}</td>
-                <td>${data['project_bug_reason'][pmt_id]['project']['name']}</td>
+                <td>${data['project_bug_reason'][pmt_id]['project']['endtime']}</td>
+                <td>${data['project_bug_reason'][pmt_id]['project']['dev']}</td>
+                <td>${data['project_bug_reason'][pmt_id]['project']['qa']}</td>
+                <td>${data['project_bug_reason'][pmt_id]['total']}</td>
                 % for id in data['project_bug_reason'][pmt_id]['reason']:
                     <td>
                     % if data['project_bug_reason'][pmt_id]['reason'][id] !=0 : 

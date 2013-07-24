@@ -4,11 +4,9 @@
 	
 }
 
-.table{ 
-    word-wrap:break-word;
-    }
 
-td {
+tr.break td {
+    word-break:break-all;
     word-wrap:break-word;
     border-color: #e3e3e3;
 }
