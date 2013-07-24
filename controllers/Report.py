@@ -77,7 +77,7 @@ class Reason:
         version = params.get('version')
         if appName:
             appName = urllib.unquote(appName)
-            data['params'] = {'appName':appName,'category':category,'version':version}
+        data['params'] = {'appName':appName,'category':category,'version':version}
 
         reason_all_tmp = ibug_db.select('dd_common',where = "type='reason'",order = 'sort')
         data['th']={}
@@ -139,11 +139,11 @@ class Component:
         appName = params.get('appName')
         if appName :
             appName = urllib.unquote(appName)
-            data['params'] = {'appName':appName,'category':category,'version':version}
 
         data['os'] = puzzle_db.select('applist', where = 'appName = $appName',vars = {'appName':appName})
         category = params.get('category')
         version =params.get('version')
+        data['params'] = {'appName':appName,'category':category,'version':version}
         component_all_tmp = ibug_db.select('dd_component')
         data['th'] = {}
         for com in component_all_tmp:
