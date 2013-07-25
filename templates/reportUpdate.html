@@ -1,0 +1,20 @@
+<html>
+% if data['is_update']:
+    124
+% for item in data['ticket']:
+${item['id']}
+% endfor
+<br>
+
+% for a in data['pmt_id']:
+${a['id']}
+% endfor
+<br><br>
+test123<br>
+% for i in data['test']:
+${data['test'][i]}
+%endfor
+%endif
+<br>
+${data['is_update']}
+</html>

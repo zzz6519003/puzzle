@@ -102,6 +102,36 @@ function SelectVersion()
         body.on("click", ".J_channelBox", function(){
             channelBoxChanged($(this));
         });
+
+        body.on("change", ".J_selectDependencyType", function(){
+            dependencyTypeSelected($(this));
+        });
+    }
+
+    function dependencyTypeSelected(actionItem){
+
+        var projectId = parseInt($("#J_projectInfo").attr('data-project-id'));
+        var dependencyType = parseInt(actionItem.val());
+        var dependencyId = parseInt(actionItem.attr('data-dependency-id'));
+
+        var data = {
+            projectId : projectId,
+            dependencyType : dependencyType,
+            dependencyId : dependencyId
+        };
+
+        var postData = $.toJSON(data);
+        //data['dependencyName'] = actionItem.context.dataset.dependencyName;
+        //data['dependencyId'] = actionItem.context.dataset.dependencyId;
+        //data['dependencyType'] = parseInt(actionItem.val());
+
+        console.log(postData);
+
+        //var url = "/packageBuild/selectVersions?"
+        //    +
+        $.post("/packageBuild/selectVersions", {data:postData}, function(fetchedData){
+            console.log(fetchedData);
+        },"json");
     }
 
     function channelBoxChanged(actionItem){

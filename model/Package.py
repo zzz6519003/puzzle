@@ -6,7 +6,7 @@ import urllib
 
 db = settings.db
 
-def getPackageInfoForBuild(projectId, category):
+def getPackageInfoForBuild(projectId, category, type=1):
     """
         the result of this function is used for user to choose which version need to be build
     """
@@ -102,3 +102,13 @@ def getProjectPath(appId, version):
     appInfo = (db.select('appList', where="id="+appId))[0]
     projectPath = getIosProjectPath(appInfo['identifier'], version)
     return projectPath
+
+def getDependecyInfoArray(dependencyInfo):
+    """
+        dependencyInfo['projectId']
+        dependencyInfo['dependencyId']
+        dependencyInfo['initSHA1'] initSHA1 can be null
+        dependencyInfo['numBeforeInitSHA1']
+    """
+    result = getVersionArray(dependencyInfo)
+    return result

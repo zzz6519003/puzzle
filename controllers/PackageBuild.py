@@ -39,8 +39,30 @@ class SelectVersions:
         return render.selectVersions(data=data)
 
     def POST(self):
-        pass
+        postData = web.input()
+        data = json.loads(urllib.unquote(postData['data']));
+        print "the posted data is"
+        print data
+        params = {
+            'projectId':data['projectId'],
+            'dependencyId':data['dependencyId'],
+            'initSHA1': None,
+            'numBeforeInitSHA1':3
+        }
 
+        print "params for getDependecyInfoArray()"
+        print params
+
+        dependencyArray = PackageModel.getDependecyInfoArray(params)
+        dependencyArray.reverse()
+        print "the fetched dependency Array"
+        print dependencyArray
+
+        jsonDependencyArray = json.dumps(dependencyArray)
+        print "json encoded dependency array is"
+        print jsonDependencyArray
+
+        return jsonDependencyArray
 
 class BuildPackage:
     """
@@ -87,6 +109,10 @@ class InputCommit:
         postData = web.input()
         data = json.loads(urllib.unquote(postData['data']))
         return render.inputCommit(data=data)
+
+    def GET(self):
+        getData = web.input()
+        print getData
 
 
 class CopyProject:
