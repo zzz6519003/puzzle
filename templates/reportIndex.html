@@ -4,59 +4,58 @@
 </%block>
 <%block name='body'>
     <div class='container'>
+    <%include file='/components/reportSelect.html'/>
 
     <table class="table">
-    <tbody>
-    <tr>
-        <td rowspan="2" align="center" bgcolor="#EAF1DD">PMTID</td>
-        <td rowspan="2" align="center" bgcolor="#EAF1DD">项目名称</td>
-        <td rowspan="2" align="center" bgcolor="#EAF1DD">工程结束</td>
-        <td rowspan="2" align="center" bgcolor="#EAF1DD">开发</td>
-        <td rowspan="2" bgcolor="#EAF1DD">测试</td>
-        <td rowspan="2" bgcolor="#EAF1DD">自测通过率</td>
-        <td colspan="4" align="center" bgcolor="#c7dae2">Bug数（项目bug）</td>
-        <td colspan="5" align="center" bgcolor="#FDE9D9">bug等级（APP&项目bug）</td>
-        <td colspan="4" align="center" bgcolor="#C5E2AF">测试阶段（APP）</td>
-    </tr>
-    <tr>
-        <td align="center" bgcolor="#c7dae2">总数</td>
-        <td align="center" bgcolor="#c7dae2">APP</td>
-        <td align="center" bgcolor="#c7dae2">API</td>
-        <td align="center" bgcolor="#c7dae2">产品</td>
-        <td align="center" bgcolor="#FDE9D9">p1</td>
-        <td align="center" bgcolor="#FDE9D9">p2</td>
-        <td align="center" bgcolor="#FDE9D9">p3</td>
-        <td align="center" bgcolor="#FDE9D9">p4</td>
-        <td align="center" bgcolor="#FDE9D9">p5</td>
-        <td align="center" bgcolor="#C5E2AF">test</td>
-        <td align="center" bgcolor="#C5E2AF">dev</td>
-        <td align="center" bgcolor="#C5E2AF"><font color="red">pre</font></td>
-        <td align="center" bgcolor="#C5E2AF">prod</td>
-    </tr>
-    % for i in data['project_bug']:
-        % for item in data['project_bug'][i]['count']:
+        <tbody>
         <tr>
-            <td>${item['pmtId']}</td>
-            <td>${data['project_bug'][i]['name']}</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>0</td>
-            <td>0</td>
-            <td>${item['app']}</td>
-            <td>${item['api']}</td>
-            <td>${item['product']}</td>
-            <td>${item['p1']}</td>
-            <td>${item['p2']}</td>
-            <td>${item['p3']}</td>
-            <td>${item['p4']}</td>
-            <td>${item['p5']}</td>
-            <td>${item['test']}</td>
-            <td>${item['dev']}</td>
-            <td>${item['prerelease']}</td>
-            <td>${item['production']}</td>
+            <td rowspan="2" align="center" bgcolor="#EAF1DD">PMTID</td>
+            <td rowspan="2" align="center" bgcolor="#EAF1DD">项目名称</td>
+            <td rowspan="2" align="center" bgcolor="#EAF1DD">工程结束</td>
+            <td rowspan="2" align="center" bgcolor="#EAF1DD">开发</td>
+            <td rowspan="2" bgcolor="#EAF1DD">测试</td>
+            <td rowspan="2" bgcolor="#EAF1DD">自测通过率</td>
+            <td colspan="4" align="center" bgcolor="#c7dae2">Bug数（项目bug）</td>
+            <td colspan="5" align="center" bgcolor="#FDE9D9">bug等级（APP&项目bug）</td>
+            <td colspan="4" align="center" bgcolor="#C5E2AF">测试阶段（APP）</td>
         </tr>
-        % endfor
+        <tr>
+            <td align="center" bgcolor="#c7dae2">总数</td>
+            <td align="center" bgcolor="#c7dae2">APP</td>
+            <td align="center" bgcolor="#c7dae2">API</td>
+            <td align="center" bgcolor="#c7dae2">产品</td>
+            <td align="center" bgcolor="#FDE9D9">p1</td>
+            <td align="center" bgcolor="#FDE9D9">p2</td>
+            <td align="center" bgcolor="#FDE9D9">p3</td>
+            <td align="center" bgcolor="#FDE9D9">p4</td>
+            <td align="center" bgcolor="#FDE9D9">p5</td>
+            <td align="center" bgcolor="#C5E2AF">test</td>
+            <td align="center" bgcolor="#C5E2AF">dev</td>
+            <td align="center" bgcolor="#C5E2AF"><font color="red">pre</font></td>
+            <td align="center" bgcolor="#C5E2AF">prod</td>
+        </tr>
+        % for pmt_id in data['project_bug']:
+            <tr>
+            <td>${data['project_bug'][pmt_id]['pmt_id']}</td>
+            <td>${data['project_bug'][pmt_id]['name']}</td>
+            <td>${data['project_bug'][pmt_id]['endtime']}</td>
+            <td>${data['project_bug'][pmt_id]['developer']}</td>
+            <td>${data['project_bug'][pmt_id]['qa']}</td>
+            <td>${data['project_bug'][pmt_id]['rate']}</td>
+            <td>${data['project_bug'][pmt_id]['total']}</td>
+            <td>${data['project_bug'][pmt_id]['app']}</td>
+            <td>${data['project_bug'][pmt_id]['api']}</td>
+            <td>${data['project_bug'][pmt_id]['product']}</td>
+            <td>${data['project_bug'][pmt_id]['p1']}</td>
+            <td>${data['project_bug'][pmt_id]['p2']}</td>
+            <td>${data['project_bug'][pmt_id]['p3']}</td>
+            <td>${data['project_bug'][pmt_id]['p4']}</td>
+            <td>${data['project_bug'][pmt_id]['p5']}</td>
+            <td>${data['project_bug'][pmt_id]['test']}</td>
+            <td>${data['project_bug'][pmt_id]['dev']}</td>
+            <td>${data['project_bug'][pmt_id]['prerelease']}</td>
+            <td>${data['project_bug'][pmt_id]['production']}</td>
+            </tr>
     % endfor
     </tbody>
 </table>
