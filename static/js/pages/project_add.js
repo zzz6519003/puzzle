@@ -221,13 +221,13 @@ function AddProject()
 
         data['openXcode'] = $("#J_openXcode")[0].checked;
 
-        data['whoami'] = $.cookie("puzzleUsername");
-        data['clientProjectPath'] = $.cookie("puzzleProjectPath");
+        data['whoami'] = $.cookie("puzzleUsername")?$.cookie("puzzleUsername"):"";
+        data['clientProjectPath'] = $.cookie("puzzleProjectPath")?$.cookie("puzzleProjectPath"):"";
 
-        if(typeof(data['whoami']) == "undefined" || typeof(data['clientProjectPath']) == "undefined"){
-            warningPopout("去右上角设置用户名和项目路径去，赶紧的。");
-            return false;
-        }
+        //if(typeof(data['whoami']) == "undefined" || typeof(data['clientProjectPath']) == "undefined"){
+        //    warningPopout("去右上角设置用户名和项目路径去，赶紧的。");
+        //    return false;
+        //}
 
         console.log(data);
 
@@ -249,11 +249,11 @@ function AddProject()
             }
         });
 
-        if(typeof($.cookie("puzzleUsername")) == "undefined" || typeof($.cookie("puzzleProjectPath")) == "undefined"){
-            console.log("no username and project path");
-            warningPopout("去时间轴那儿设置用户名和项目路径去，赶紧的。");
-            result = false;
-        }
+        //if(typeof($.cookie("puzzleUsername")) == "undefined" || typeof($.cookie("puzzleProjectPath")) == "undefined"){
+        //    console.log("no username and project path");
+        //    warningPopout("去时间轴那儿设置用户名和项目路径去，赶紧的。");
+        //    result = false;
+        //}
 
         return result;
     }
