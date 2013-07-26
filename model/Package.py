@@ -37,7 +37,14 @@ def getPackageInfoForBuild(projectId, category, type=1):
     data['projectId'] = projectId
     data['category'] = category
 
-    data['dependencyArray'] = getOrganizedDepInfo(projectId, data['projectPath'], data['appName'])
+    params = {
+        'projectId':projectId,
+        'projectPath':projectInfo['projectPath'],
+        'appName':data['appName'],
+        'dependencyType':1,
+    }
+
+    data['dependencyArray'] = getOrganizedDepInfo(params)
 
     #data['dependencyArray'] = [{
     #        'name':'RTApiProxy',
@@ -107,6 +114,7 @@ def getDependecyInfoArray(dependencyInfo):
     """
         dependencyInfo['projectId']
         dependencyInfo['dependencyId']
+        dependencyInfo['dependencyType']
         dependencyInfo['initSHA1'] initSHA1 can be null
         dependencyInfo['numBeforeInitSHA1']
     """

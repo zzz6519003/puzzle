@@ -13,9 +13,9 @@ dependencyInfoArray = packageInfo['dependencyArray']
 
 <p>
     <p>usage:</p>
+    <p>如果要使用线下版本的依赖库，请将修改merge到temp分支，然后push这个temp分支。系统会自动检测到temp的新修改。</p>
     <span class="badge badge-success">当前选中的版本</span>
     <span class="badge badge-info">项目开始时使用的版本</span>
-    <span class="badge badge-important">线下版本</span>
 </p>
 
 <span id="J_projectInfo"
@@ -60,8 +60,16 @@ dependencyInfoArray = packageInfo['dependencyArray']
             data-dependency-id="${dependencyDict['dependencyId']}"
             data-dependency-name="${dependencyDict['name']}"
             >
-            <option value="1">线上版</option>
-            <option value="0">线下版</option>
+            <option
+                class="J_versionOption"
+                value="1"
+                data-init-sha1=""
+                data-dependency-id="${dependencyDict['dependencyId']}"
+            >线上版</option>
+            <option
+                value="0"
+                data-init-sha1=""
+            >线下版</option>
         </select>
     </td>
     <td>

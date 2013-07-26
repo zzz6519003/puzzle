@@ -43,10 +43,15 @@ class SelectVersions:
         data = json.loads(urllib.unquote(postData['data']));
         print "the posted data is"
         print data
+
+        if data['initSHA1'] == "":
+            data['initSHA1'] = None
+
         params = {
             'projectId':data['projectId'],
             'dependencyId':data['dependencyId'],
-            'initSHA1': None,
+            'dependencyType':data['dependencyType'],
+            'initSHA1': data['initSHA1'],
             'numBeforeInitSHA1':3
         }
 
