@@ -171,7 +171,6 @@ function SelectVersion()
                 width:"1024px",
                 onComplete:function(){
 
-                    var data = getDependencySha1();
                     var jsonData = $.toJSON(data);
                     $.post("/packageBuild/buildPackage", {data:jsonData});
 
@@ -334,7 +333,7 @@ function SelectVersion()
         data['version'] = $("#J_projectInfo")[0].dataset['version'];
         data['appName'] = $("#J_projectInfo")[0].dataset['appName'];
         data['projectPath'] = $("#J_projectInfo")[0].dataset['projectPath'];
-        data['mailContent'] = $("#J_mailContent").val();
+        data['mailContent'] = $("#cboxLoadedContent #J_mailContent").val();
 
         data['dependencyArray'] = dependencyArray;
 

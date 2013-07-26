@@ -116,8 +116,7 @@ class InputCommit:
         return render.inputCommit(data=data)
 
     def GET(self):
-        getData = web.input()
-        print getData
+        pass
 
 
 class CopyProject:
