@@ -112,6 +112,8 @@ function SelectVersion()
     }
 
     function dependencyTypeSelected(actionItem){
+        var badgeTd = actionItem.closest("tr").find("td").get(2);
+        $(badgeTd).html('<img src="/static/img/ajax-loader.gif">');
 
         var projectId = parseInt($("#J_projectInfo").attr('data-project-id'));
         var dependencyType = parseInt(actionItem.val());
@@ -147,7 +149,6 @@ function SelectVersion()
                 +'>'+value.versionName+'</a>&nbsp;';
             });
 
-            var badgeTd = actionItem.closest("tr").find("td").get(2);
             $(badgeTd).html(versionBadgeHtml);
 
             configVersionBadge();
