@@ -92,7 +92,7 @@ def sendmailToQA(packageInfo):
         subject += "qudao_"
 
     subject+=packageInfo['version']
-    subject+="mission completed"
+    subject+=" mission completed"
 
     try:
         mail_config = {
