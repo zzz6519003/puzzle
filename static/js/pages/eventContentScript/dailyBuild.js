@@ -8,7 +8,15 @@
 })();
 
 function dailyBuildButtonClicked(actionItem){
-    gotoSelectVersion(actionItem);
+    $.colorbox({
+        html:'<img src="/static/img/ajax-loader.gif">',
+        overlayClose:false,
+        escKey:false,
+        closeButton:false,
+        onComplete:function(){
+            gotoSelectVersion(actionItem);
+        }
+    });
 }
 
 //this is the public function which will be called by release.js
