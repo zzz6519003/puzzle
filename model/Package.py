@@ -6,7 +6,7 @@ import urllib
 
 db = settings.db
 
-def getPackageInfoForBuild(projectId, category):
+def getPackageInfoForBuild(projectId, category, type=1):
     """
         the result of this function is used for user to choose which version need to be build
     """
@@ -37,7 +37,14 @@ def getPackageInfoForBuild(projectId, category):
     data['projectId'] = projectId
     data['category'] = category
 
-    data['dependencyArray'] = getOrganizedDepInfo(projectId, data['projectPath'], data['appName'])
+    params = {
+        'projectId':projectId,
+        'projectPath':projectInfo['projectPath'],
+        'appName':data['appName'],
+        'dependencyType':1,
+    }
+
+    data['dependencyArray'] = getOrganizedDepInfo(params)
 
     #data['dependencyArray'] = [{
     #        'name':'RTApiProxy',
@@ -70,6 +77,23 @@ def sendmailToQA(packageInfo):
     from turbomail import Message, interface
 
     print "sending email"
+    print "here is packageInfo"
+    print packageInfo
+    print "packageInfo done"
+
+    subject = packageInfo['appName']+"_"
+    if packageInfo['category'] == '7':
+        subject += "Daily Build_"
+    if packageInfo['category'] == '8':
+        subject += "RC Build_"
+    if packageInfo['category'] == '10':
+        subject += "Release Build_"
+    if packageInfo['category'] == '100':
+        subject += "qudao_"
+
+    subject+=packageInfo['version']
+    subject+=" mission completed"
+
     try:
         mail_config = {
             'mail.on':True,
@@ -80,16 +104,37 @@ def sendmailToQA(packageInfo):
         interface.start(mail_config)
 
         mail = Message()
-        mail.subject = "hello world"
+        mail.subject = subject
         mail.sender = "noreply@dm.anjuke.com"
-        mail.to = "weiyutian@anjuke.com , wadecong@anjuke.com"
+        mail.to = """
+            weiyutian@anjuke.com ,
+            wadecong@anjuke.com ,
+            lenyemeng@anjukeinc.com ,
+            sicongwu@anjuke.com ,
+            yifengwang@anjuke.com ,
+            zeppozheng@anjuke.com ,
+            zhengyan@anjuke.com ,
+            Floydshen@anjuke.com ,
+            minjiewang@anjuke.com ,
+            lhliu@anjuke.com ,
+            zhenyanzhang@anjuke.com ,
+            wendygu@anjuke.com ,
+            tengxiangyin@anjuke.com ,
+            wnbaoli@anjuke.com ,
+            jianzhongliu@anjuke.com ,
+            williamyang@anjuke.com ,
+            clairyin@anjuke.com ,
+            yuxiaoma@anjuke.com ,
+            bozhang@anjuke.com ,
+            vingowang@anjukeinc.com ,
+            louiezhou@anjuke.com
+            """
         mail.encoding = "utf-8"
-        mail.plain = packageInfo['mailContent']
-        #mail.plain = "here"
-        #mail.author = "casa"
+        mail.plain = "sended from Puzzle:\n\t"+packageInfo['mailContent']
         mail.send()
     except Exception, e:
         print e
+        print "fail"
     print "success"
     pass
 
@@ -98,3 +143,14 @@ def getProjectPath(appId, version):
     appInfo = (db.select('appList', where="id="+appId))[0]
     projectPath = getIosProjectPath(appInfo['identifier'], version)
     return projectPath
+
+def getDependecyInfoArray(dependencyInfo):
+    """
+        dependencyInfo['projectId']
+        dependencyInfo['dependencyId']
+        dependencyInfo['dependencyType']
+        dependencyInfo['initSHA1'] initSHA1 can be null
+        dependencyInfo['numBeforeInitSHA1']
+    """
+    result = getVersionArray(dependencyInfo)
+    return result

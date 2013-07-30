@@ -14,17 +14,30 @@ data = {'pageIndex':'project'}
 
 class Index:
     def GET(self):
+        GET_data = web.input()
+        print GET_data
+
+        if not GET_data.has_key("appId"):
+            appId = "1"
+        else:
+            appId = GET_data['appId']
+
         #获取当前日期
         import time
         data['currentDate'] = time.strftime('%Y-%m-%d,%A',time.localtime(time.time()))
 
         #获取项目列表
-        data['projectList'] = db.select('projectList', order="id DESC", _test=False)
+        data['projectList'] = db.select('projectList', order="id DESC", where="appId="+appId, _test=False)
         temp = [];
         for item in data['projectList']:
             item['lastUpdate'] = time.strftime('%Y-%m-%d,%H:%M',time.localtime(item['lastUpdate']))
             temp.append(item)
+
+        appList = db.select('appList')
+
         data['projectList'] = temp
+        data['currentAppId'] = appId
+        data['appList'] = appList
 
         #获取数据
         return render.projectList(data=data)

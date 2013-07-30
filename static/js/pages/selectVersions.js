@@ -50,10 +50,12 @@ function SelectVersion()
     function setBadgeStateToDefault(actionItem){
         var isInit = (actionItem.context.dataset['isInit'] == '1')?true:false;
         var isOffLine = (actionItem.context.dataset['isOffLine'] == '1')?true:false;
+        var dependencyId = actionItem.context.dataset['repoId'];
 
         cleanBadgeState(actionItem);
 
         if(isInit){
+            $(".J_versionOption[data-dependency-id="+dependencyId+"]").attr("data-init-sha1", actionItem.context.dataset['sha1']);
             setBadgeStateToInitVersion(actionItem);
         }
 
@@ -63,6 +65,18 @@ function SelectVersion()
     }
 
     function configVersionBadge(){
+        $(".J_versionBadge").tinyTips({
+            content: function(actionItem){
+                var commit = actionItem.context.dataset['commit'];
+                return commit;
+            },
+            position: 'top',
+            spacing: 8,
+            transition: 'fade',
+            arrow: true,
+            arrowColor: 'rgba(0, 0, 0, 0.8)'
+        });
+
         $(".J_versionBadge").each(function(index, value){
             $item = $(value);
             setBadgeStateToDefault($item);
@@ -75,17 +89,6 @@ function SelectVersion()
     }
 
     function bindEvent(){
-        $(".J_versionBadge").tinyTips({
-            content: function(actionItem){
-                var commit = actionItem.context.dataset['commit'];
-                return commit;
-            },
-            position: 'top',
-            spacing: 8,
-            transition: 'fade',
-            arrow: true,
-            arrowColor: 'rgba(0, 0, 0, 0.8)'
-        });
 
         body.on("click", ".J_versionBadge", function(){
             versionBadgeClicked($(this));
@@ -102,6 +105,53 @@ function SelectVersion()
         body.on("click", ".J_channelBox", function(){
             channelBoxChanged($(this));
         });
+
+        body.on("change", ".J_selectDependencyType", function(){
+            dependencyTypeSelected($(this));
+        });
+    }
+
+    function dependencyTypeSelected(actionItem){
+
+        var projectId = parseInt($("#J_projectInfo").attr('data-project-id'));
+        var dependencyType = parseInt(actionItem.val());
+        var dependencyId = parseInt(actionItem.attr('data-dependency-id'));
+        var initSHA1 = actionItem[0].selectedOptions[0].dataset['initSha1'];
+
+        console.log(actionItem);
+
+        var data = {
+            projectId : projectId,
+            dependencyType : dependencyType,
+            dependencyId : dependencyId,
+            initSHA1 : initSHA1
+        };
+
+        var postData = $.toJSON(data);
+
+        $.post("/packageBuild/selectVersions", {data:postData}, function(fetchedData){
+            var versionBadgeHtml = "";
+
+            $.each(fetchedData, function(index, value){
+                versionBadgeHtml +=
+                '<a'
+                +'  data-repo-id="'+value.dependency.id+'"'
+                +'  data-repo-name="'+value.dependency.dependency_name+'"'
+                +'  data-sha1="'+value.hash+'"'
+                +'  data-type="'+value.type+'"'
+                +'  data-is-current="'+value.isCurrent+'"'
+                +'  data-is-init="'+value.isInit+'"'
+                +'  data-is-off-line="'+value.isOffLine+'"'
+                +'  data-commit="'+value.commit+'"'
+                +'  class="J_versionBadge badge"'
+                +'>'+value.versionName+'</a>&nbsp;';
+            });
+
+            var badgeTd = actionItem.closest("tr").find("td").get(2);
+            $(badgeTd).html(versionBadgeHtml);
+
+            configVersionBadge();
+        },"json");
     }
 
     function channelBoxChanged(actionItem){
@@ -112,7 +162,7 @@ function SelectVersion()
 
     function packageButtonClicked(actionItem){
         var data = getDependencySha1();
-        console.log(data);
+        var intervalId = 0;
         if(data){
             var contentHtml = getContentHtml(actionItem);
             $.colorbox({
@@ -121,13 +171,12 @@ function SelectVersion()
                 width:"1024px",
                 onComplete:function(){
 
-                    var data = getDependencySha1();
                     var jsonData = $.toJSON(data);
                     $.post("/packageBuild/buildPackage", {data:jsonData});
 
                     progressNumberUrl = getContentUrl(actionItem, "/progressNumber");
 
-                    var intervalId = setInterval(function(){
+                    intervalId = setInterval(function(){
 
                         var progressBar = $("#J_progressBar");
                         var currentProgress = progressBar.attr("style");
@@ -166,7 +215,7 @@ function SelectVersion()
                                 }
                             }
                         }
-                    }, 500);
+                    }, 2000);
 
                     function stop(){
                         //$.colorbox.close();
@@ -175,6 +224,8 @@ function SelectVersion()
 
                 },
                 onClosed:function(){
+                    $.colorbox.close();
+                    clearInterval(intervalId);
                     window.location.href="/project";
                 },
             });
@@ -282,7 +333,7 @@ function SelectVersion()
         data['version'] = $("#J_projectInfo")[0].dataset['version'];
         data['appName'] = $("#J_projectInfo")[0].dataset['appName'];
         data['projectPath'] = $("#J_projectInfo")[0].dataset['projectPath'];
-        data['mailContent'] = $("#J_mailContent").val();
+        data['mailContent'] = $("#cboxLoadedContent #J_mailContent").val();
 
         data['dependencyArray'] = dependencyArray;
 
@@ -290,6 +341,8 @@ function SelectVersion()
         $(".J_channelBox:checked").each(function(index, value){
             data['channelIdList'].push($(value).val());
         });
+
+        console.log(data);
 
         return data;
     } 
