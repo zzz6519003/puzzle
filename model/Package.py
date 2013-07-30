@@ -107,22 +107,8 @@ def sendmailToQA(packageInfo):
         mail.subject = subject
         mail.sender = "noreply@dm.anjuke.com"
         mail.to = """
-            weiyutian@anjuke.com ,
-            wadecong@anjuke.com ,
-            lenyemeng@anjukeinc.com ,
-            sicongwu@anjuke.com ,
-            yifengwang@anjuke.com ,
-            zeppozheng@anjuke.com ,
-            zhengyan@anjuke.com ,
-            Floydshen@anjuke.com ,
-            minjiewang@anjuke.com ,
-            lhliu@anjuke.com ,
-            zhenyanzhang@anjuke.com ,
             wendygu@anjuke.com ,
-            tengxiangyin@anjuke.com ,
-            wnbaoli@anjuke.com ,
             jianzhongliu@anjuke.com ,
-            williamyang@anjuke.com ,
             clairyin@anjuke.com ,
             yuxiaoma@anjuke.com ,
             bozhang@anjuke.com ,
@@ -154,3 +140,19 @@ def getDependecyInfoArray(dependencyInfo):
     """
     result = getVersionArray(dependencyInfo)
     return result
+
+
+#            weiyutian@anjuke.com ,
+#            wadecong@anjuke.com ,
+#            lenyemeng@anjukeinc.com ,
+#            sicongwu@anjuke.com ,
+#            yifengwang@anjuke.com ,
+#            zeppozheng@anjuke.com ,
+#            zhengyan@anjuke.com ,
+#            Floydshen@anjuke.com ,
+#            minjiewang@anjuke.com ,
+#            lhliu@anjuke.com ,
+#            zhenyanzhang@anjuke.com ,
+#            tengxiangyin@anjuke.com ,
+#            wnbaoli@anjuke.com ,
+#            williamyang@anjuke.com ,
