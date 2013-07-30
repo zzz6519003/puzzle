@@ -1,0 +1,60 @@
+<%inherit file='base.html'/>
+<%block name="header">
+</%block>
+<%block name='body'>
+<div class='container'>
+    <%include file='/components/reportSelect.html'/>
+    <table class='table table-bordered'>
+    <tr>
+        <td rowspan="2">PMTID</td>
+        <td rowspan="2">项目名称</td>
+        <td rowspan="2" width="80px">工程结束</td>
+        <td rowspan="2" width="80px">测试</td>
+        <td colspan="3">bug工时比</td>
+        <td colspan="2">bug解决率</td>
+        <td colspan="3">bug失修率</td>
+        <td colspan="2">P1-P3bug修复周期</td>
+        <td colspan="2">dailybuild bug遗留</td>
+    </tr>
+    <tr>
+        <td>bug数</td>
+        <td>工时（天）</td>
+        <td>bug工时比</td>
+        <td>close数</td>
+        <td>bug解决率</td>
+        <td>reopen数</td>
+        <td>reject数</td>
+        <td>bug失修率</td>
+        <td>修复总时长</td>
+        <td>bug修复周期</td>
+        <td>dailybuild带入rc</td>
+        <td>占比</td>
+    </tr>
+
+    % for pmt_id in data['data']:
+    <%
+    project = data['data'][pmt_id]['project']
+    count = data['data'][pmt_id]['count']
+    %>
+    <tr>
+        <td>${project['pmt_id']}</td>
+        <td>${project['name']}</td>
+        <td>${project['endtime']}</td>
+        <td>${count['chinese_name']}</td>
+        <td>${count['total']}</td>
+        <td>${count['workload']}</td>
+        <td>${count['workload_div']}</td>
+        <td>${count['close']}</td>
+        <td>${count['close_div']}</td>
+        <td>${count['reopen']}</td>
+        <td>${count['reject']}</td>
+        <td>${count['lose_repair_div']}</td>
+        <td>${count['repair_time']}</td>
+        <td>${count['repair_time_div']}</td>
+        <td>${count['daily_to_rc']}</td>
+        <td>${count['daily_to_rc_div']}</td>
+    </tr>
+    % endfor
+    </table>
+</div>
+</%block>

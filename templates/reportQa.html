@@ -30,23 +30,24 @@
             
     % for pmt_id in data['data']:
     <%
-    project = data['data'][pmt_id]
+    project = data['data'][pmt_id]['project']
+    count = data['data'][pmt_id]['count']
     %>
     <tr>
         <td>${project['pmt_id']}</td>
         <td>${project['name']}</td>
         <td>${project['endtime']}</td>
-        <td>${project['chinese_name']}</td>
-        <td>${project['total']}</td>
-        <td>${project['workload']}</td>
-        <td>${project['workload_div']}</td>
-        <td>${project['p1']}</td>
-        <td>${project['p2']}</td>
-        <td>${project['p3']}</td>
-        <td>${project['p4']}</td>
-        <td>${project['dailybuild']}</td>
-        <td>${project['no_dailybuild']}</td>
-        <td>${project['dr_div']}</td>
+        <td>${count['chinese_name']}</td>
+        <td>${count['total']}</td>
+        <td>${count['workload']}</td>
+        <td>${count['workload_div']}</td>
+        <td>${count['p1']}</td>
+        <td>${count['p2']}</td>
+        <td>${count['p3']}</td>
+        <td>${count['p4']}</td>
+        <td>${count['dailybuild']}</td>
+        <td>${count['no_dailybuild']}</td>
+        <td>${count['dr_div']}</td>
     </tr>
     % endfor
     </table>
