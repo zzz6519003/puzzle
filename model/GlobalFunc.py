@@ -1,7 +1,4 @@
-def isset(value):
-    try:
-        type(eval(value))
-    except:
-        return 0
-    else:
-        return 1
+from config import common
+
+def get_pmt_url(pmt_id):
+    return common.pmt_url+pmt_id

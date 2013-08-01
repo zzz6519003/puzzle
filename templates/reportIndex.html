@@ -35,26 +35,31 @@
             <td align="center" bgcolor="#C5E2AF">prod</td>
         </tr>
         % for pmt_id in data['project_bug']:
+            <%
+            item = data['project_bug'][pmt_id]
+            from model.GlobalFunc import get_pmt_url
+            pmt_url = get_pmt_url(item['pmt_id'])
+            %>
             <tr>
-            <td>${data['project_bug'][pmt_id]['pmt_id']}</td>
-            <td>${data['project_bug'][pmt_id]['name']}</td>
-            <td>${data['project_bug'][pmt_id]['endtime']}</td>
-            <td>${data['project_bug'][pmt_id]['developer']}</td>
-            <td>${data['project_bug'][pmt_id]['qa']}</td>
-            <td>${data['project_bug'][pmt_id]['rate']}</td>
-            <td>${data['project_bug'][pmt_id]['total']}</td>
-            <td>${data['project_bug'][pmt_id]['app']}</td>
-            <td>${data['project_bug'][pmt_id]['api']}</td>
-            <td>${data['project_bug'][pmt_id]['product']}</td>
-            <td>${data['project_bug'][pmt_id]['p1']}</td>
-            <td>${data['project_bug'][pmt_id]['p2']}</td>
-            <td>${data['project_bug'][pmt_id]['p3']}</td>
-            <td>${data['project_bug'][pmt_id]['p4']}</td>
-            <td>${data['project_bug'][pmt_id]['p5']}</td>
-            <td>${data['project_bug'][pmt_id]['test']}</td>
-            <td>${data['project_bug'][pmt_id]['dev']}</td>
-            <td>${data['project_bug'][pmt_id]['prerelease']}</td>
-            <td>${data['project_bug'][pmt_id]['production']}</td>
+            <td><a href="${pmt_url}" target="_blank">${item['pmt_id']}</a></td>
+            <td>${item['name']}</td>
+            <td>${item['endtime']}</td>
+            <td>${item['developer']}</td>
+            <td>${item['qa']}</td>
+            <td>${item['rate']}</td>
+            <td>${item['total']}</td>
+            <td>${item['app']}</td>
+            <td>${item['api']}</td>
+            <td>${item['product']}</td>
+            <td>${item['p1']}</td>
+            <td>${item['p2']}</td>
+            <td>${item['p3']}</td>
+            <td>${item['p4']}</td>
+            <td>${item['p5']}</td>
+            <td>${item['test']}</td>
+            <td>${item['dev']}</td>
+            <td>${item['prerelease']}</td>
+            <td>${item['production']}</td>
             </tr>
     % endfor
     </tbody>

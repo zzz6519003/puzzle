@@ -17,5 +17,9 @@ ${data['test'][i]}
 %endif
 <br>
 ${data['is_update']}
-
+ % for i in data['users']:
+ % for key in data['users'][i]:
+ ${key},${data['users'][i][key]}<br>
+     % endfor
+         % endfor
 </html>

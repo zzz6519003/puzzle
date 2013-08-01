@@ -20,11 +20,16 @@
             % endfor
         </tr>
         % for pmt_id in data['project_bug_component']:
-            <tr>
-                <td>${data['project_bug_component'][pmt_id]['project']['pmt_id']}</td>
+        <%  
+        item = data['project_bug_component'][pmt_id]['project']
+        from model.GlobalFunc import get_pmt_url
+        pmt_url = get_pmt_url(item['pmt_id'])
+        %>
+        <tr>
+                <td><a href="${pmt_url}" target="_blank">${data['project_bug_component'][pmt_id]['project']['pmt_id']}</a></td>
                 <td>${data['project_bug_component'][pmt_id]['project']['name']}</td>
                 <td>${data['project_bug_component'][pmt_id]['project']['endtime']}</td>
-                <td>${data['project_bug_component'][pmt_id]['project']['dev']}</td>
+                <td>${data['project_bug_component'][pmt_id]['project']['developer']}</td>
                 <td>${data['project_bug_component'][pmt_id]['project']['qa']}</td>
                 <td>${data['project_bug_component'][pmt_id]['total']}</td>
                 % for id in data['project_bug_component'][pmt_id]['component']:
