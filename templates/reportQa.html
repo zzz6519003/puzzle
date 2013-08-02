@@ -1,6 +1,7 @@
 <%inherit file='base.html'/>
 <%block name="header">
 </%block>
+
 <%block name='body'>
     <div class='container'>
     <%include file='/components/reportSelect.html'/>
@@ -41,24 +42,50 @@
     <%
     project = data['data'][pmt_id]['project']
     count = data['data'][pmt_id]['count']
+    bug = data['data'][pmt_id]['count_s']
     from model.GlobalFunc import get_pmt_url
+    from model.GlobalFunc import report_html
     pmt_url = get_pmt_url(project['pmt_id'])
+    total_id = len(bug)-1
     %>
     <tr>
         <td><a href="${pmt_url}" target="_blank">${project['pmt_id']}</a></td>
         <td>${project['name']}</td>
         <td>${project['endtime']}</td>
-        <td>${count['chinese_name']}</td>
-        <td>${count['total']}</td>
-        <td>${count['workload']}</td>
-        <td>${count['workload_div']}</td>
-        <td>${count['p1']}</td>
-        <td>${count['p2']}</td>
-        <td>${count['p3']}</td>
-        <td>${count['p4']}</td>
-        <td>${count['dailybuild']}</td>
-        <td>${count['no_dailybuild']}</td>
-        <td>${count['dr_div']}</td>
+
+        <td>
+            ${report_html(bug,'chinese_name',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td>
+            ${report_html(bug,'total',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td>
+            ${report_html(bug,'workload',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td>
+            ${report_html(bug,'workload_div',project['pmt_id'],'qa',False,1,0)}
+	    </td>
+        <td> 
+            ${report_html(bug,'p1',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td>
+            ${report_html(bug,'p2',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td>
+            ${report_html(bug,'p3',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td> 
+            ${report_html(bug,'p4',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td>       
+            ${report_html(bug,'dailybuild',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td>
+            ${report_html(bug,'no_dailybuild',project['pmt_id'],'qa',False,1,0)}
+        </td>
+        <td>
+            ${report_html(bug,'dr_div',project['pmt_id'],'qa',False,1,0)}
+        </td>
     </tr>
     % endfor
     </table>
@@ -67,5 +94,4 @@
     <script type="text/javascript" src="/static/js/pages/report_qa.js"></script>
     <link href="/static/js/plugins/tinytip/tinyTips.css" rel="stylesheet">
     <script type="text/javascript" src="/static/js/plugins/tinytip/jquery.tinyTips.js"></script>
-
 </%block>

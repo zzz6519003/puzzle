@@ -85,7 +85,7 @@ class Reason:
             data['project_bug_reason'][pmt_id]['project'] ={}
             data['project_bug_reason'][pmt_id]['reason'] ={}
             data['project_bug_reason'][pmt_id]['total'] = 0
-            data['project_bug_reason'][pmt_id]['project'] ={'name':project['projectName'],'pmt_id':pmt_id}
+            data['project_bug_reason'][pmt_id]['project'] ={'name':project['projectName']+get_os(project['category']),'pmt_id':pmt_id}
             devs = get_owners(pmt_id,'dev')
             qas = get_owners(pmt_id,'qa')
             data['project_bug_reason'][pmt_id]['project']['developer'] = get_owner_str(devs)
@@ -138,7 +138,7 @@ class Component:
         for project in project_list:
             pmt_id = project['pmtId']
             data['project_bug_component'][pmt_id] = {}
-            data['project_bug_component'][pmt_id]['project'] = {'name':project['projectName'],'pmt_id':pmt_id}
+            data['project_bug_component'][pmt_id]['project'] = {'name':project['projectName']+get_os(project['category']),'pmt_id':pmt_id}
             devs = get_owners(pmt_id,'dev')
             qas = get_owners(pmt_id,'qa')
             data['project_bug_component'][pmt_id]['project']['developer'] = get_owner_str(devs)
@@ -196,7 +196,7 @@ class Developer:
            
             project_info ={}
             project_info['pmt_id'] = pmt_id
-            project_info['name'] = project['projectName']
+            project_info['name'] = project['projectName']+get_os(project['category'])
             project_info['endtime'] = format_time(project['endDate'])
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
@@ -204,7 +204,7 @@ class Developer:
 
             devs_bug = puzzle_db.select('rp_developer',where="pmtId = $pmt_id",vars={'pmt_id':pmt_id},order='user_from ASC')
             max_id = 0
-            result = {}.fromkeys(('chinese_name','total','workload','workload_div','close','close_div','reject','reopen','lose_repair_div','repair_time','major_bug','repair_time_div','daily_to_rc','daily_to_rc_div'),'')
+            result = {}.fromkeys(('chinese_name','total','workload','workload_div','unclose','close_div','reject','reopen','lose_repair_div','repair_time','major_bug','repair_time_div','daily_to_rc','daily_to_rc_div'),'')
             for item in devs_bug:
                 user_id = len(users)
                 total = item['total']
@@ -216,7 +216,7 @@ class Developer:
                     workload = 'N/A'
                 user['total'] = total
                 user['workload_div'] = div(total,workload)
-                user['close_div'] = div(user['close'],total)
+                user['close_div'] = div(total-user['unclose'],total)
                 user['lose_repair_div'] = div(user['reject']+user['reopen'],total)
                 user['repair_time_div'] = div(user['repair_time'],user['major_bug'])
                 user['daily_to_rc_div'] = div(user['daily_to_rc'],user['rc'])
@@ -225,7 +225,7 @@ class Developer:
             
             if max_id > 0 :
                 total_id = max_id +1
-                user_tmp = {}.fromkeys(('total','workload','close','reject','reopen','repair_time','major_bug','daily_to_rc','rc'),0)
+                user_tmp = {}.fromkeys(('total','workload','unclose','reject','reopen','repair_time','major_bug','daily_to_rc','rc'),0)
                 for user_id in users:
                     for key in users[user_id]:
                         if key in user_tmp and users[user_id][key]!='N/A':
@@ -233,12 +233,11 @@ class Developer:
                 user_tmp['chinese_name'] = 'total'
                 total = user_tmp['total']
                 user_tmp['workload_div'] = div(total,user_tmp['workload'])
-                user_tmp['close_div'] = div(user_tmp['close'],total)
+                user_tmp['close_div'] = div(total-user_tmp['unclose'],total)
                 user_tmp['lose_repair_div'] = div(user_tmp['reject']+user_tmp['reopen'],total)
                 user_tmp['repair_time_div'] = div(user_tmp['repair_time'],user_tmp['major_bug'])
                 user_tmp['daily_to_rc_div'] = div(user_tmp['daily_to_rc'],user_tmp['rc'])
-                user[total_id] = user_tmp
-                
+                users[total_id] = user_tmp
                 for user_id in users:
                     if user_id != total_id:
                         for key in users[user_id]:
@@ -248,11 +247,12 @@ class Developer:
                                 else:
                                     color = ''
                                 result[key] += '<span  style="background-color:'+color+';">'+str(users[user_id][key]) + '<br></span>'
-                for key in user[total_id]:
+                for key in users[total_id]:
                     if key in result:
-                        result[key] += '<span>' + str(user[total_id][key]) + '<br></span>'
+                        result[key] += '<span>' + str(users[total_id][key]) + '<br></span>'
 
             data['data'][pmt_id]['count'] = result
+            data['data'][pmt_id]['count_s'] = users
         return render.reportDeveloper(data=data)
 
 class Qa:
@@ -284,17 +284,18 @@ class Qa:
 
             project_info = {}
             project_info['pmt_id'] = pmt_id
-            project_info['name'] = project['projectName']
+            project_info['name'] = project['projectName']+get_os(project['category'])
             project_info['endtime'] = format_time(project['endDate'])
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
+            
             data['data'][pmt_id] ={'project':project_info}
 
             qas_bug = puzzle_db.select('rp_qa',where = "pmtId = $pmt_id",vars = {'pmt_id':pmt_id},order='user_from')
             max_id = 0
             result = {}.fromkeys(('total','workload','workload_div','p1','p2','p3','p4','dailybuild','no_dailybuild','dr_div','chinese_name'),'')
             
-            for item in qas_bug :
+            for item in qas_bug:
                 user_id = len(users)
                 user = item
                 total = item['total']
@@ -329,7 +330,6 @@ class Qa:
                             if key in result and key not in{'p1','p2','p3','p4'}:
                                 if key in result:
                                     if users[user_id]['user_from'] ==2  and key =='chinese_name':
-                                        print '=============',total_id,key,users[user_id]['user_from'] ,'=================='
                                         color ='#B0B85E'
                                     else:
                                         color = ''
@@ -339,7 +339,7 @@ class Qa:
                     if key in result:                                                             
                         result[key] += '<span>'+str(users[total_id][key])+'<br><span>' 
             data['data'][pmt_id]['count'] = result
-
+            data['data'][pmt_id]['count_s'] =users
         
         return render.reportQa(data=data)
 
@@ -358,42 +358,77 @@ class Update:
         if is_update:
             data['pmt_id'] = pmt_db.select('project',where ='id='+pmt_id)
             data['ticket'] = ibug_db.select('ticket',where ='pmt_id='+pmt_id)
-
+            puzzle_db.delete('ticket',where ='pmtId='+pmt_id)
+            ticket_detail = ibug_db.query("SELECT t.resolution,t.id AS ticket_id,created_at , \
+                    updated_at,closed_at,p.name AS priority,\
+                    r.chinese_name AS reporter,o.chinese_name AS owner,\
+                    status,summary,pmt_id,e.name AS environment ,\
+                    c.name AS component,re.name AS resolution,rea.name AS reason \
+                    FROM ticket AS t \
+                    LEFT JOIN dd_common AS p \
+                    ON t.priority=p.id \
+                    LEFT JOIN user AS r \
+                    ON t.reporter =r.user_name \
+                    LEFT JOIN user AS o \
+                    ON t.owner = o.user_name \
+                    LEFT JOIN dd_common AS e \
+                    ON t.environment =e.id \
+                    LEFT JOIN dd_component AS c \
+                    ON t.component = c.int \
+                    LEFT JOIN dd_common AS re \
+                    ON t.resolution = re.id \
+                    LEFT JOIN dd_common AS rea \
+                    ON t.reason = rea.id \
+                    WHERE pmt_id = $pmt_id \
+                    AND (status <>'closed' OR status='closed' AND t.resolution NOT IN(20,27))",vars=value)
+            for item in ticket_detail:
+                    puzzle_db.insert('ticket',ticket_id=item['ticket_id'],created_at=item['created_at'],updated_at=item['updated_at'],closed_at=item['closed_at'],priority=item['priority'],reporter=item['reporter'],owner=item['owner'],status=item['status'],summary=item['summary'],pmtId=item['pmt_id'],environment=item['environment'],component=item['component'],resolution=item['resolution'],reason=item['reason'])
             total = ibug_db.query("SELECT count(id) AS count  FROM ticket "
                                 "WHERE pmt_id = $pmt_id AND environment <> 17 "
                                 "AND (status <> 'closed' OR status = 'closed' "
                                 "AND resolution NOT IN(20,27))",vars = value)[0]['count']
             
-            api = ibug_db.query("SELECT count(ticket.id) AS count  FROM ticket,dd_component,dd_common "
-                                "WHERE pmt_id = $pmt_id AND environment <> 17 "
-                                "AND (status <> 'closed' OR status = 'closed' AND resolution NOT IN(20,27)) "
-                                "AND ticket.component = dd_component.int AND dd_component.name LIKE '%api%' "
-                                "AND ticket.reason = dd_common.id AND dd_common.name NOT LIKE '%产品设计%'",vars = value)[0]['count']
+            api = ibug_db.query("SELECT count(*) AS count FROM ticket \
+                    LEFT JOIN dd_component \
+                    ON ticket.component = dd_component.int \
+                    LEFT JOIN dd_common \
+                    ON ticket.reason = dd_common.id \
+                    WHERE pmt_id = $pmt_id AND environment <> 17 \
+                    AND (status <> 'closed' OR status = 'closed' AND resolution NOT IN(20,27)) \
+                    AND dd_component.name LIKE '%api%' AND dd_common.name NOT LIKE '%产品设计%'",vars = value)[0]['count']
 
 
-            product = ibug_db.query("SELECT count(ticket.id) AS count  FROM ticket,dd_common "
+            product = ibug_db.query("SELECT count(ticket.id) AS count  FROM ticket "
+                                    "LEFT JOIN dd_common "
+                                    "ON ticket.reason = dd_common.id "
                                     "WHERE pmt_id = $pmt_id AND environment <> 17 "
-                                    "AND (status <> 'closed' OR status = 'closed' AND resolution NOT IN(20,27))"
-                                    "AND ticket.reason = dd_common.id AND dd_common.name LIKE '%产品设计%'",vars = value)[0]['count']
+                                    "AND (status <> 'closed' OR status = 'closed' AND resolution NOT IN(20,27)) "
+                                    "AND dd_common.name LIKE '%产品设计%'",vars = value)[0]['count']
             
             app  = total-api-product
 
-            priorities_tmp = ibug_db.query("SELECT dd_common.name AS name,count(ticket.id) AS count FROM ticket,dd_common,dd_component "
+            priorities_tmp = ibug_db.query("SELECT dd_common.name AS name,count(ticket.id) AS count FROM ticket "
+                                        "LEFT JOIN dd_common "
+                                        "ON ticket.priority = dd_common.id "
+                                        "LEFT JOIN dd_component "
+                                        "ON ticket.component = dd_component.int "
                                         "WHERE pmt_id = $pmt_id AND environment <>17 "
                                         "AND (status <> 'closed' OR status = 'closed' AND resolution NOT IN(20,27)) "
-                                        "AND ticket.priority = dd_common.id "
-                                        "AND ticket.component = dd_component.int AND dd_component.name not like '%api%' "
+                                        "AND dd_component.name not like '%api%' "
                                         "GROUP BY dd_common.name",vars = value)
             priorities = {'p1':0,'p2':0,'p3':0,'p4':0,'p5':0}
             for priority in  priorities_tmp:
                 name = priority['name'].split('-')[0].lower()
                 priorities[name] = priority['count']
             
-            environments_tmp = ibug_db.query("SELECT dd_common.name AS name,count(ticket.id) AS count FROM ticket,dd_common,dd_component "
+            environments_tmp = ibug_db.query("SELECT dd_common.name AS name,count(ticket.id) AS count FROM ticket "
+                                            "LEFT JOIN dd_common "
+                                            "ON ticket.environment = dd_common.id "
+                                            "LEFT JOIN dd_component "
+                                            "ON ticket.component = dd_component.int "
                                             "WHERE pmt_id = $pmt_id "
                                             "AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
-                                            "AND ticket.environment = dd_common.id "
-                                            "AND ticket.component = dd_component.int AND dd_component.name not like '%api%' "
+                                            "AND dd_component.name not like '%api%' "
                                             "GROUP BY dd_common.name",vars = value)
 
             
@@ -408,10 +443,12 @@ class Update:
             else:
                 puzzle_db.insert('rp_projectbug', app = app, api = api , product = product , p1 = priorities['p1'] , p2 = priorities['p2'] ,  p3 = priorities['p3'] ,  p4 = priorities['p4'] , p5 = priorities['p5'] , test = environments['test'] ,dev = environments['dev'] ,prerelease = environments['prerelease'] , production = environments['production'], pmtId = pmt_id, created = time.time())
        
-            reasons_tmp = ibug_db.query("SELECT reason ,count(t.id) AS count  FROM ticket AS t,dd_component AS c "
+            reasons_tmp = ibug_db.query("SELECT reason ,count(*) AS count  FROM ticket AS t "
+                                        "LEFT JOIN dd_component AS c "
+                                        "ON component = c.int "
                                         "WHERE pmt_id = $pmt_id "
                                         "AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
-                                        "AND t.component = c.int AND c.name not like '%api%' "
+                                        "AND c.name not like '%api%' "
                                         "GROUP BY reason",vars = value)
             
             puzzle_db.delete("rp_projectbug_type",where = "pmtId =$pmt_id AND type = 'reason'",vars = value)
@@ -431,10 +468,12 @@ class Update:
             for reason_id in reason:
                 puzzle_db.insert('rp_projectbug_type',type ='reason',com_id = reason_id,count = reason[reason_id]['count'],pmtId = pmt_id,created = time.time())
             
-            component_tmp = ibug_db.query("SELECT component ,count(t.id) as count FROM ticket as t,dd_component as c "
+            component_tmp = ibug_db.query("SELECT component ,count(t.id) AS count FROM ticket AS t "
+                                        "LEFT JOIN dd_component AS c "
+                                        "ON t.component = c.int "
                                         "WHERE pmt_id = $pmt_id "
                                         "AND (status <> 'closed' or status ='closed' AND resolution NOT IN(20,27)) "
-                                        "AND t.component = c.int AND c.name not like '%api%' "
+                                        "AND c.name not like '%api%' "
                                         "GROUP by component",vars = value)
             puzzle_db.delete("rp_projectbug_type",where = "pmtId = $pmt_id AND type='component'",vars =value)
             for b in component_tmp:
@@ -453,38 +492,50 @@ class Update:
                 #user_name = devs[i]['email'].split('@')[0]+'@%'
                 chinese_name = devs[i]['chinese_name']
                 dev_value = {'pmt_id':pmt_id,'chinese_name':chinese_name}
-                dev_count = ibug_db.query("SELECT count(*) AS count FROM ticket AS t,user AS u "
+                dev_count = ibug_db.query("SELECT count(*) AS count FROM ticket AS t "
+                        "LEFT JOIN user AS u "
+                        "ON t.owner = u.user_name "
                         "WHERE pmt_id = $pmt_id AND t.environment <>17 "
-                        "AND (status<>'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
-                        "AND t.owner = u.user_name "+ pmt_to_ibug_user_sql,vars=dev_value)[0]['count']
-                close = ibug_db.query("SELECT count(*) AS count FROM ticket AS t,user AS u "
+                        "AND (status<>'closed' OR status ='closed' "
+                        "AND resolution NOT IN(20,27)) "+ pmt_to_ibug_user_sql,vars=dev_value)[0]['count']
+                unclose = ibug_db.query("SELECT count(*) AS count FROM ticket AS t "
+                        "LEFT JOIN user AS u "
+                        "ON t.owner = u.user_name "
                         "WHERE pmt_id = $pmt_id AND t.environment<>17 "
-                        "AND status ='closed' AND resolution NOT IN(20,27) "
-                        "AND t.owner = u.user_name "+ pmt_to_ibug_user_sql,vars=dev_value)[0]['count']
+                        "AND status <>'closed' AND resolution NOT IN(20,27) "
+                        + pmt_to_ibug_user_sql,vars=dev_value)[0]['count']
                 reject = ibug_db.query("SELECT count(*)  AS count "
-                        "FROM ticket AS t ,ticket_log  AS l ,user AS u "
+                        "FROM ticket AS t "
+                        "LEFT JOIN ticket_log  AS l "
+                        "ON t.id =l.ticket_id "
+                        "LEFT JOIN user AS u "
+                        "ON owner = u.user_name "
                         "WHERE pmt_id = $pmt_id AND t.environment<>17 "
-                        "AND t.id = l.ticket_id AND l.newvalue = 'opened' "
+                        "AND l.newvalue = 'opened' "
                         "AND l.field='status' AND l.rlog='Ticket_ActionReject'" 
                         "AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
-                        "AND t.owner = u.user_name "+ pmt_to_ibug_user_sql,vars=dev_value)[0]['count']
+                        + pmt_to_ibug_user_sql,vars=dev_value)[0]['count']
                 reopen = ibug_db.query("SELECT count(*) AS count "
-                        "FROM ticket AS t ,ticket_relation  AS r ,user AS u "
-                        "WHERE pmt_id = $pmt_id AND t.environment<>17 AND t.id = r.ticket_id "
+                        "FROM ticket AS t "
+                        "LEFT JOIN ticket_relation  AS r "
+                        "ON t.id =r.ticket_id "
+                        "LEFT JOIN user AS u "
+                        "ON owner = u.user_name "
+                        "WHERE pmt_id = $pmt_id AND t.environment<>17 AND r.ticket_id is not null "
                         "AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
-                        "AND t.owner = u.user_name "+ pmt_to_ibug_user_sql,vars=dev_value)[0]['count']
+                        +pmt_to_ibug_user_sql,vars=dev_value)[0]['count']
                 
 
-                major_bug_all = ibug_db.query("SELECT u.user_name as name,b.id AS id,b.status AS status,b.created_at AS created_at,b.verified_at AS verified_at " 
-                        "FROM user AS u,"
-                        "(SELECT t.id AS id,t.owner AS owner,t.created_at AS created_at,t.status AS status,MAX(l.created_at) AS verified_at "
+                major_bug_all = ibug_db.query("SELECT user_name as name,b.id AS id,b.status AS status,b.created_at AS created_at,b.verified_at AS verified_at " 
+                        "FROM user AS u"
+                        "LEFT JOIN (SELECT t.id AS id,t.owner AS owner,t.created_at AS created_at,t.status AS status,MAX(l.created_at) AS verified_at "
                         "FROM ticket AS t "
                         "LEFT JOIN ticket_log AS l "
                         "ON t.id = l.ticket_id "
                         "WHERE t.pmt_id =$pmt_id AND priority IN (6,7,8) "
                         "AND (t.status !='closed' OR t.status ='closed' AND resolution NOT IN(20,27)) "
                         "AND environment <>17 GROUP BY id ) AS b "
-                        "WHERE b.owner = u.user_name "+ pmt_to_ibug_user_sql,vars = dev_value)
+                        "ON b.owner = user_name "+ pmt_to_ibug_user_sql,vars = dev_value)
                 major_bug = len(major_bug_all)
                 repair_time = 0
                 aday = 3600*24
@@ -498,8 +549,12 @@ class Update:
                 repair_time = repair_time/aday
                 
                 test_to_dev = ibug_db.query("SELECT t.id,MAX(l.created_at) "
-                        "FROM ticket AS t ,ticket_log AS l,user AS u "
-                        "WHERE  t.id = l.ticket_id AND t.owner=u.user_name "
+                        "FROM ticket AS t "
+                        "LEFT JOIN ticket_log AS l "
+                        "ON t.id = l.ticket_id "
+                        "LEFT JOIN user AS u "
+                        "ON owner=u.user_name "
+                        "WHERE  t.id = l.ticket_id "
                         "AND pmt_id=$pmt_id AND environment = 16 "
                         "AND (t.status !='closed' OR t.status ='closed' AND t.resolution NOT IN(20,27)) "
                         "AND l.field='environment' AND l.oldvalue ='Test' AND l.newvalue='Dev' "
@@ -507,30 +562,40 @@ class Update:
                         "GROUP BY t.id",vars =dev_value)
                 daily_to_rc = len(test_to_dev)
                 rc = ibug_db.query("SELECT count(*) AS count "
-                        "FROM ticket AS t ,user AS u "
+                        "FROM ticket AS t "
+                        "LEFT JOIN user AS u "
+                        "ON t.owner = u.user_name "
                         "WHERE t.owner=u.user_name "
                         "AND pmt_id=$pmt_id AND environment = 16 "
                         "AND (t.status !='closed' OR t.status ='closed' AND t.resolution NOT IN(20,27)) "
                         + pmt_to_ibug_user_sql,vars =dev_value)[0]['count']
 
-                puzzle_db.insert('rp_developer',staff_no = devs[i]['staff_no'],chinese_name = devs[i]['chinese_name'],total=dev_count,workload = devs[i]['workload']/8,close=close,reject=reject,reopen=reopen,repair_time=repair_time,major_bug=major_bug,daily_to_rc = daily_to_rc,rc =rc,user_from=devs[i]['from'],pmtId =pmt_id)
+                puzzle_db.insert('rp_developer',staff_no = devs[i]['staff_no'],chinese_name = devs[i]['chinese_name'],total=dev_count,workload = devs[i]['workload']/8,unclose=unclose,reject=reject,reopen=reopen,repair_time=repair_time,major_bug=major_bug,daily_to_rc = daily_to_rc,rc =rc,user_from=devs[i]['from'],pmtId =pmt_id)
             
             puzzle_db.delete('rp_qa',where ='pmtId = $pmt_id',vars = value)
             for i in qas :
                 #user_name = qas[i]['email'].split('@')[0]+'@%'
                 qa_value = {'pmt_id':pmt_id,'chinese_name':qas[i]['chinese_name']}
-                qa_count = ibug_db.query("SELECT count(*) AS count FROM ticket AS t, user AS u "
-                                        "WHERE pmt_id = $pmt_id AND reporter = u.user_name "
+                qa_count = ibug_db.query("SELECT count(*) AS count FROM ticket AS t "
+                                        "LEFT JOIN user AS u "
+                                        "ON reporter = u.user_name "
+                                        "WHERE pmt_id = $pmt_id "
                                         "AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
                                         + pmt_to_ibug_user_sql,vars=qa_value)[0]['count']
-                dailybuild = ibug_db.query("SELECT count(*) AS count FROM ticket AS t, user as u "
-                                        "WHERE pmt_id = $pmt_id AND reporter = u.user_name "
+                dailybuild = ibug_db.query("SELECT count(*) AS count FROM ticket AS t "
+                                        "LEFT JOIN user as u "
+                                        "ON reporter = u.user_name "
+                                        "WHERE pmt_id = $pmt_id "
                                         "AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
                                         "AND environment=17 "+ pmt_to_ibug_user_sql,vars=qa_value)[0]['count']
-                pre_priority = ibug_db.query("SELECT priority,c.name AS name ,count(*) AS count FROM ticket AS t, user as u,dd_common as c "
-                                            "WHERE pmt_id = $pmt_id AND reporter = u.user_name "
+                pre_priority = ibug_db.query("SELECT priority,c.name AS name ,count(*) AS count FROM ticket AS t"
+                                            "LEFT JOIN user as u "
+                                            "ON reporter = u.user_name "
+                                            "LEFT JOIN dd_common as c "
+                                            "ON priority = c.id "
+                                            "WHERE pmt_id = $pmt_id "
                                             "AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
-                                            "AND environment=18 AND t.priority = c.id "+ pmt_to_ibug_user_sql+
+                                            "AND environment=18 "+ pmt_to_ibug_user_sql+
                                             "GROUP BY priority",vars = qa_value)
                 qa_priority = {'p1':0,'p2':0,'p3':0,'p4':0}
                 for priority in  pre_priority:
@@ -565,11 +630,14 @@ def get_task_owners_from_pmt(pmt_id):
 def get_ticket_owners_from_ibug(pmt_id):
     owners = {}
     owners_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email \
-            FROM ticket AS t ,user AS u ,dd_component AS c\
-            WHERE t.owner = u.user_name \
-            AND pmt_id =$pmt_id AND environment<>17 \
+            FROM ticket AS t \
+            LEFT JOIN user AS u \
+            ON t.owner = u.user_name \
+            LEFT JOIN dd_component AS c \
+            ON t.component = c.int \
+            WHERE pmt_id =$pmt_id AND environment<>17 \
             AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) \
-            AND t.component = c.int AND c.name not like '%api%'",vars={'pmt_id':pmt_id})
+            AND c.name not like '%api%'",vars={'pmt_id':pmt_id})
     for owner in owners_tmp:
         #user = owner['email'].split('@')[0]
         value ={'chinese_name':owner['chinese_name']}
@@ -585,9 +653,10 @@ def get_ticket_owners_from_ibug(pmt_id):
 
 def get_ticket_reporters_from_ibug(pmt_id):
     reporters = {}
-    reporters_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email FROM ticket AS t ,user AS u \
-            WHERE t.reporter = u.user_name \
-            AND pmt_id =$pmt_id  \
+    reporters_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email FROM ticket AS t  \
+            LEFT JOIN user AS u \
+            ON t.reporter = u.user_name \
+            WHERE pmt_id =$pmt_id  \
             AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27))",vars={'pmt_id':pmt_id})
     for reporter in reporters_tmp:  
         #user = reporter['email'].split('@')[0]

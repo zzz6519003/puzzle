@@ -15,3 +15,8 @@ tr.break td {
     border-color: #e3e3e3;
     background:#F7F7F0;
 }
+li{
+    list-style:none;
+    text-align:inherit;
+}
+

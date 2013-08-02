@@ -9,8 +9,8 @@
     <tr>
         <td rowspan="2">PMTID</td>
         <td rowspan="2">项目名称</td>
-        <td rowspan="2" width="80px">工程结束</td>
-        <td rowspan="2" width="80px">开发</td>
+        <td rowspan="2" width="100px">工程结束</td>
+        <td rowspan="2" width="100px">开发</td>
         <td colspan="3">bug工时比</td>
         <td colspan="2">bug解决率</td>
         <td colspan="3">bug失修率</td>
@@ -21,34 +21,24 @@
         <td>bug数</td>
         <td>工时（天）</td>
         <td>
-            <a id="workload_div" href="#" class="label label-important tTip" rel="popover" 
-                        tt="bug数/总工时（天）" data-original-title="${title}">bug工时比
-            </a>
+            <a class="tTip" tt="bug数/总工时（天）">bug工时比</a>
         </td>
-        <td>close数</td>
+        <td>未close数</td>
         <td>
-            <a id="close_div" href="#" class="label label-important tTip" rel="popover" 
-                        tt="close/bug总数" data-original-title="${title}">bug解决率
-            </a>
+            <a class="tTip" tt="1-未close/bug总数">bug解决率</a>
         </td>
         <td>reopen数</td>
         <td>reject数</td>
         <td>
-            <a id="lose_repair_div" href="#" class="label label-important tTip" rel="popover" 
-                        tt="(reopen+reject)/bug总数" data-original-title="${title}">bug失修率
-            </a>
+            <a class="tTip" tt="(reopen+reject)/bug总数">bug失修率</a>
         </td>
         <td>修复总时长</td>
         <td>
-            <a id="repair_time_div" href="#" class="label label-important tTip" rel="popover" 
-                        tt="bug open到最后一次verify时间总和 / bug数" data-original-title="${title}">bug修复周期
-            </a>
+            <a class="tTip" tt="bug open到最后一次verify时间总和 / bug数">bug修复周期</a>
         </td>
         <td>dailybuild带入rc</td>
         <td>
-            <a id="daily_to_rc_div" href="#" class="label label-important tTip" rel="popover" 
-                                tt="dailybuild带入rc bug数/rc bug总数" data-original-title="${title}">占比
-            </a>
+            <a class="tTip" tt="dailybuild带入rc bug数/rc bug总数">占比</a>
         </td>
     </tr>
 
@@ -56,26 +46,28 @@
     <%
     project = data['data'][pmt_id]['project']
     count = data['data'][pmt_id]['count']
+    bug = data['data'][pmt_id]['count_s']
     from model.GlobalFunc import get_pmt_url
+    from model.GlobalFunc import report_html
     pmt_url = get_pmt_url(project['pmt_id'])
     %>
     <tr>
         <td><a href="${pmt_url}" target="_blank">${project['pmt_id']}</a></td>
         <td>${project['name']}</td>
         <td>${project['endtime']}</td>
-        <td>${count['chinese_name']}</td>
-        <td>${count['total']}</td>
-        <td>${count['workload']}</td>
-        <td>${count['workload_div']}</td>
-        <td>${count['close']}</td>
-        <td>${count['close_div']}</td>
-        <td>${count['reopen']}</td>
-        <td>${count['reject']}</td>
-        <td>${count['lose_repair_div']}</td>
-        <td>${count['repair_time']}</td>
-        <td>${count['repair_time_div']}</td>
-        <td>${count['daily_to_rc']}</td>
-        <td>${count['daily_to_rc_div']}</td>
+        <td>${report_html(bug,'chinese_name',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'total',project['pmt_id'],'dev',False,100,0)}</td>
+        <td>${report_html(bug,'workload',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'workload_div',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'unclose',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'close_div',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'reopen',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'reject',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'lose_repair_div',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'repair_time',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'repair_time_div',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'daily_to_rc',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'daily_to_rc_div',project['pmt_id'],'dev',False,1,0)}</td>
     </tr>
     % endfor
     </table>
