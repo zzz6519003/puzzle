@@ -6,16 +6,22 @@
 
 <div class='container'>
     <%include file='/components/reportSelect.html'/>
-    <table class="table">
-        <tr>
-            <td rowspan="2">PMTID</td>
-            <td rowspan="2">项目名称</td>
-            <td rowspan="2" width="80px">工程结束</td>
-            <td rowspan="2" width="80px">开发</td>
-            <td rowspan="2" width="80px">测试</td>
+    <table class="table table-bordered">
+    <%
+    color = "#F7F7F0"
+    color2 = "#cde"
+    color3 = "#FDE9D9"
+    color4 = "#e7ffff"
+    %>
+    <tr bgcolor="${color}">
+            <td rowspan="2" bgcolor="${color}">PMTID</td>
+            <td rowspan="2" bgcolor="${color}">项目名称</td>
+            <td rowspan="2" width="80px" bgcolor="${color}">工程结束</td>
+            <td rowspan="2" width="80px" bgcolor="${color}">开发</td>
+            <td rowspan="2" width="80px" bgcolor="${color}">测试</td>
             <td colspan="${data['colspan']}">bug原因(APP)</td>
         </tr>
-        <tr>
+        <tr bgcolor="${color}">
             <td>总数</td>
             % for id in data['th'] :
                 <td>${data['th'][id]['name']}</td>

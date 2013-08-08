@@ -7,30 +7,36 @@
     <%include file='/components/reportSelect.html'/>
     <% title ="计算公式"%>
     <table class='table table-bordered'>
+    <%  
+    color = "#F7F7F0"
+    color2 = "#cde"
+    color3 = "#FDE9D9"
+    color4 = "#e7ffff"
+    %>
         <tr>
-            <td rowspan="2">PMTID</td>
-            <td rowspan="2">项目名称</td>
-            <td rowspan="2" width="80px">工程结束</td>
-            <td rowspan="2" width="80px">测试</td>
-            <td colspan="3">bug工时比</td>
-            <td colspan="4">bug漏测（真机）</td>
-            <td colspan="3">dailybuild、rc bug占比</td>
+            <td rowspan="2" bgcolor="${color}">PMTID</td>
+            <td rowspan="2" bgcolor="${color}">项目名称</td>
+            <td rowspan="2" width="80px" bgcolor="${color}">工程结束</td>
+            <td rowspan="2" width="80px" bgcolor="${color}">测试</td>
+            <td colspan="3" bgcolor="${color2}">bug工时比</td>
+            <td colspan="4" bgcolor="${color3}">bug漏测（真机）</td>
+            <td colspan="3" bgcolor="${color4}">dailybuild、rc bug占比</td>
         </tr>
         <tr>
-            <td>bug数</td>
-            <td>工时（天）</td>
-            <td>
+            <td bgcolor="${color2}">bug数</td>
+            <td bgcolor="${color2}">工时（天）</td>
+            <td bgcolor="${color2}">
                 <a id="workload_div" href="#" class="label label-important tTip" rel="popover" 
                 tt="bug数/总工时(天)" data-original-title="${title}">bug工时比
                 </a>
             </td>
-            <td>P1</td>
-            <td>P2</td>
-            <td>P3</td>
-            <td>P4</td>
-            <td>dailybuild</td>
-            <td>rc+真机+线上</td>
-            <td>
+            <td bgcolor="${color3}">P1</td>
+            <td bgcolor="${color3}">P2</td>
+            <td bgcolor="${color3}">P3</td>
+            <td bgcolor="${color3}">P4</td>
+            <td bgcolor="${color4}">dailybuild</td>
+            <td bgcolor="${color4}">rc+真机+线上</td>
+            <td bgcolor="${color4}">
                 <a id="daily_to_rc" href="#" class="label label-important tTip" rel="popover" 
                             tt="dailybuilg/rc+真机+线上" data-original-title="${title}">占比
                 </a>

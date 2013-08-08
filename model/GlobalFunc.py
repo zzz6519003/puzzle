@@ -15,21 +15,21 @@ def report_html(data,name,pmt_id,page,is_hyperlink,limit,is_color):
     if page in ('index','reason','component'):
         param = urllib.urlencode({'pmt_id':pmt_id,'page':page,'location':name})
         if page =='index':
-            content = str(data['name'])
+            content = data[name]
         else:
             if name !='total':
-                content = str(data['count'])
+                content = data['count']
             else:
-                content = str(data)
-        if is_color ==1 and data[name] < limit or is_color==2 and data[name]>limit:
+                content = data
+        if is_color ==1 and content < limit or is_color==2 and content > limit:
             color = 'red'
-        s += '<span  style="background-color:'+bgcolor+';"><font color="'+color+'">'
+        s += '<span  style="background-color:'+bgcolor+';">'
         if is_hyperlink ==True:
-            s+= '<a href="/report/detail?'+param+'" target="_blank">'+ content+'</a>'
+            s+= '<a href="/report/detail?'+param+'" target="_blank"><font color="'+color+'">'+ str(content)+'</font></a>'
         else:
             s+= content
                                                                                                                                     
-        s +='</font></span>'
+        s +='</span>'
 
         return s
 
@@ -46,13 +46,13 @@ def report_html(data,name,pmt_id,page,is_hyperlink,limit,is_color):
             #超过限制的参数变色
             if is_color ==1 and data[i][name] < limit or is_color==2 and data[i][name]>limit:
                 color = 'red'
-            s += '<li><span  style="background-color:'+bgcolor+';"><font color="'+color+'">'
+            s += '<li><span  style="background-color:'+bgcolor+';">'
             if is_hyperlink ==True:
-                s+= '<a href="/report/detail?'+param+'" target="_blank">'+str(data[i][name])+'</a>'
+                s+= '<a href="/report/detail?'+param+'" target="_blank"><font color="'+color+'">'+str(data[i][name])+'</font></a>'
             else:
                 s+= str(data[i][name])
             
-            s +='</font></span></li>'
+            s +='</span></li>'
     if len(data) > 0:
         pos = len(data)-1
         param = urllib.urlencode({'pmt_id':pmt_id,'cn_name':data[pos]['chinese_name'],'page':page,'location':name})

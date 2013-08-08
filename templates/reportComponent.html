@@ -5,7 +5,14 @@
     <div class='container'>
     <%include file='/components/reportSelect.html'/>
     <table class='table table-bordered'>
-        <tr>
+    <%  
+    color = "#F7F7F0"
+    color2 = "#cde"
+    color3 = "#FDE9D9"
+    color4 = "#e7ffff"
+    %>
+
+        <tr bgcolor="${color}">
             <td rowspan="2">PMTID</td>
             <td rowspan="2">项目名称</td>
             <td rowspan="2" width="80px">工程结束</td>
@@ -13,7 +20,7 @@
             <td rowspan="2" width="80px">测试</td>
             <td colspan="${data['colspan']}">bug产生模块(APP)</td>
         </tr>
-        <tr>
+        <tr bgcolor="${color}">
             <td>总数</td>
             % for id in data['th']:
                 <td>${data['th'][id]['name']}</td>

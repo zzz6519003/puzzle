@@ -6,38 +6,46 @@
     <%include file='/components/reportSelect.html'/>
     <% title ="计算公式"%>
     <table class='table table-bordered'>
+    <%  
+    color = "#F7F7F0"
+    color2 = "#cde"
+    color3 = "#FDE9D9"
+    color4 = "#e7ffff"
+    color5 = "#E6E6E6"
+    color6 = "#D8E2CF"
+    %>
     <tr>
-        <td rowspan="2">PMTID</td>
-        <td rowspan="2">项目名称</td>
-        <td rowspan="2" width="100px">工程结束</td>
-        <td rowspan="2" width="100px">开发</td>
-        <td colspan="3">bug工时比</td>
-        <td colspan="2">bug解决率</td>
-        <td colspan="3">bug失修率</td>
-        <td colspan="2">P1-P3bug修复周期</td>
-        <td colspan="2">dailybuild bug遗留</td>
+        <td rowspan="2" bgcolor="${color}">PMTID</td>
+        <td rowspan="2" bgcolor="${color}">项目名称</td>
+        <td rowspan="2" width="100px" bgcolor="${color}">工程结束</td>
+        <td rowspan="2" width="100px" bgcolor="${color}">开发</td>
+        <td colspan="3" bgcolor="${color2}">bug工时比</td>
+        <td colspan="2" bgcolor="${color4}">bug解决率</td>
+        <td colspan="3" bgcolor="${color6}">bug失修率</td>
+        <td colspan="2" bgcolor="${color3}">P1-P3bug修复周期</td>
+        <td colspan="2" bgcolor="${color5}">dailybuild bug遗留</td>
     </tr>
     <tr>
-        <td>bug数</td>
-        <td>工时（天）</td>
-        <td>
+        <td bgcolor="${color2}">bug数</td>
+        <td bgcolor="${color2}">工时（天）</td>
+        <td bgcolor="${color2}"> 
             <a class="tTip" tt="bug数/总工时（天）">bug工时比</a>
         </td>
-        <td>未close数</td>
-        <td>
+        <td bgcolor="${color4}">未close数</td>
+        <td bgcolor="${color4}">
             <a class="tTip" tt="1-未close/bug总数">bug解决率</a>
         </td>
-        <td>reopen数</td>
-        <td>reject数</td>
-        <td>
+        <td bgcolor="${color6}">reopen数</td>
+        <td bgcolor="${color6}">reject数</td>
+        <td bgcolor="${color6}">
             <a class="tTip" tt="(reopen+reject)/bug总数">bug失修率</a>
         </td>
-        <td>修复总时长</td>
-        <td>
+        <td bgcolor="${color3}">修复总时长</td>
+        <td bgcolor="${color3}">
             <a class="tTip" tt="bug open到最后一次verify时间总和 / bug数">bug修复周期</a>
         </td>
-        <td>dailybuild带入rc</td>
-        <td>
+        <td bgcolor="${color5}">dailybuild带入rc</td>
+        <td bgcolor="${color5}">
             <a class="tTip" tt="dailybuild带入rc bug数/rc bug总数">占比</a>
         </td>
     </tr>

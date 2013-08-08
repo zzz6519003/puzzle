@@ -6,33 +6,39 @@
     <div class='container'>
     <%include file='/components/reportSelect.html'/>
 
-    <table class="table">
+    <table class="table table-bordered">
         <tbody>
+        <%
+        color = "#F7F7F0"
+        color2 = "#cde"
+        color3 = "#FDE9D9"
+        color4 = "#e7ffff"
+        %>
         <tr>
-            <td rowspan="2" align="center" bgcolor="#EAF1DD">PMTID</td>
-            <td rowspan="2" align="center" bgcolor="#EAF1DD">项目名称</td>
-            <td rowspan="2" align="center" bgcolor="#EAF1DD">工程结束</td>
-            <td rowspan="2" align="center" bgcolor="#EAF1DD">开发</td>
-            <td rowspan="2" bgcolor="#EAF1DD">测试</td>
-            <td rowspan="2" bgcolor="#EAF1DD">自测通过率</td>
-            <td colspan="4" align="center" bgcolor="#c7dae2">Bug数（项目bug）</td>
-            <td colspan="5" align="center" bgcolor="#FDE9D9">bug等级（APP&项目bug）</td>
-            <td colspan="4" align="center" bgcolor="#C5E2AF">测试阶段（APP）</td>
+            <td rowspan="2" align="center" bgcolor="${color}">PMTID</td>
+            <td rowspan="2" align="center" bgcolor="${color}">项目名称</td>
+            <td rowspan="2" align="center" bgcolor="${color}">工程结束</td>
+            <td rowspan="2" align="center" bgcolor="${color}">开发</td>
+            <td rowspan="2" bgcolor="${color}">测试</td>
+            <td rowspan="2" bgcolor="${color}">自测通过率</td>
+            <td colspan="4" align="center" bgcolor="${color2}">Bug数（项目bug）</td>
+            <td colspan="5" align="center" bgcolor="${color3}">bug等级（APP&项目bug）</td>
+            <td colspan="4" align="center" bgcolor="${color4}">测试阶段（APP）</td>
         </tr>
         <tr>
-            <td align="center" bgcolor="#c7dae2">总数</td>
-            <td align="center" bgcolor="#c7dae2">APP</td>
-            <td align="center" bgcolor="#c7dae2">API</td>
-            <td align="center" bgcolor="#c7dae2">产品</td>
-            <td align="center" bgcolor="#FDE9D9">p1</td>
-            <td align="center" bgcolor="#FDE9D9">p2</td>
-            <td align="center" bgcolor="#FDE9D9">p3</td>
-            <td align="center" bgcolor="#FDE9D9">p4</td>
-            <td align="center" bgcolor="#FDE9D9">p5</td>
-            <td align="center" bgcolor="#C5E2AF">test</td>
-            <td align="center" bgcolor="#C5E2AF">dev</td>
-            <td align="center" bgcolor="#C5E2AF"><font color="red">pre</font></td>
-            <td align="center" bgcolor="#C5E2AF">prod</td>
+            <td align="center" bgcolor="${color2}">总数</td>
+            <td align="center" bgcolor="${color2}">APP</td>
+            <td align="center" bgcolor="${color2}">API</td>
+            <td align="center" bgcolor="${color2}">产品</td>
+            <td align="center" bgcolor="${color3}">p1</td>
+            <td align="center" bgcolor="${color3}">p2</td>
+            <td align="center" bgcolor="${color3}">p3</td>
+            <td align="center" bgcolor="${color3}">p4</td>
+            <td align="center" bgcolor="${color3}">p5</td>
+            <td align="center" bgcolor="${color4}">test</td>
+            <td align="center" bgcolor="${color4}">dev</td>
+            <td align="center" bgcolor="${color4}"><font color="red">pre</font></td>
+            <td align="center" bgcolor="${color4}">prod</td>
         </tr>
         % for pmt_id in data['project_bug']:
             <%
@@ -59,7 +65,7 @@
             <td>${report_html(item,'p5',item['pmt_id'],'index',True,0,0)}</td>
             <td>${report_html(item,'test',item['pmt_id'],'index',True,0,0)}</td>
             <td>${report_html(item,'dev',item['pmt_id'],'index',True,0,0)}</td>
-            <td>${report_html(item,'prerelease',item['pmt_id'],'index',True,0,0)}</td>
+            <td bgcolor="yellow">${report_html(item,'prerelease',item['pmt_id'],'index',True,0,2)}</td>
             <td>${report_html(item,'production',item['pmt_id'],'index',True,0,0)}</td>
             </tr>
     % endfor
