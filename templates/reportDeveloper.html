@@ -55,19 +55,19 @@
         <td><a href="${pmt_url}" target="_blank">${project['pmt_id']}</a></td>
         <td>${project['name']}</td>
         <td>${project['endtime']}</td>
-        <td>${report_html(bug,'chinese_name',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'total',project['pmt_id'],'dev',False,100,0)}</td>
-        <td>${report_html(bug,'workload',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'workload_div',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'unclose',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'close_div',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'reopen',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'reject',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'lose_repair_div',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'repair_time',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'repair_time_div',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'daily_to_rc',project['pmt_id'],'dev',False,1,0)}</td>
-        <td>${report_html(bug,'daily_to_rc_div',project['pmt_id'],'dev',False,1,0)}</td>
+        <td>${report_html(bug,'chinese_name',project['pmt_id'],'developer',False,1,0)}</td>
+        <td>${report_html(bug,'total',project['pmt_id'],'developer',True,100,0)}</td>
+        <td>${report_html(bug,'workload',project['pmt_id'],'developer',False,1,0)}</td>
+        <td>${report_html(bug,'workload_div',project['pmt_id'],'developer',False,1,0)}</td>
+        <td>${report_html(bug,'unclose',project['pmt_id'],'developer',True,1,0)}</td>
+        <td>${report_html(bug,'close_div',project['pmt_id'],'developer',False,1,0)}</td>
+        <td>${report_html(bug,'reopen',project['pmt_id'],'developer',True,1,0)}</td>
+        <td>${report_html(bug,'reject',project['pmt_id'],'developer',True,1,0)}</td>
+        <td>${report_html(bug,'lose_repair_div',project['pmt_id'],'developer',False,1,0)}</td>
+        <td>${report_html(bug,'repair_time',project['pmt_id'],'developer',False,1,0)}</td>
+        <td>${report_html(bug,'repair_time_div',project['pmt_id'],'developer',False,1,0)}</td>
+        <td>${report_html(bug,'daily_to_rc',project['pmt_id'],'developer',True,1,0)}</td>
+        <td>${report_html(bug,'daily_to_rc_div',project['pmt_id'],'developer',False,1,0)}</td>
     </tr>
     % endfor
     </table>

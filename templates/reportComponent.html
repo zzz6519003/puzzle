@@ -21,21 +21,23 @@
         </tr>
         % for pmt_id in data['project_bug_component']:
         <%  
-        item = data['project_bug_component'][pmt_id]['project']
         from model.GlobalFunc import get_pmt_url
-        pmt_url = get_pmt_url(item['pmt_id'])
+        from model.GlobalFunc import report_html
+        project = data['project_bug_component'][pmt_id]['project']
+        component = data['project_bug_component'][pmt_id]['component']
+        pmt_url = get_pmt_url(project['pmt_id'])
         %>
         <tr>
-                <td><a href="${pmt_url}" target="_blank">${data['project_bug_component'][pmt_id]['project']['pmt_id']}</a></td>
-                <td>${data['project_bug_component'][pmt_id]['project']['name']}</td>
-                <td>${data['project_bug_component'][pmt_id]['project']['endtime']}</td>
-                <td>${data['project_bug_component'][pmt_id]['project']['developer']}</td>
-                <td>${data['project_bug_component'][pmt_id]['project']['qa']}</td>
-                <td>${data['project_bug_component'][pmt_id]['total']}</td>
+                <td><a href="${pmt_url}" target="_blank">${project['pmt_id']}</a></td>
+                <td>${project['name']}</td>
+                <td>${project['endtime']}</td>
+                <td>${project['developer']}</td>
+                <td>${project['qa']}</td>
+                <td>${report_html(data['project_bug_component'][pmt_id]['total'],'total',project['pmt_id'],'component',True,0,0)}</td>
                 % for id in data['project_bug_component'][pmt_id]['component']:
                     <td>
-                    % if data['project_bug_component'][pmt_id]['component'][id] != 0 :
-                        ${data['project_bug_component'][pmt_id]['component'][id]}
+                    % if data['project_bug_component'][pmt_id]['component'][id]['count'] != 0 :
+                         ${report_html(component[id],component[id]['name'],project['pmt_id'],'component',True,0,0)}
                     % endif
                     </td>
                 % endfor

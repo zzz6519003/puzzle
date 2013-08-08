@@ -15,14 +15,6 @@ puzzle_db = settings.puzzle_db
 pmt_db = settings.pmt_db
 ibug_db = settings.ibug_db
 
-def filter_project_info(fl_project,project,dev_str,qa_str):
-    fl_project['pmt_id'] = project['pmtId']
-    fl_project['name'] = project['projectName']+get_os(project['category'])
-    fl_project['endtime'] = format_time(project['endDate']) 
-    fl_project['developer'] = dev_str
-    fl_project['qa'] = qa_str
-    
-    return fl_project
 
 class Index:
     def GET(self):
@@ -75,7 +67,7 @@ class Reason:
         for reason in reason_all_tmp:
             id = reason['id']
             data['th'][id] = {'name':reason['name'],'count':0}
-        data['th'][0] ={'name':'no reason','count':0}
+        data['th'][0] ={'name':'无原因','count':0}
         
         project_list = get_project_list(appName,category,version)
         data['project_bug_reason'] = {}
@@ -95,21 +87,24 @@ class Reason:
             project_bug_reason = puzzle_db.select('rp_projectbug_type',where="pmtId = $pmt_id AND type ='reason'",vars = {'pmt_id':pmt_id})
             bug_reason = {}
             for item in project_bug_reason:
-                bug_reason[item['com_id']] = item['count']
-                data['project_bug_reason'][pmt_id]['total'] += bug_reason[item['com_id']]
+                bug_reason[item['com_id']] = {'count':item['count']}
+                data['project_bug_reason'][pmt_id]['total'] += bug_reason[item['com_id']]['count']
             
             for id in data['th']:
                 if  id in bug_reason :
                     data['project_bug_reason'][pmt_id]['reason'][id] = bug_reason[id] 
                     data['th'][id]['count'] +=1;
                 else:
-                    data['project_bug_reason'][pmt_id]['reason'][id] = 0 
+                    data['project_bug_reason'][pmt_id]['reason'][id] = {'count':0} 
         
         for id in data['th'].keys() :
             if data['th'][id]['count'] ==0:
                 data['th'].pop(id)
                 for pmt_id in data['project_bug_reason']:
                     data['project_bug_reason'][pmt_id]['reason'].pop(id)
+            else :
+                for pmt_id in data['project_bug_reason']:
+                    data['project_bug_reason'][pmt_id]['reason'][id]['name'] = data['th'][id]['name']
         data['colspan'] = len(data['th'])+1
         return render.reportReason(data=data)
 
@@ -150,21 +145,24 @@ class Component:
             project_bug_component = puzzle_db.select('rp_projectbug_type',where ="pmtId =$pmt_id AND type='component'",vars = {'pmt_id':pmt_id})
             bug_component = {}
             for item in project_bug_component:
-                bug_component[item['com_id']] = item['count']
-                data['project_bug_component'][pmt_id]['total'] += bug_component[item['com_id']] 
+                bug_component[item['com_id']] = {'count':item['count']}
+                data['project_bug_component'][pmt_id]['total'] += bug_component[item['com_id']]['count'] 
 
             for id in data['th']:
                 if id in bug_component :
                     data['project_bug_component'][pmt_id]['component'][id] = bug_component[id]
                     data['th'][id]['count'] +=1
                 else:
-                    data['project_bug_component'][pmt_id]['component'][id] = 0
+                    data['project_bug_component'][pmt_id]['component'][id] = {'count':0}
         
         for id in data['th'].keys() :
             if data['th'][id]['count'] == 0:
                 data['th'].pop(id)
                 for pmt_id in data['project_bug_component']:
                     data['project_bug_component'][pmt_id]['component'].pop(id)
+            else:
+                for pmt_id in data['project_bug_component']:
+                    data['project_bug_component'][pmt_id]['component'][id]['name'] = data['th'][id]['name']
         
         data['colspan'] = len(data['th'])+1
         
@@ -343,6 +341,76 @@ class Qa:
         
         return render.reportQa(data=data)
 
+class Detail:
+    def GET(self):
+        params = web.input()
+        pmt_id = params.get('pmt_id')
+        cn_name = params.get('cn_name')
+        page = params.get('page')
+        location = params.get('location')
+        tickets = {}
+        if page == 'qa':
+            if location == 'total':
+                tickets = get_qa_bugs_from_puzzle(pmt_id,cn_name)
+            elif location in ('p1','p2','p3','p4'):
+                tickets = get_qa_priority_bugs_from_puzzle(pmt_id,location)
+            elif location == 'dailybuild':
+                tickets = get_qa_dailybuild_bugs_from_puzzle(pmt_id,cn_name,True)
+            elif location == 'no_dailybuild':
+                tickets = get_qa_dailybuild_bugs_from_puzzle(pmt_id,cn_name,False)
+        elif page =='developer':
+            if location == 'total':
+                tickets = get_dev_bugs_from_puzzle(pmt_id,cn_name)
+            elif location =='unclose':
+                tickets = get_dev_unclose_bugs_from_puzzle(pmt_id,cn_name)
+            elif location =='reopen':
+                tickets = get_dev_reopen_bugs_from_puzzle(pmt_id,cn_name)
+            elif location =='reject':
+                tickets = get_dev_reject_bugs_from_puzzle(pmt_id,cn_name)
+            elif location =='daily_to_rc':
+                tickets = get_dev_daily_to_rc_bugs_from_puzzle(pmt_id,cn_name)
+        elif page =='index':
+            if location =='total':
+                tickets = puzzle_db.select('ticket',where="pmtId = $pmt_id AND environment<>'test'",
+                        vars={'pmt_id':pmt_id})
+            elif location == 'app':
+                tickets = puzzle_db.query("SELECT * FROM ticket \
+                        WHERE pmtId=$pmt_id AND component NOT LIKE '%api%' \
+                        AND reason NOT LIKE '%产品设计%' AND environment !='test'",vars={'pmt_id':pmt_id})
+            elif location == 'api':
+                tickets = puzzle_db.query("SELECT * FROM ticket \
+                        WHERE pmtId=$pmt_id AND component LIKE '%api%' \
+                        AND reason NOT LIKE '%产品设计%' AND environment !='test'",vars={'pmt_id':pmt_id})
+            elif location == 'product':
+                tickets = puzzle_db.query("SELECT * FROM ticket \
+                        WHERE pmtId=$pmt_id AND reason LIKE '%产品设计%' \
+                        AND environment !='test'",vars={'pmt_id':pmt_id})
+            elif location in ('p1','p2','p3','p4','p5'):
+                tickets = puzzle_db.query("SELECT * FROM ticket \
+                        WHERE pmtId=$pmt_id AND component NOT LIKE '%api%' \
+                        AND priority  LIKE $priority AND environment !='test'",vars={'pmt_id':pmt_id,'priority':location+'%'})
+            elif location in ('test','dev','prerelease','production'):
+                tickets = puzzle_db.query("SELECT * FROM ticket \
+                        WHERE pmtId=$pmt_id AND component NOT LIKE '%api%' \
+                        AND environment=$environment",vars={'pmt_id':pmt_id,'environment':location})
+        elif page == 'reason':
+            sql = "SELECT * FROM ticket WHERE pmtId=$pmt_id AND component NOT LIKE '%api%' "
+            if location =='无原因':
+                sql += "AND reason = ''"
+            elif location !='total':
+                sql += "AND reason = $reason"
+            tickets = puzzle_db.query(sql,vars={'pmt_id':urllib.unquote(pmt_id),'reason':location})
+        elif page =='component':
+            sql = "SELECT * FROM ticket WHERE pmtId=$pmt_id "
+            if location !='total':
+                sql += "AND component =$component"
+            tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'component':urllib.unquote(location)})
+
+        data['tickets'] = tickets
+        return render.reportDetail(data=data)
+
+
+
 class Update:
     def GET(self):
         params = web.input()
@@ -382,7 +450,29 @@ class Update:
                     WHERE pmt_id = $pmt_id \
                     AND (status <>'closed' OR status='closed' AND t.resolution NOT IN(20,27))",vars=value)
             for item in ticket_detail:
-                    puzzle_db.insert('ticket',ticket_id=item['ticket_id'],created_at=item['created_at'],updated_at=item['updated_at'],closed_at=item['closed_at'],priority=item['priority'],reporter=item['reporter'],owner=item['owner'],status=item['status'],summary=item['summary'],pmtId=item['pmt_id'],environment=item['environment'],component=item['component'],resolution=item['resolution'],reason=item['reason'])
+                if not item['resolution']:
+                    item['resolution'] =''
+                if not item['reason']:
+                    item['reason'] = ''
+                is_reject = 0
+                is_reopen = 0
+                is_daily_to_rc = 0
+                reject_tmp = ibug_db.query("SELECT * FROM ticket_log \
+                        WHERE ticket_id=$ticket_id AND field='status' \
+                        AND rlog='Ticket_ActionReject'",vars={'ticket_id':item['ticket_id']})
+                if len(reject_tmp) > 0:
+                    is_reject = 1
+                reopen_tmp = ibug_db.query("SELECT * FROM ticket_relation WHERE ticket_id =$ticket_id",vars={'ticket_id':item['ticket_id']})
+                if len(reopen_tmp) >0:
+                    is_reopen = 1
+
+                daily_to_rc_tmp = ibug_db.query("SELECT * FROM ticket_log WHERE ticket_id=$ticket_id AND field='environment' AND oldvalue='Test' AND newvalue='Dev'",vars={'ticket_id':item['ticket_id']})
+                if len(daily_to_rc_tmp) > 0:
+                    is_daily_to_rc = 1
+
+
+
+                puzzle_db.insert('ticket',ticket_id=item['ticket_id'],created_at=item['created_at'],updated_at=item['updated_at'],closed_at=item['closed_at'],priority=item['priority'],reporter=item['reporter'],owner=item['owner'],status=item['status'],summary=item['summary'],pmtId=item['pmt_id'],environment=item['environment'],component=item['component'],resolution=item['resolution'],reason=item['reason'],is_reopen=is_reopen,is_reject=is_reject,is_daily_to_rc=is_daily_to_rc)
             total = ibug_db.query("SELECT count(id) AS count  FROM ticket "
                                 "WHERE pmt_id = $pmt_id AND environment <> 17 "
                                 "AND (status <> 'closed' OR status = 'closed' "
@@ -608,6 +698,94 @@ class Update:
         return render.reportUpdate(data=data)
 
 
+
+
+
+def get_qa_bugs_from_puzzle(pmt_id,cn_name):
+    sql = "SELECT * FROM ticket WHERE pmtId=$pmt_id "
+    if cn_name != 'total':
+        sql += " AND reporter=$cn_name"
+    tickets = puzzle_db.query(sql,vars = {'pmt_id':pmt_id,'cn_name':cn_name})
+    if cn_name == 'total':
+        ticket = puzzle_db.select('ticket',where="pmtId=$pmt_id",vars={'pmt_id':pmt_id})
+    else:
+        ticket = puzzle_db.select('ticket', where=" pmtId=$pmt_id AND reporter = $cn_name",vars ={'pmt_id':pmt_id,'cn_name':cn_name})
+    return tickets
+
+def get_qa_priority_bugs_from_puzzle(pmt_id,location):
+    tickets = puzzle_db.query("SELECT * FROM ticket WHERE pmtId = $pmt_id AND environment='PreRelease' AND priority LIKE $priority",vars={'pmt_id':pmt_id,'priority':location+'%'})
+    return tickets
+
+def get_qa_dailybuild_bugs_from_puzzle(pmt_id,cn_name,is_daily):
+    vars= {'pmt_id':pmt_id,'cn_name':cn_name}
+    sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND environment "
+    if is_daily ==True:
+        sql += "='test' "
+    else:
+        sql += "!='test'"
+    if cn_name !='total':
+        sql += "AND reporter = $cn_name"
+    tickets = puzzle_db.query(sql,vars)
+    return tickets
+
+def get_dev_bugs_from_puzzle(pmt_id,cn_name):
+    if cn_name =='total':
+        tickets = puzzle_db.select('ticket', where="pmtId=$pmt_id AND environment !='test' AND component NOT LIKE '%api%'",vars ={'pmt_id':pmt_id})
+    else:
+        tickets = puzzle_db.select('ticket', where=" pmtId=$pmt_id AND owner = $cn_name AND environment !='test'",vars ={'pmt_id':pmt_id,'cn_name':cn_name})
+    return tickets
+
+def get_dev_unclose_bugs_from_puzzle(pmt_id,cn_name):
+    sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND status !='closed' AND environment!='test' "
+    if cn_name !='total':
+        sql += " AND owner = $cn_name"
+    else:
+        sql +=" AND component NOT LIKE '%api%'"
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    return tickets
+
+def get_dev_reject_bugs_from_puzzle(pmt_id,cn_name):
+    sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND is_reject=1 AND environment!='test' "
+    if cn_name !='total':
+        sql += " AND owner = $cn_name"
+    else:
+        sql +=" AND component NOT LIKE '%api%'"
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    return tickets
+
+
+def get_dev_reopen_bugs_from_puzzle(pmt_id,cn_name):
+    sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND is_reopen=1 AND environment!='test' "
+    if cn_name !='total':
+        sql += " AND owner = $cn_name"
+    else:
+        sql +=" AND component NOT LIKE '%api%'"
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    return tickets
+
+def get_dev_daily_to_rc_bugs_from_puzzle(pmt_id,cn_name):
+    sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id  AND is_daily_to_rc=1 "
+    if cn_name !='total':
+        sql += " AND owner = $cn_name"
+    else:
+        sql +=" AND component NOT LIKE '%api%'"
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    return tickets
+
+
+
+def filter_project_info(fl_project,project,dev_str,qa_str):
+    fl_project['pmt_id'] = project['pmtId']
+    fl_project['name'] = project['projectName']+get_os(project['category'])
+    fl_project['endtime'] = format_time(project['endDate']) 
+    fl_project['developer'] = dev_str
+    fl_project['qa'] = qa_str
+
+    return fl_project
+
+
+
+
 def get_task_owners_from_pmt(pmt_id):
     dev = {}
     qa = {}
@@ -778,3 +956,4 @@ def get_os(os_int):
         return 'android'
     else:
         return ''
+

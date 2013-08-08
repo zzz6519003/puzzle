@@ -38,6 +38,7 @@
             <%
             item = data['project_bug'][pmt_id]
             from model.GlobalFunc import get_pmt_url
+            from model.GlobalFunc import report_html
             pmt_url = get_pmt_url(item['pmt_id'])
             %>
             <tr>
@@ -47,19 +48,19 @@
             <td>${item['developer']}</td>
             <td>${item['qa']}</td>
             <td>${item['rate']}</td>
-            <td>${item['total']}</td>
-            <td>${item['app']}</td>
-            <td>${item['api']}</td>
-            <td>${item['product']}</td>
-            <td>${item['p1']}</td>
-            <td>${item['p2']}</td>
-            <td>${item['p3']}</td>
-            <td>${item['p4']}</td>
-            <td>${item['p5']}</td>
-            <td>${item['test']}</td>
-            <td>${item['dev']}</td>
-            <td>${item['prerelease']}</td>
-            <td>${item['production']}</td>
+            <td>${report_html(item,'total',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'app',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'api',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'product',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'p1',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'p2',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'p3',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'p4',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'p5',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'test',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'dev',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'prerelease',item['pmt_id'],'index',True,0,0)}</td>
+            <td>${report_html(item,'production',item['pmt_id'],'index',True,0,0)}</td>
             </tr>
     % endfor
     </tbody>
