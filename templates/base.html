@@ -67,6 +67,7 @@ if data == None:
         <script type="text/javascript" src="/static/js/pages/common/notice.js"></script>
         <script type="text/javascript" src="/static/js/pages/common/main.js"></script>
 
+        <script type="text/javascript" src="/static/js/bootstrap-dropdown.js"></script>
 	 	${self.header()}
     </head>
 
@@ -89,20 +90,33 @@ if data == None:
                             navData = [
                             ["Home","/index"],
                             ["Project","/project"],
-                     
                             ['UIComponent',"/mobileUi"],
                             ["Report","/report/index"],
                             ["AboutUs","/aboutUs"],
                             ]
+                            report = [
+                            ["Index","/report/index"],
+                            ["Reason","/report/reason"],
+                            ["Component","/report/component"],
+                            ["Developer","/report/developer"],
+                            ["QA","/report/qa"],
+                            ]
                             %>
 
                             % for item in navData:
-                            <li class="
+                            <li class="dropdown
                             % if data['pageIndex'].lower() == item[0].lower():
                             active
                             % endif
                             ">
-                            <a href="${item[1]}">${item[0]}</a>
+                            <a href="${item[1]}"  class="dropdown-toggle" data-toggle="dropdown">${item[0]}</a>
+                            %if item[0] == "Report":
+                             <ul class="dropdown-menu">
+                                %for value in report:
+                                <li><a href="${value[1]}">${value[0]}</a></li>
+                                % endfor
+                             </ul>
+                            % endif
                             </li>
                             % endfor    
                             </%def>

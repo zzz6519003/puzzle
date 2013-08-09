@@ -102,3 +102,112 @@ create table `uiClipper`(
 primary key `id`(`id`)
 ) engine=innodb default charset=utf8 comment='切片列表';
 
+
+
+
+
+
+
+
+
+
+delimiter $$
+
+CREATE TABLE `rp_developer` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `staff_no` varchar(45) NOT NULL,
+        `chinese_name` varchar(45) NOT NULL,
+        `pmtId` int(11) NOT NULL DEFAULT '0',
+        `total` int(11) NOT NULL DEFAULT '0',
+        `workload` decimal(10,2) NOT NULL DEFAULT '0.00',
+        `unclose` int(11) NOT NULL DEFAULT '0',
+        `reopen` int(11) NOT NULL DEFAULT '0',
+        `reject` int(11) NOT NULL DEFAULT '0',
+        `repair_time` int(11) NOT NULL DEFAULT '0' COMMENT '修复总时间',
+        `major_bug` int(11) NOT NULL DEFAULT '0' COMMENT 'p1-p3 bug数',
+        `daily_to_rc` int(11) NOT NULL DEFAULT '0' COMMENT 'dailybuild带到rc的bug',
+        `rc` int(11) NOT NULL DEFAULT '0' COMMENT 'rc bug',
+        `user_from` int(11) NOT NULL COMMENT '1是pmt，2是ibug',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=627 DEFAULT CHARSET=utf8 COMMENT='开发报表'$$
+
+
+delimiter $$
+
+CREATE TABLE `rp_projectbug` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `app` int(11) NOT NULL DEFAULT '0' COMMENT 'app bug',
+        `api` int(11) NOT NULL DEFAULT '0' COMMENT 'api bug',
+        `product` int(11) NOT NULL DEFAULT '0' COMMENT '产品设计bug',
+        `p1` int(11) NOT NULL DEFAULT '0',
+        `p2` int(11) NOT NULL DEFAULT '0',
+        `p3` int(11) NOT NULL DEFAULT '0',
+        `p4` int(11) NOT NULL DEFAULT '0',
+        `p5` int(11) NOT NULL DEFAULT '0',
+        `test` int(11) NOT NULL DEFAULT '0' COMMENT 'daily build bug',
+        `dev` int(11) NOT NULL DEFAULT '0' COMMENT 'rc bug',
+        `prerelease` int(11) NOT NULL DEFAULT '0' COMMENT '真机测试bug',
+        `production` int(11) NOT NULL DEFAULT '0' COMMENT '线上bug',
+        `pmtId` int(11) NOT NULL DEFAULT '0',
+        `created` int(11) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='项目报表' $$
+
+
+delimiter $$
+
+CREATE TABLE `rp_projectbug_type` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `type` varchar(45) NOT NULL COMMENT '类型',
+        `com_id` int(11) NOT NULL DEFAULT '0' COMMENT '分类id',
+        `count` int(11) NOT NULL DEFAULT '0' COMMENT 'bug数量',
+        `pmtId` int(11) NOT NULL DEFAULT '0',
+        `created` int(11) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=3870 DEFAULT CHARSET=utf8 COMMENT='bug 原因和component统计'$$
+
+
+delimiter $$
+
+CREATE TABLE `rp_qa` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `staff_no` varchar(45) NOT NULL COMMENT '工号',
+        `chinese_name` varchar(45) NOT NULL,
+        `pmtId` int(11) NOT NULL DEFAULT '0',
+        `total` int(11) NOT NULL DEFAULT '0',
+        `workload` decimal(10,2) NOT NULL DEFAULT '0.00',
+        `p1` int(11) NOT NULL DEFAULT '0',
+        `p2` int(11) NOT NULL DEFAULT '0',
+        `p3` int(11) NOT NULL DEFAULT '0',
+        `p4` int(11) NOT NULL DEFAULT '0',
+        `dailybuild` int(11) NOT NULL DEFAULT '0' COMMENT 'daily build bug',
+        `user_from` int(11) NOT NULL COMMENT '1是pmt 2是ibug',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=464 DEFAULT CHARSET=utf8 COMMENT='qa报表'$$
+
+
+delimiter $$
+
+CREATE TABLE `ticket` (
+        `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+        `ticket_id` int(11) NOT NULL,
+        `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+        `updated_at` datetime DEFAULT NULL COMMENT '最后更新时间',
+        `closed_at` datetime DEFAULT NULL COMMENT '关闭时间',
+        `priority` varchar(45) DEFAULT NULL COMMENT '优先级',
+        `reporter` varchar(45) DEFAULT NULL COMMENT '创建者',
+        `owner` varchar(45) DEFAULT NULL COMMENT 'owner',
+        `status` varchar(45) DEFAULT NULL COMMENT '状态',
+        `summary` varchar(256) NOT NULL COMMENT '摘要',
+        `pmtId` int(10) unsigned DEFAULT NULL COMMENT '关联的外部项目id',
+        `environment` varchar(45) NOT NULL COMMENT '环境',
+        `component` varchar(45) DEFAULT NULL COMMENT '组件',
+        `resolution` varchar(45) DEFAULT '' COMMENT '解决的状态',
+        `reason` varchar(45) DEFAULT '' COMMENT '解决原因',
+        `is_reopen` int(11) DEFAULT '0',
+        `is_reject` int(11) DEFAULT '0',
+        `is_daily_to_rc` int(11) DEFAULT NULL,
+        PRIMARY KEY (`id`,`ticket_id`),
+        KEY `reporter` (`reporter`),
+        KEY `owner` (`owner`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=2310 DEFAULT CHARSET=utf8 COMMENT='ticket信息'$$
