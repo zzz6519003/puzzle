@@ -415,16 +415,17 @@ class Update:
     def GET(self):
         params = web.input()
         pmt_id = params.get('pmt_id')
-        if not pmt_id :
-            raise web.seeother('/index')
-        data['pmt_id'] = pmt_id
+        if pmt_id :
+            data['pmt_id'] = pmt_id
+        else:
+            data['pmt_id'] = ''
         value = {'pmt_id':pmt_id}
+        data['success'] = False
         #获取当前日期
         data['currentDate'] = time.strftime('%Y-%m-%d,%A',time.localtime(time.time()))
         is_update = params.get('is_update')
         data['is_update'] = is_update
-        if is_update:
-            data['pmt_id'] = pmt_db.select('project',where ='id='+pmt_id)
+        if pmt_id and is_update:
             data['ticket'] = ibug_db.select('ticket',where ='pmt_id='+pmt_id)
             puzzle_db.delete('ticket',where ='pmtId='+pmt_id)
             ticket_detail = ibug_db.query("SELECT t.resolution,t.id AS ticket_id,created_at , \
@@ -694,6 +695,7 @@ class Update:
 
 
                 puzzle_db.insert('rp_qa',staff_no = qas[i]['staff_no'],chinese_name = qas[i]['chinese_name'],total=qa_count,workload = qas[i]['workload']/8,p1=qa_priority['p1'],p2=qa_priority['p2'],p3=qa_priority['p3'],p4=qa_priority['p4'],dailybuild=dailybuild,user_from=qas[i]['from'],pmtId =pmt_id)
+                data['success'] = True
         #获取数据
         return render.reportUpdate(data=data)
 

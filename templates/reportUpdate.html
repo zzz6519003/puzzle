@@ -1,25 +1,15 @@
-<html>
-% if data['is_update']:
-    124
-% for item in data['ticket']:
-${item['id']}
-% endfor
-<br>
-
-% for a in data['pmt_id']:
-${a['id']}
-% endfor
-<br><br>
-test123<br>
-% for i in data['test']:
-${data['test'][i]}
-%endfor
-%endif
-<br>
-${data['is_update']}
- % for i in data['users']:
- % for key in data['users'][i]:
- ${key},${data['users'][i][key]}<br>
-     % endfor
-         % endfor
-</html>
+<%inherit file='base.html'/>
+<%block name='header'>
+</%block>
+<%block name='body'>
+    <div class='container'>
+    <form>
+        pmt_id:&nbsp<input name="pmt_id" type="text" class="input-medium" value="${data['pmt_id']}">
+        <input name="is_update" type="hidden" value="1">
+        <button class="btn btn-info" type="sumbit">更新</button>
+    </form>
+    % if data['success'] == True:
+    更新成功
+    % endif
+    </div>
+</%block>
