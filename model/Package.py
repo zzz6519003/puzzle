@@ -108,11 +108,14 @@ def sendmailToQA(packageInfo):
         mail.sender = "noreply@dm.anjuke.com"
         mail.to = """
             wendygu@anjuke.com ,
-            jianzhongliu@anjuke.com ,
             clairyin@anjuke.com ,
             yuxiaoma@anjuke.com ,
             bozhang@anjuke.com ,
             vingowang@anjukeinc.com ,
+            irishan@anjuke.com ,
+            angelazhang@anjuke.com ,
+            shanxu@anjuke.com ,
+            qianyunxu@anjuke.com ,
             louiezhou@anjuke.com
             """
         mail.encoding = "utf-8"
