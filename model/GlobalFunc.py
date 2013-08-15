@@ -33,7 +33,7 @@ def report_html(data,name,pmt_id,page,is_hyperlink,limit,is_color):
 
         return s
 
-    s = '<ul>'
+    s = '<ul class="report">'
     for i in data:
         #这些项不累加
         param = urllib.urlencode({'pmt_id':pmt_id,'cn_name':data[i]['chinese_name'],'page':page,'location':name})
