@@ -1,4 +1,4 @@
--- grant all PRIVILEGES on `MobilePuzzle`.* to 'mobilePuzzle'@'%' identified by 'mobilepuzzle123456';
+﻿-- grant all PRIVILEGES on `MobilePuzzle`.* to 'mobilePuzzle'@'%' identified by 'mobilepuzzle123456';
 
 -- appList
 CREATE TABLE `appList` (
@@ -129,7 +129,7 @@ CREATE TABLE `rp_developer` (
         `rc` int(11) NOT NULL DEFAULT '0' COMMENT 'rc bug',
         `user_from` int(11) NOT NULL COMMENT '1是pmt，2是ibug',
         PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=627 DEFAULT CHARSET=utf8 COMMENT='开发报表'$$
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='开发报表'$$
 
 
 delimiter $$
@@ -151,7 +151,7 @@ CREATE TABLE `rp_projectbug` (
         `pmtId` int(11) NOT NULL DEFAULT '0',
         `created` int(11) NOT NULL,
         PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='项目报表' $$
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目报表' $$
 
 
 delimiter $$
@@ -164,7 +164,7 @@ CREATE TABLE `rp_projectbug_type` (
         `pmtId` int(11) NOT NULL DEFAULT '0',
         `created` int(11) NOT NULL,
         PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=3870 DEFAULT CHARSET=utf8 COMMENT='bug 原因和component统计'$$
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='bug 原因和component统计'$$
 
 
 delimiter $$
@@ -183,7 +183,7 @@ CREATE TABLE `rp_qa` (
         `dailybuild` int(11) NOT NULL DEFAULT '0' COMMENT 'daily build bug',
         `user_from` int(11) NOT NULL COMMENT '1是pmt 2是ibug',
         PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=464 DEFAULT CHARSET=utf8 COMMENT='qa报表'$$
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='qa报表'$$
 
 
 delimiter $$
@@ -210,4 +210,4 @@ CREATE TABLE `ticket` (
         PRIMARY KEY (`id`,`ticket_id`),
         KEY `reporter` (`reporter`),
         KEY `owner` (`owner`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=2310 DEFAULT CHARSET=utf8 COMMENT='ticket信息'$$
+    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ticket信息'$$

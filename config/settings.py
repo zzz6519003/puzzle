@@ -26,7 +26,7 @@ config = web.storage(
 
 #db = web.database(dbn='mysql',db='puzzle',user='root',pw='casacasa',host='localhost',port=3306);
 db = getConnection()
-puzzle_db = getConnectionV2('puzzle')
+puzzle_db = getConnection()
 pmt_db = getConnectionV2('pmt')
 ibug_db = getConnectionV2('ibug')
 
