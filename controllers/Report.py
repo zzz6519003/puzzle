@@ -926,7 +926,7 @@ def get_select(data):
     index = 0
     dict_index = {}
     data['version'] = {}
-    appNames = puzzle_db.query("SELECT DISTINCT appGroup AS appName FROM applist ORDER BY id")
+    appNames = puzzle_db.query("SELECT DISTINCT appGroup AS appName FROM appList WHERE appGroup <>'' ORDER BY id")
     for item in appNames:
         data['appName'][index] = item['appName']
         dict_index[item['appName']] = index
