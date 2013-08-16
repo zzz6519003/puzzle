@@ -951,7 +951,7 @@ def div(dividend,divisor):
 def format_time(timestamp):
     import time
     if timestamp :
-        format_time = time.strftime( '%Y-%m-%d',time.gmtime(timestamp))
+        format_time = time.strftime( '%Y-%m-%d',time.localtime(timestamp))
     else :
         format_time = ''
     return format_time

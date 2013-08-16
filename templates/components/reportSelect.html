@@ -1,6 +1,14 @@
 <script src="/static/js/jquery.js" type="text/javascript"></script> 
 <script type="text/javascript"> 
-$(document).ready(function(){ 
+$(document).ready(function(){
+
+     $('select#appName').val("${data['params']['appName']}");
+    $('select#category').val("${data['params']['category']}");
+    $('select#version').val("${data['params']['version']}");
+
+
+    $('select#appName').attr("selected","selected");
+
     $("#appName").change(function(){ 
         $("#appName option").each(function(i,o){ 
             if($(this).attr("selected")) 
@@ -14,10 +22,9 @@ $(document).ready(function(){
             } 
         }); 
     }); 
-    $("#appName").change(); 
-    $('select#appName').val("${data['params']['appName']}");
-    $('select#category').val("${data['params']['category']}");
-    $('select#version').val("${data['params']['version']}");
+    $("#appName").change();
+
+
 }); 
 </script>
 <form method ="GET">
