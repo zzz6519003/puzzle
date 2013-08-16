@@ -43,7 +43,8 @@ class Index:
             if len(counts):
                 count = counts[0]
             else :
-                count =  {}.fromkeys(('app', 'api','product','p1','p2','p3','p4','p5','test','dev','prerelease','production'),0) 
+                count =  {}.fromkeys(('app', 'api','product','p1','p2','p3','p4','p5','test','dev','prerelease','production','created'),0)
+
             total = count['app']+ count['api']+count['product']
             data['project_bug'][index] = filter_project_info(count,project,dev_str,qa_str)
             data['project_bug'][index]['rate'] = project['rate']
@@ -86,6 +87,8 @@ class Reason:
             data['project_bug_reason'][index]['project']['developer'] = get_owner_str(devs)
             data['project_bug_reason'][index]['project']['qa'] = get_owner_str(qas)
             data['project_bug_reason'][index]['project']['endtime'] = format_time(project['endDate'])
+
+            data['project_bug_reason'][index]['project']['created'] = get_created_time(pmt_id)
 
             project_bug_reason = puzzle_db.select('rp_projectbug_type',where="pmtId = $pmt_id AND type ='reason'",vars = {'pmt_id':pmt_id})
             bug_reason = {}
@@ -146,6 +149,8 @@ class Component:
             data['project_bug_component'][index]['project']['endtime'] = format_time(project['endDate'])
             data['project_bug_component'][index]['component'] ={}
             data['project_bug_component'][index]['total'] = 0
+
+            data['project_bug_component'][index]['project']['created'] = get_created_time(pmt_id)
             
             project_bug_component = puzzle_db.select('rp_projectbug_type',where ="pmtId =$pmt_id AND type='component'",vars = {'pmt_id':pmt_id})
             bug_component = {}
@@ -205,6 +210,9 @@ class Developer:
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
             data['data'][index] ={'project':project_info}
+
+
+            project_info['created'] = get_created_time(pmt_id)
 
             devs_bug = puzzle_db.select('rp_developer',where="pmtId = $pmt_id",vars={'pmt_id':pmt_id},order='user_from ASC')
             max_id = 0
@@ -294,6 +302,7 @@ class Qa:
             project_info['endtime'] = format_time(project['endDate'])
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
+            project_info['created'] = get_created_time(pmt_id)
             
             data['data'][index] ={'project':project_info}
 
@@ -542,7 +551,7 @@ class Update:
             if len(project_bug):
                 puzzle_db.update('rp_projectbug',where = 'pmtId = $pmt_id',vars = value, app = app, api = api , product = product , p1 = priorities['p1'] , p2 = priorities['p2'] ,  p3 = priorities['p3'] ,  p4 = priorities['p4'] , p5 = priorities['p5'] , test = environments['test'] ,dev = environments['dev'] ,prerelease = environments['prerelease'] , production = environments['production'])
             else:
-                puzzle_db.insert('rp_projectbug', app = app, api = api , product = product , p1 = priorities['p1'] , p2 = priorities['p2'] ,  p3 = priorities['p3'] ,  p4 = priorities['p4'] , p5 = priorities['p5'] , test = environments['test'] ,dev = environments['dev'] ,prerelease = environments['prerelease'] , production = environments['production'], pmtId = pmt_id, created = time.time())
+                puzzle_db.insert('rp_projectbug', app = app, api = api , product = product , p1 = priorities['p1'] , p2 = priorities['p2'] ,  p3 = priorities['p3'] ,  p4 = priorities['p4'] , p5 = priorities['p5'] , test = environments['test'] ,dev = environments['dev'] ,prerelease = environments['prerelease'] , production = environments['production'], pmtId = pmt_id)
        
             reasons_tmp = ibug_db.query("SELECT reason ,count(*) AS count  FROM ticket AS t "
                                         "LEFT JOIN dd_component AS c "
@@ -567,7 +576,7 @@ class Update:
 
 
             for reason_id in reason:
-                puzzle_db.insert('rp_projectbug_type',type ='reason',com_id = reason_id,count = reason[reason_id]['count'],pmtId = pmt_id,created = time.time())
+                puzzle_db.insert('rp_projectbug_type',type ='reason',com_id = reason_id,count = reason[reason_id]['count'],pmtId = pmt_id)
             
             component_tmp = ibug_db.query("SELECT component ,count(t.id) AS count FROM ticket AS t "
                                         "LEFT JOIN dd_component AS c "
@@ -578,7 +587,7 @@ class Update:
                                         "GROUP by component",vars = value)
             puzzle_db.delete("rp_projectbug_type",where = "pmtId = $pmt_id AND type='component'",vars =value)
             for b in component_tmp:
-                puzzle_db.insert('rp_projectbug_type',type = 'component',com_id = b['component'],count = b['count'],pmtId = pmt_id ,created =time.time())
+                puzzle_db.insert('rp_projectbug_type',type = 'component',com_id = b['component'],count = b['count'],pmtId = pmt_id)
             
             #dev,qa模块
             task_owners = get_task_owners_from_pmt(pmt_id) 
@@ -705,7 +714,8 @@ class Update:
 
 
                 puzzle_db.insert('rp_qa',staff_no = qas[i]['staff_no'],chinese_name = qas[i]['chinese_name'],total=qa_count,workload = qas[i]['workload']/8,p1=qa_priority['p1'],p2=qa_priority['p2'],p3=qa_priority['p3'],p4=qa_priority['p4'],dailybuild=dailybuild,user_from=qas[i]['from'],pmtId =pmt_id)
-                data['success'] = True
+            puzzle_db.update('rp_projectbug',where ="pmtId="+pmt_id,created=time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
+            data['success'] = True
         #获取数据
         return render.reportUpdate(data=data)
 
@@ -787,6 +797,8 @@ def get_dev_daily_to_rc_bugs_from_puzzle(pmt_id,cn_name):
 
 
 def filter_project_info(fl_project,project,dev_str,qa_str):
+    if not fl_project['created']:
+        fl_project['created']='暂无更新时间'
     fl_project['pmt_id'] = project['pmtId']
     fl_project['name'] = project['appName']+get_os(project['category'])+project['version']
     fl_project['endtime'] = format_time(project['endDate']) 
@@ -970,3 +982,11 @@ def get_os(os_int):
     else:
         return ''
 
+def get_created_time(pmt_id):
+    tmp = puzzle_db.select('rp_projectbug',where ='pmtId = $pmt_id',vars = {'pmt_id':pmt_id})
+    created = '暂无更新时间'
+    if len(tmp) > 0:
+        tmp2 = tmp[0]
+        if tmp2['created']:
+            created = str(tmp2['created'])
+    return created

@@ -61,7 +61,7 @@
     %>
     <tr>
         <td><a href="${pmt_url}" target="_blank">${project['pmt_id']}</a></td>
-        <td>${project['name']}</td>
+        <td><a class="label label-important tTip" href="#" rel="popover" tt="${project['created']}">${project['name']}</a></td>
         <td>${project['endtime']}</td>
         <td>${report_html(bug,'chinese_name',project['pmt_id'],'developer',False,1,0)}</td>
         <td>${report_html(bug,'total',project['pmt_id'],'developer',True,100,0)}</td>

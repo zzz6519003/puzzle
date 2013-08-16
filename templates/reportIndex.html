@@ -49,7 +49,7 @@
             %>
             <tr>
             <td><a href="${pmt_url}" target="_blank">${item['pmt_id']}</a></td>
-            <td>${item['name']}</td>
+            <td><a class="label label-important tTip" href="#" rel="popover" tt="${item['created']}">${item['name']}</a></td>
             <td>${item['endtime']}</td>
             <td>${item['developer']}</td>
             <td>${item['qa']}</td>
@@ -72,4 +72,10 @@
     </tbody>
 </table>
 </div>
+<script>$(document).ready(function(){
+    $('a.tTip').tinyTips();
+}
+);</script>
+<link href="/static/js/plugins/tinytip/tinyTips.css" rel="stylesheet">
+<script type="text/javascript" src="/static/js/plugins/tinytip/jquery.tinyTips.js"></script>
 </%block>
