@@ -40,9 +40,9 @@
             <td align="center" bgcolor="${color4}"><font color="red">pre</font></td>
             <td align="center" bgcolor="${color4}">prod</td>
         </tr>
-        % for pmt_id in data['project_bug']:
+        % for index in data['project_bug']:
             <%
-            item = data['project_bug'][pmt_id]
+            item = data['project_bug'][index]
             from model.GlobalFunc import get_pmt_url
             from model.GlobalFunc import report_html
             pmt_url = get_pmt_url(item['pmt_id'])

@@ -30,9 +30,10 @@ class Index:
 
         project_list = get_project_list(appName,category,version)
         data['project_bug'] = {}
+        index = 0
         for project in project_list:
             pmt_id = project['pmtId']
-            data['project_bug'][pmt_id] = {}
+            data['project_bug'][index] = {}
 
             devs = get_owners(pmt_id,'dev')
             dev_str = get_owner_str(devs)
@@ -44,9 +45,10 @@ class Index:
             else :
                 count =  {}.fromkeys(('app', 'api','product','p1','p2','p3','p4','p5','test','dev','prerelease','production'),0) 
             total = count['app']+ count['api']+count['product']
-            data['project_bug'][pmt_id] = filter_project_info(count,project,dev_str,qa_str)
-            data['project_bug'][pmt_id]['rate'] = ''
-            data['project_bug'][pmt_id]['total'] = total 
+            data['project_bug'][index] = filter_project_info(count,project,dev_str,qa_str)
+            data['project_bug'][index]['rate'] = ''
+            data['project_bug'][index]['total'] = total
+            index +=1
 
         return render.reportIndex(data=data)
 
@@ -71,40 +73,42 @@ class Reason:
         
         project_list = get_project_list(appName,category,version)
         data['project_bug_reason'] = {}
+        index = 0
         for project in project_list:
             pmt_id = project['pmtId']
-            data['project_bug_reason'][pmt_id] = {}
-            data['project_bug_reason'][pmt_id]['project'] ={}
-            data['project_bug_reason'][pmt_id]['reason'] ={}
-            data['project_bug_reason'][pmt_id]['total'] = 0
-            data['project_bug_reason'][pmt_id]['project'] ={'name':project['projectName']+get_os(project['category']),'pmt_id':pmt_id}
+            data['project_bug_reason'][index] = {}
+            data['project_bug_reason'][index]['project'] ={}
+            data['project_bug_reason'][index]['reason'] ={}
+            data['project_bug_reason'][index]['total'] = 0
+            data['project_bug_reason'][index]['project'] ={'name':project['appName']+get_os(project['category'])+project['version'],'pmt_id':pmt_id}
             devs = get_owners(pmt_id,'dev')
             qas = get_owners(pmt_id,'qa')
-            data['project_bug_reason'][pmt_id]['project']['developer'] = get_owner_str(devs)
-            data['project_bug_reason'][pmt_id]['project']['qa'] = get_owner_str(qas)
-            data['project_bug_reason'][pmt_id]['project']['endtime'] = format_time(project['endDate'])
+            data['project_bug_reason'][index]['project']['developer'] = get_owner_str(devs)
+            data['project_bug_reason'][index]['project']['qa'] = get_owner_str(qas)
+            data['project_bug_reason'][index]['project']['endtime'] = format_time(project['endDate'])
 
             project_bug_reason = puzzle_db.select('rp_projectbug_type',where="pmtId = $pmt_id AND type ='reason'",vars = {'pmt_id':pmt_id})
             bug_reason = {}
             for item in project_bug_reason:
                 bug_reason[item['com_id']] = {'count':item['count']}
-                data['project_bug_reason'][pmt_id]['total'] += bug_reason[item['com_id']]['count']
+                data['project_bug_reason'][index]['total'] += bug_reason[item['com_id']]['count']
             
             for id in data['th']:
                 if  id in bug_reason :
-                    data['project_bug_reason'][pmt_id]['reason'][id] = bug_reason[id] 
+                    data['project_bug_reason'][index]['reason'][id] = bug_reason[id]
                     data['th'][id]['count'] +=1;
                 else:
-                    data['project_bug_reason'][pmt_id]['reason'][id] = {'count':0} 
+                    data['project_bug_reason'][index]['reason'][id] = {'count':0}
+            index+=1
         
         for id in data['th'].keys() :
             if data['th'][id]['count'] ==0:
                 data['th'].pop(id)
-                for pmt_id in data['project_bug_reason']:
-                    data['project_bug_reason'][pmt_id]['reason'].pop(id)
+                for index in data['project_bug_reason']:
+                    data['project_bug_reason'][index]['reason'].pop(id)
             else :
-                for pmt_id in data['project_bug_reason']:
-                    data['project_bug_reason'][pmt_id]['reason'][id]['name'] = data['th'][id]['name']
+                for index in data['project_bug_reason']:
+                    data['project_bug_reason'][index]['reason'][id]['name'] = data['th'][id]['name']
         data['colspan'] = len(data['th'])+1
         return render.reportReason(data=data)
 
@@ -130,39 +134,40 @@ class Component:
         
         project_list = get_project_list(appName,category,version)
         data['project_bug_component'] = {}
+        index = 0
         for project in project_list:
             pmt_id = project['pmtId']
-            data['project_bug_component'][pmt_id] = {}
-            data['project_bug_component'][pmt_id]['project'] = {'name':project['projectName']+get_os(project['category']),'pmt_id':pmt_id}
+            data['project_bug_component'][index] = {}
+            data['project_bug_component'][index]['project'] = {'name':project['appName']+get_os(project['category'])+project['version'],'pmt_id':pmt_id}
             devs = get_owners(pmt_id,'dev')
             qas = get_owners(pmt_id,'qa')
-            data['project_bug_component'][pmt_id]['project']['developer'] = get_owner_str(devs)
-            data['project_bug_component'][pmt_id]['project']['qa'] = get_owner_str(qas)
-            data['project_bug_component'][pmt_id]['project']['endtime'] = format_time(project['endDate'])
-            data['project_bug_component'][pmt_id]['component'] ={}
-            data['project_bug_component'][pmt_id]['total'] = 0
+            data['project_bug_component'][index]['project']['developer'] = get_owner_str(devs)
+            data['project_bug_component'][index]['project']['qa'] = get_owner_str(qas)
+            data['project_bug_component'][index]['project']['endtime'] = format_time(project['endDate'])
+            data['project_bug_component'][index]['component'] ={}
+            data['project_bug_component'][index]['total'] = 0
             
             project_bug_component = puzzle_db.select('rp_projectbug_type',where ="pmtId =$pmt_id AND type='component'",vars = {'pmt_id':pmt_id})
             bug_component = {}
             for item in project_bug_component:
                 bug_component[item['com_id']] = {'count':item['count']}
-                data['project_bug_component'][pmt_id]['total'] += bug_component[item['com_id']]['count'] 
+                data['project_bug_component'][index]['total'] += bug_component[item['com_id']]['count']
 
             for id in data['th']:
                 if id in bug_component :
-                    data['project_bug_component'][pmt_id]['component'][id] = bug_component[id]
+                    data['project_bug_component'][index]['component'][id] = bug_component[id]
                     data['th'][id]['count'] +=1
                 else:
-                    data['project_bug_component'][pmt_id]['component'][id] = {'count':0}
-        
+                    data['project_bug_component'][index]['component'][id] = {'count':0}
+            index+=1
         for id in data['th'].keys() :
             if data['th'][id]['count'] == 0:
                 data['th'].pop(id)
-                for pmt_id in data['project_bug_component']:
-                    data['project_bug_component'][pmt_id]['component'].pop(id)
+                for index in data['project_bug_component']:
+                    data['project_bug_component'][index]['component'].pop(id)
             else:
-                for pmt_id in data['project_bug_component']:
-                    data['project_bug_component'][pmt_id]['component'][id]['name'] = data['th'][id]['name']
+                for index in data['project_bug_component']:
+                    data['project_bug_component'][index]['component'][id]['name'] = data['th'][id]['name']
         
         data['colspan'] = len(data['th'])+1
         
@@ -184,6 +189,7 @@ class Developer:
         
         data['data'] = {}
         project_list = get_project_list(appName,category,version)
+        index = 0
         for project in project_list:
             pmt_id = project['pmtId']
             users = {}
@@ -194,11 +200,11 @@ class Developer:
            
             project_info ={}
             project_info['pmt_id'] = pmt_id
-            project_info['name'] = project['projectName']+get_os(project['category'])
+            project_info['name'] = project['appName']+get_os(project['category'])+project['version']
             project_info['endtime'] = format_time(project['endDate'])
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
-            data['data'][pmt_id] ={'project':project_info}
+            data['data'][index] ={'project':project_info}
 
             devs_bug = puzzle_db.select('rp_developer',where="pmtId = $pmt_id",vars={'pmt_id':pmt_id},order='user_from ASC')
             max_id = 0
@@ -249,8 +255,9 @@ class Developer:
                     if key in result:
                         result[key] += '<span>' + str(users[total_id][key]) + '<br></span>'
 
-            data['data'][pmt_id]['count'] = result
-            data['data'][pmt_id]['count_s'] = users
+            data['data'][index]['count'] = result
+            data['data'][index]['count_s'] = users
+            index+=1
         return render.reportDeveloper(data=data)
 
 class Qa:
@@ -270,6 +277,7 @@ class Qa:
         project_list = get_project_list(appName,category,version)
         
         data['data'] = {}
+        index = 0
         for project in project_list:
             pmt_id = project['pmtId']
             
@@ -282,12 +290,12 @@ class Qa:
 
             project_info = {}
             project_info['pmt_id'] = pmt_id
-            project_info['name'] = project['projectName']+get_os(project['category'])
+            project_info['name'] = project['appName']+get_os(project['category'])+project['version']
             project_info['endtime'] = format_time(project['endDate'])
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
             
-            data['data'][pmt_id] ={'project':project_info}
+            data['data'][index] ={'project':project_info}
 
             qas_bug = puzzle_db.select('rp_qa',where = "pmtId = $pmt_id",vars = {'pmt_id':pmt_id},order='user_from')
             max_id = 0
@@ -336,8 +344,9 @@ class Qa:
                 for key in users[total_id]:
                     if key in result:                                                             
                         result[key] += '<span>'+str(users[total_id][key])+'<br><span>' 
-            data['data'][pmt_id]['count'] = result
-            data['data'][pmt_id]['count_s'] =users
+            data['data'][index]['count'] = result
+            data['data'][index]['count_s'] =users
+            index+=1
         
         return render.reportQa(data=data)
 
@@ -467,9 +476,10 @@ class Update:
                 if len(reopen_tmp) >0:
                     is_reopen = 1
 
-                daily_to_rc_tmp = ibug_db.query("SELECT * FROM ticket_log WHERE ticket_id=$ticket_id AND field='environment' AND oldvalue='Test' AND newvalue='Dev'",vars={'ticket_id':item['ticket_id']})
-                if len(daily_to_rc_tmp) > 0:
-                    is_daily_to_rc = 1
+                if item['environment'] =='Dev':
+                    daily_to_rc_tmp = ibug_db.query("SELECT * FROM ticket_log WHERE ticket_id=$ticket_id AND field='environment' AND oldvalue='Test' AND newvalue='Dev'",vars={'ticket_id':item['ticket_id']})
+                    if len(daily_to_rc_tmp) > 0:
+                        is_daily_to_rc = 1
 
 
 
@@ -778,7 +788,7 @@ def get_dev_daily_to_rc_bugs_from_puzzle(pmt_id,cn_name):
 
 def filter_project_info(fl_project,project,dev_str,qa_str):
     fl_project['pmt_id'] = project['pmtId']
-    fl_project['name'] = project['projectName']+get_os(project['category'])
+    fl_project['name'] = project['appName']+get_os(project['category'])+project['version']
     fl_project['endtime'] = format_time(project['endDate']) 
     fl_project['developer'] = dev_str
     fl_project['qa'] = qa_str
@@ -889,14 +899,15 @@ def get_owner_str(owners):
 def get_project_list(appName,category,version):
     if not appName and not category and not version:
         return {}
-    sql = "SELECT b.pmtId AS pmtId,b.projectName AS projectName,b.version AS version,b.category AS category,e.endDate AS endDate \
+    sql = "SELECT b.pmtId AS pmtId,b.projectName AS projectName,b.version AS version,\
+    b.appName AS appName,b.category AS category,e.endDate AS endDate \
     FROM (SELECT p.id AS id,p.pmtId AS pmtId,p.projectName AS projectName ,\
-    p.version AS version,a.appName as appName,a.category AS category \
+    p.version AS version,a.appGroup as appName,a.category AS category \
     FROM projectlist AS p ,applist AS a \
     WHERE p.appId = a.id "
     value ={}
     if appName :
-        sql += "AND a.appName = $appName "
+        sql += "AND a.appGroup = $appName "
         value['appName'] = appName
     if category :
         sql += "AND a.category=$category "
@@ -906,7 +917,7 @@ def get_project_list(appName,category,version):
         value['version'] = version
     sql += ") as b \
     LEFT JOIN projectevent AS e \
-    ON b.id = e.projectId AND e.category =10"
+    ON b.id = e.projectId AND e.category =10 ORDER BY pmtId DESC"
     project_list = puzzle_db.query(sql,vars = value)
     return project_list
 
@@ -915,14 +926,14 @@ def get_select(data):
     index = 0
     dict_index = {}
     data['version'] = {}
-    appNames = puzzle_db.query("SELECT DISTINCT appName AS appName FROM applist ORDER BY id")
+    appNames = puzzle_db.query("SELECT DISTINCT appGroup AS appName FROM applist ORDER BY id")
     for item in appNames:
         data['appName'][index] = item['appName']
         dict_index[item['appName']] = index
         data['version'][index] = {}
         index +=1
 
-    versions = puzzle_db.query("SELECT DISTINCT a.appName as appName ,p.version as version \
+    versions = puzzle_db.query("SELECT DISTINCT a.appGroup as appName ,p.version as version \
                                 FROM applist AS a,projectlist AS p \
                                 WHERE a.id = p.appId ORDER BY version")
     for item in versions:

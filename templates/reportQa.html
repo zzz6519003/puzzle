@@ -44,11 +44,11 @@
 
         </tr>
             
-    % for pmt_id in data['data']:
+    % for index in data['data']:
     <%
-    project = data['data'][pmt_id]['project']
-    count = data['data'][pmt_id]['count']
-    bug = data['data'][pmt_id]['count_s']
+    project = data['data'][index]['project']
+    count = data['data'][index]['count']
+    bug = data['data'][index]['count_s']
     from model.GlobalFunc import get_pmt_url
     from model.GlobalFunc import report_html
     pmt_url = get_pmt_url(project['pmt_id'])

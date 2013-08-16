@@ -27,13 +27,13 @@
                 <td>${data['th'][id]['name']}</td>
             % endfor
         </tr>
-        % for pmt_id in data['project_bug_reason']:
+        % for index in data['project_bug_reason']:
         <%  
         from model.GlobalFunc import get_pmt_url
         from model.GlobalFunc import report_html
-        project = data['project_bug_reason'][pmt_id]['project']
+        project = data['project_bug_reason'][index]['project']
         pmt_url = get_pmt_url(project['pmt_id'])
-        reason = data['project_bug_reason'][pmt_id]['reason']
+        reason = data['project_bug_reason'][index]['reason']
         %>
             <tr>
                 <td><a href="${pmt_url}" target="_blank">${project['pmt_id']}</a></td>
@@ -41,7 +41,7 @@
                 <td>${project['endtime']}</td>
                 <td>${project['developer']}</td>
                 <td>${project['qa']}</td>
-                <td>${report_html(data['project_bug_reason'][pmt_id]['total'],'total',project['pmt_id'],'reason',True,0,0)}</td>
+                <td>${report_html(data['project_bug_reason'][index]['total'],'total',project['pmt_id'],'reason',True,0,0)}</td>
                 % for id in reason:
                     <td>
                     % if reason[id]['count'] !=0 : 

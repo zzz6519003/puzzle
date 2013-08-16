@@ -40,7 +40,7 @@
         <td bgcolor="${color6}">
             <a class="label label-important tTip" href="#" tt="(reopen+reject)/bug总数">bug失修率</a>
         </td>
-        <td bgcolor="${color3}">修复总时长</td>
+        <td bgcolor="${color3}">修复总时长(天)</td>
         <td bgcolor="${color3}">
             <a class="label label-important tTip" href="#" tt="bug open到最后一次verify时间总和 / bug数">bug修复周期</a>
         </td>
@@ -50,11 +50,11 @@
         </td>
     </tr>
 
-    % for pmt_id in data['data']:
+    % for index in data['data']:
     <%
-    project = data['data'][pmt_id]['project']
-    count = data['data'][pmt_id]['count']
-    bug = data['data'][pmt_id]['count_s']
+    project = data['data'][index]['project']
+    count = data['data'][index]['count']
+    bug = data['data'][index]['count_s']
     from model.GlobalFunc import get_pmt_url
     from model.GlobalFunc import report_html
     pmt_url = get_pmt_url(project['pmt_id'])

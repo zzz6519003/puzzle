@@ -26,12 +26,12 @@
                 <td>${data['th'][id]['name']}</td>
             % endfor
         </tr>
-        % for pmt_id in data['project_bug_component']:
+        % for index in data['project_bug_component']:
         <%  
         from model.GlobalFunc import get_pmt_url
         from model.GlobalFunc import report_html
-        project = data['project_bug_component'][pmt_id]['project']
-        component = data['project_bug_component'][pmt_id]['component']
+        project = data['project_bug_component'][index]['project']
+        component = data['project_bug_component'][index]['component']
         pmt_url = get_pmt_url(project['pmt_id'])
         %>
         <tr>
@@ -40,10 +40,10 @@
                 <td>${project['endtime']}</td>
                 <td>${project['developer']}</td>
                 <td>${project['qa']}</td>
-                <td>${report_html(data['project_bug_component'][pmt_id]['total'],'total',project['pmt_id'],'component',True,0,0)}</td>
-                % for id in data['project_bug_component'][pmt_id]['component']:
+                <td>${report_html(data['project_bug_component'][index]['total'],'total',project['pmt_id'],'component',True,0,0)}</td>
+                % for id in data['project_bug_component'][index]['component']:
                     <td>
-                    % if data['project_bug_component'][pmt_id]['component'][id]['count'] != 0 :
+                    % if data['project_bug_component'][index]['component'][id]['count'] != 0 :
                          ${report_html(component[id],component[id]['name'],project['pmt_id'],'component',True,0,0)}
                     % endif
                     </td>
