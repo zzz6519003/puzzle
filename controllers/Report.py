@@ -46,7 +46,7 @@ class Index:
                 count =  {}.fromkeys(('app', 'api','product','p1','p2','p3','p4','p5','test','dev','prerelease','production'),0) 
             total = count['app']+ count['api']+count['product']
             data['project_bug'][index] = filter_project_info(count,project,dev_str,qa_str)
-            data['project_bug'][index]['rate'] = ''
+            data['project_bug'][index]['rate'] = project['rate']
             data['project_bug'][index]['total'] = total
             index +=1
 
@@ -80,7 +80,7 @@ class Reason:
             data['project_bug_reason'][index]['project'] ={}
             data['project_bug_reason'][index]['reason'] ={}
             data['project_bug_reason'][index]['total'] = 0
-            data['project_bug_reason'][index]['project'] ={'name':project['appName']+get_os(project['category'])+project['version'],'pmt_id':pmt_id}
+            data['project_bug_reason'][index]['project'] ={'name':project['appName']+get_os(project['category'])+project['version'],'rate':project['rate'],'pmt_id':pmt_id}
             devs = get_owners(pmt_id,'dev')
             qas = get_owners(pmt_id,'qa')
             data['project_bug_reason'][index]['project']['developer'] = get_owner_str(devs)
@@ -225,10 +225,10 @@ class Developer:
                 user['repair_time_div'] = div(user['repair_time'],user['major_bug'])
                 user['daily_to_rc_div'] = div(user['daily_to_rc'],user['rc'])
                 users[user_id] = user
-                max_id = user_id
+                max_id = user_id+1
             
             if max_id > 0 :
-                total_id = max_id +1
+                total_id = max_id
                 user_tmp = {}.fromkeys(('total','workload','unclose','reject','reopen','repair_time','major_bug','daily_to_rc','rc'),0)
                 for user_id in users:
                     for key in users[user_id]:
@@ -317,10 +317,10 @@ class Qa:
                 user['no_dailybuild'] = no_dailybuild
                 user['dr_div'] = div(dailybuild,no_dailybuild)
                 users[user_id] = user
-                max_id = user_id
+                max_id = user_id+1
             
             if max_id > 0:
-                total_id = max_id +1
+                total_id = max_id
                 user_tmp = {}.fromkeys(('total','workload','p1','p2','p3','p4','dailybuild','no_dailybuild'),0)
                 for user_id in users :
                     for key in users[user_id] :
@@ -489,19 +489,19 @@ class Update:
                                 "AND (status <> 'closed' OR status = 'closed' "
                                 "AND resolution NOT IN(20,27))",vars = value)[0]['count']
             
-            api = ibug_db.query("SELECT count(*) AS count FROM ticket \
+            api = ibug_db.query("SELECT count(distinct ticket.id)  AS count FROM ticket \
                     LEFT JOIN dd_component \
                     ON ticket.component = dd_component.int \
                     LEFT JOIN dd_common \
-                    ON ticket.reason = dd_common.id \
+                    ON (ticket.reason ='' OR ticket.reason = dd_common.id ) \
                     WHERE pmt_id = $pmt_id AND environment <> 17 \
                     AND (status <> 'closed' OR status = 'closed' AND resolution NOT IN(20,27)) \
                     AND dd_component.name LIKE '%api%' AND dd_common.name NOT LIKE '%产品设计%'",vars = value)[0]['count']
 
 
-            product = ibug_db.query("SELECT count(ticket.id) AS count  FROM ticket "
+            product = ibug_db.query("SELECT count(*) AS count  FROM ticket "
                                     "LEFT JOIN dd_common "
-                                    "ON ticket.reason = dd_common.id "
+                                    "ON  ticket.reason = dd_common.id  "
                                     "WHERE pmt_id = $pmt_id AND environment <> 17 "
                                     "AND (status <> 'closed' OR status = 'closed' AND resolution NOT IN(20,27)) "
                                     "AND dd_common.name LIKE '%产品设计%'",vars = value)[0]['count']
@@ -899,10 +899,10 @@ def get_owner_str(owners):
 def get_project_list(appName,category,version):
     if not appName and not category and not version:
         return {}
-    sql = "SELECT b.pmtId AS pmtId,b.projectName AS projectName,b.version AS version,\
+    sql = "SELECT b.pmtId AS pmtId,b.projectName AS projectName,b.rate AS rate,b.version AS version,\
     b.appName AS appName,b.category AS category,e.endDate AS endDate \
     FROM (SELECT p.id AS id,p.pmtId AS pmtId,p.projectName AS projectName ,\
-    p.version AS version,a.appGroup as appName,a.category AS category \
+    p.rate AS rate,p.version AS version,a.appGroup as appName,a.category AS category \
     FROM projectlist AS p ,applist AS a \
     WHERE p.appId = a.id "
     value ={}
