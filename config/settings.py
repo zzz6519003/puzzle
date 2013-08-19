@@ -6,7 +6,7 @@ from settingsPersonality import getConnection
 from settingsReport import getConnectionV2
 import os
 
-os.chdir("/home/yuetingqian/code/puzzle")
+os.chdir("/Users/anjuke/project/puzzle")
 #os.chdir("/Users/casa/projects/puzzle")
 
 render = render_mako(

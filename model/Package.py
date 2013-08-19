@@ -69,75 +69,7 @@ def buildPackage(packageInfo):
     print "buildPackage is here"
     print packageInfo
     package(packageInfo)
-    sendmailToQA(packageInfo)
     return True
-
-
-def sendmailToQA(packageInfo):
-    from turbomail import Message, interface
-
-    print "sending email"
-    print "here is packageInfo"
-    print packageInfo
-    print "packageInfo done"
-
-    subject = packageInfo['appName']+"_"
-    if packageInfo['category'] == '7':
-        subject += "Daily Build_"
-    if packageInfo['category'] == '8':
-        subject += "RC Build_"
-    if packageInfo['category'] == '10':
-        subject += "Release Build_"
-    if packageInfo['category'] == '100':
-        subject += "qudao_"
-
-    subject+=packageInfo['version']
-    subject+=" mission completed"
-
-    try:
-        mail_config = {
-            'mail.on':True,
-            'mail.manager' : 'immediate',
-            'mail.transport' : 'smtp',
-            'mail.smtp.server' : '10.10.6.209'
-        }
-        interface.start(mail_config)
-
-        mail = Message()
-        mail.subject = subject
-        mail.sender = "noreply@dm.anjuke.com"
-        mail.to = """
-            weiyutian@anjuke.com ,
-            wadecong@anjuke.com ,
-            lenyemeng@anjukeinc.com ,
-            sicongwu@anjuke.com ,
-            yifengwang@anjuke.com ,
-            zeppozheng@anjuke.com ,
-            zhengyan@anjuke.com ,
-            Floydshen@anjuke.com ,
-            minjiewang@anjuke.com ,
-            lhliu@anjuke.com ,
-            zhenyanzhang@anjuke.com ,
-            wendygu@anjuke.com ,
-            tengxiangyin@anjuke.com ,
-            wnbaoli@anjuke.com ,
-            jianzhongliu@anjuke.com ,
-            williamyang@anjuke.com ,
-            clairyin@anjuke.com ,
-            yuxiaoma@anjuke.com ,
-            bozhang@anjuke.com ,
-            vingowang@anjukeinc.com ,
-            louiezhou@anjuke.com
-            """
-        mail.encoding = "utf-8"
-        mail.plain = "sended from Puzzle:\n\t"+packageInfo['mailContent']
-        mail.send()
-    except Exception, e:
-        print e
-        print "fail"
-    print "success"
-    pass
-
 
 def getProjectPath(appId, version):
     appInfo = (db.select('appList', where="id="+appId))[0]
@@ -154,3 +86,5 @@ def getDependecyInfoArray(dependencyInfo):
     """
     result = getVersionArray(dependencyInfo)
     return result
+
+
