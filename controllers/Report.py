@@ -43,12 +43,18 @@ class Index:
             if len(counts):
                 count = counts[0]
             else :
-                count =  {}.fromkeys(('app', 'api','product','p1','p2','p3','p4','p5','test','dev','prerelease','production','created'),0)
+                count =  {}.fromkeys(('app', 'api','product','p1','p2','p3','p4','p5','test','dev','prerelease','production'),0)
 
             total = count['app']+ count['api']+count['product']
             data['project_bug'][index] = filter_project_info(count,project,dev_str,qa_str)
-            data['project_bug'][index]['rate'] = project['rate']
+            rp_projectList = puzzle_db.select('rp_projectList',where='pmtId=$pmt_id',vars = {'pmt_id':pmt_id})
+            if len(rp_projectList) == 1:
+                rate = rp_projectList[0]['rate']
+            else:
+                rate = ''
+            data['project_bug'][index]['rate'] = rate
             data['project_bug'][index]['total'] = total
+            data['project_bug'][index]['created'] = get_created_time(pmt_id)
             index +=1
 
         return render.reportIndex(data=data)
@@ -81,7 +87,7 @@ class Reason:
             data['project_bug_reason'][index]['project'] ={}
             data['project_bug_reason'][index]['reason'] ={}
             data['project_bug_reason'][index]['total'] = 0
-            data['project_bug_reason'][index]['project'] ={'name':project['appName']+get_os(project['category'])+project['version'],'rate':project['rate'],'pmt_id':pmt_id}
+            data['project_bug_reason'][index]['project'] ={'name':project['appName']+get_os(project['category'])+project['version'],'pmt_id':pmt_id}
             devs = get_owners(pmt_id,'dev')
             qas = get_owners(pmt_id,'qa')
             data['project_bug_reason'][index]['project']['developer'] = get_owner_str(devs)
@@ -734,8 +740,12 @@ class Update:
                                  total=qa_count, workload=qas[i]['workload'] / 8, p1=qa_priority['p1'],
                                  p2=qa_priority['p2'], p3=qa_priority['p3'], p4=qa_priority['p4'],
                                  dailybuild=dailybuild, user_from=qas[i]['from'], pmtId=pmt_id)
-                puzzle_db.update('rp_projectbug', where="pmtId=" + pmt_id,
-                             created=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+                rp_projectList = puzzle_db.select('rp_projectList',where='pmtId=$pmt_id',vars={'pmt_id':pmt_id})
+                if len(rp_projectList) == 1:
+                    puzzle_db.update('rp_projectList',where ='pmtId=$pmt_id',vars={'pmt_id':pmt_id},last_updated=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+                else:
+                    puzzle_db.insert('rp_projectList',pmtId=pmt_id)
+
                 data['info'] = '更新成功'
             except:
                 data['info'] = '更新失败'
@@ -820,16 +830,23 @@ def get_dev_daily_to_rc_bugs_from_puzzle(pmt_id,cn_name):
 
 
 def filter_project_info(fl_project,project,dev_str,qa_str):
-    if not fl_project['created']:
-        fl_project['created']='暂无更新时间'
+
     fl_project['pmt_id'] = project['pmtId']
     fl_project['name'] = project['appName']+get_os(project['category'])+project['version']
-    fl_project['endtime'] = format_time(project['endDate']) 
+    fl_project['endtime'] = format_time(project['endDate'])
     fl_project['developer'] = dev_str
     fl_project['qa'] = qa_str
 
     return fl_project
 
+
+def get_created_time(pmt_id):
+    created = '暂无更新时间'
+    rp_projectList = puzzle_db.select('rp_projectList',where='pmtId=$pmt_id',vars={'pmt_id':pmt_id})
+    if len(rp_projectList) ==1:
+        tmp = rp_projectList[0]
+        created =  format_time(datetime_to_timestamp(tmp['last_updated']))
+    return created
 
 
 
@@ -939,10 +956,10 @@ def get_owner_str(owners):
 def get_project_list(appName,category,version):
     if not appName and not category and not version:
         return {}
-    sql = "SELECT b.pmtId AS pmtId,b.projectName AS projectName,b.rate AS rate,b.version AS version,\
+    sql = "SELECT b.pmtId AS pmtId,b.projectName AS projectName,b.version AS version,\
     b.appName AS appName,b.category AS category,e.endDate AS endDate \
     FROM (SELECT p.id AS id,p.pmtId AS pmtId,p.projectName AS projectName ,\
-    p.rate AS rate,p.version AS version,a.appGroup as appName,a.category AS category \
+    p.version AS version,a.appGroup as appName,a.category AS category \
     FROM projectlist AS p ,applist AS a \
     WHERE p.appId = a.id "
     value ={}
@@ -1010,11 +1027,3 @@ def get_os(os_int):
     else:
         return ''
 
-def get_created_time(pmt_id):
-    tmp = puzzle_db.select('rp_projectbug',where ='pmtId = $pmt_id',vars = {'pmt_id':pmt_id})
-    created = '暂无更新时间'
-    if len(tmp) > 0:
-        tmp2 = tmp[0]
-        if tmp2['created']:
-            created = str(tmp2['created'])
-    return created

@@ -211,3 +211,11 @@ CREATE TABLE `ticket` (
         KEY `reporter` (`reporter`),
         KEY `owner` (`owner`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ticket信息'$$
+
+delimiter $$
+CREATE TABLE `rp_projectList` (
+        `id` int(11) NOT NULL auto_increment,
+        `rate` varchar(50) default NULL,
+        `last_update` timestamp NOT NULL default CURRENT_TIMESTAMP,
+        PRIMARY KEY  (`id`)
+     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC  $$
