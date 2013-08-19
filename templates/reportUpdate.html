@@ -8,8 +8,6 @@
         <input name="is_update" type="hidden" value="1">
         <button class="btn btn-info" type="sumbit">更新</button>
     </form>
-    % if data['success'] == True:
-    更新成功
-    % endif
+    ${data['info']}
     </div>
 </%block>
