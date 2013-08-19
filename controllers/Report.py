@@ -927,8 +927,13 @@ def get_owners(pmt_id,type):
 
 def get_owner_str(owners):
     str = ''
+
     for owner in owners:
-        str += '<span>'+ owner['chinese_name'] +'<br></span>'
+        if int(owner['user_from']) == 2:
+            bgcolor = '#B0B85E'
+        else:
+            bgcolor = ''
+        str += '<span style="background-color:'+bgcolor+';">'+ owner['chinese_name'] +'<br></span>'
     return str
 
 def get_project_list(appName,category,version):
