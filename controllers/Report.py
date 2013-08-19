@@ -878,7 +878,7 @@ def get_created_time(pmt_id):
     rp_projectList = puzzle_db.select('rp_projectList',where='pmtId=$pmt_id',vars={'pmt_id':pmt_id})
     if len(rp_projectList) ==1:
         tmp = rp_projectList[0]
-        created =  format_time(datetime_to_timestamp(tmp['last_updated']))
+        created =  format_time(datetime_to_timestamp(tmp['last_updated']),'%Y-%m-%d %H:%M')
     return created
 
 
@@ -1038,10 +1038,12 @@ def div(dividend,divisor):
     else :
         return round(float(dividend)/float(divisor),2)
 
-def format_time(timestamp):
+def format_time(timestamp,format_t=None):
     import time
+    if not format_t:
+        format_t = '%Y-%m-%d'
     if timestamp :
-        format_time = time.strftime( '%Y-%m-%d',time.localtime(timestamp))
+        format_time = time.strftime(format_t,time.localtime(timestamp))
     else :
         format_time = ''
     return format_time
