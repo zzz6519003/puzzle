@@ -629,8 +629,8 @@ class Update:
                 #dev,qa模块
                 task_owners = get_task_owners_from_pmt(pmt_id)
                 ticket_owners = get_ticket_owners_from_ibug(pmt_id)
-                data['users'] = ticket_owners
                 devs = get_compose_users(task_owners['dev'], ticket_owners)
+                data['devs'] = ticket_owners
                 ticket_reporters = get_ticket_reporters_from_ibug(pmt_id)
                 qas = get_compose_users(task_owners['qa'], ticket_reporters)
                 puzzle_db.delete('rp_developer', where='pmtId=$pmt_id', vars=value)
@@ -764,6 +764,7 @@ class Update:
                     puzzle_db.insert('rp_projectList',pmtId=pmt_id)
 
                 data['info'] = '统计信息更新成功'
+                print  data['devs'],'==================='
             except:
                 data['info'] = '统计信息更新失败'
         if int(update)==2:
@@ -785,8 +786,23 @@ class Update:
         #获取数据
         return render.reportUpdate(data=data)
 
+class Job:
+    def GET(self):
+        import urllib2
+        import urllib
+        data = {'pageIndex':'report','error':''}
+        projects = puzzle_db.select('rp_projectList',where="is_updated=1")
+        for project in projects:
+            url = "http://puzzle.corp.anjuke.com/report/update?pmt_id_job="+str(project['pmtId'])+"&update=1"
+            fd = urllib2.urlopen(url)
+            import re
+            pattern = re.compile(r'失败')
+            match = pattern.match(str(fd.readlines))
+            data['error'] +=str(fd.readlines)
+            if match:
+                data['error'] += str(project['pmtId'])+'更新失败'+str(fd.readlines)
 
-
+        return render.reportJob(data=data)
 
 
 def get_qa_bugs_from_puzzle(pmt_id,cn_name):
@@ -910,9 +926,9 @@ def get_ticket_owners_from_ibug(pmt_id):
             ON t.owner = u.user_name \
             LEFT JOIN dd_component AS c \
             ON t.component = c.int \
-            WHERE pmt_id =$pmt_id AND environment<>17 \
+            WHERE pmt_id =$pmt_id \
             AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) \
-            AND c.name not like '%api%'",vars={'pmt_id':pmt_id})
+            ",vars={'pmt_id':pmt_id})
     for owner in owners_tmp:
         #user = owner['email'].split('@')[0]
         value ={'chinese_name':owner['chinese_name']}

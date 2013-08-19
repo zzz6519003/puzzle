@@ -36,4 +36,5 @@ urls = (
         "/report/developer", pre_fix + "Report.Developer",
         "/report/qa",pre_fix + "Report.Qa",
         "/report/detail",pre_fix + "Report.Detail",
+        "/report/job",pre_fix + "Report.Job",
         )
