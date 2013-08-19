@@ -108,114 +108,127 @@ primary key `id`(`id`)
 
 
 
+/*Table structure for table `rp_developer` */
 
-
-
-delimiter $$
+DROP TABLE IF EXISTS `rp_developer`;
 
 CREATE TABLE `rp_developer` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `staff_no` varchar(45) NOT NULL,
-        `chinese_name` varchar(45) NOT NULL,
-        `pmtId` int(11) NOT NULL DEFAULT '0',
-        `total` int(11) NOT NULL DEFAULT '0',
-        `workload` decimal(10,2) NOT NULL DEFAULT '0.00',
-        `unclose` int(11) NOT NULL DEFAULT '0',
-        `reopen` int(11) NOT NULL DEFAULT '0',
-        `reject` int(11) NOT NULL DEFAULT '0',
-        `repair_time` int(11) NOT NULL DEFAULT '0' COMMENT '修复总时间',
-        `major_bug` int(11) NOT NULL DEFAULT '0' COMMENT 'p1-p3 bug数',
-        `daily_to_rc` int(11) NOT NULL DEFAULT '0' COMMENT 'dailybuild带到rc的bug',
-        `rc` int(11) NOT NULL DEFAULT '0' COMMENT 'rc bug',
-        `user_from` int(11) NOT NULL COMMENT '1是pmt，2是ibug',
-        PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='开发报表'$$
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_no` varchar(45) NOT NULL,
+  `chinese_name` varchar(45) NOT NULL,
+  `pmtId` int(11) NOT NULL DEFAULT '0',
+  `total` int(11) NOT NULL DEFAULT '0',
+  `workload` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `unclose` int(11) NOT NULL DEFAULT '0',
+  `reopen` int(11) NOT NULL DEFAULT '0',
+  `reject` int(11) NOT NULL DEFAULT '0',
+  `repair_time` int(11) NOT NULL DEFAULT '0' COMMENT '修复总时间',
+  `major_bug` int(11) NOT NULL DEFAULT '0' COMMENT 'p1-p3 bug数',
+  `daily_to_rc` int(11) NOT NULL DEFAULT '0' COMMENT 'dailybuild带到rc的bug',
+  `rc` int(11) NOT NULL DEFAULT '0' COMMENT 'rc bug',
+  `user_from` int(11) NOT NULL COMMENT '1是pmt，2是ibug',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `NewIndex1` (`staff_no`,`pmtId`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8 COMMENT='开发报表';
 
+/*Table structure for table `rp_projectList` */
 
-delimiter $$
+DROP TABLE IF EXISTS `rp_projectList`;
+
+CREATE TABLE `rp_projectList` (
+  `pmtId` int(11) NOT NULL,
+  `rate` varchar(50) DEFAULT NULL,
+  `is_updated` int(11) DEFAULT '1' COMMENT '0表示不更新，1表示自动更新',
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`pmtId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+/*Table structure for table `rp_projectbug` */
+
+DROP TABLE IF EXISTS `rp_projectbug`;
 
 CREATE TABLE `rp_projectbug` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `app` int(11) NOT NULL DEFAULT '0' COMMENT 'app bug',
-        `api` int(11) NOT NULL DEFAULT '0' COMMENT 'api bug',
-        `product` int(11) NOT NULL DEFAULT '0' COMMENT '产品设计bug',
-        `p1` int(11) NOT NULL DEFAULT '0',
-        `p2` int(11) NOT NULL DEFAULT '0',
-        `p3` int(11) NOT NULL DEFAULT '0',
-        `p4` int(11) NOT NULL DEFAULT '0',
-        `p5` int(11) NOT NULL DEFAULT '0',
-        `test` int(11) NOT NULL DEFAULT '0' COMMENT 'daily build bug',
-        `dev` int(11) NOT NULL DEFAULT '0' COMMENT 'rc bug',
-        `prerelease` int(11) NOT NULL DEFAULT '0' COMMENT '真机测试bug',
-        `production` int(11) NOT NULL DEFAULT '0' COMMENT '线上bug',
-        `pmtId` int(11) NOT NULL DEFAULT '0',
-        `created` int(11) NOT NULL,
-        PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目报表' $$
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app` int(11) NOT NULL DEFAULT '0' COMMENT 'app bug',
+  `api` int(11) NOT NULL DEFAULT '0' COMMENT 'api bug',
+  `product` int(11) NOT NULL DEFAULT '0' COMMENT '产品设计bug',
+  `p1` int(11) NOT NULL DEFAULT '0',
+  `p2` int(11) NOT NULL DEFAULT '0',
+  `p3` int(11) NOT NULL DEFAULT '0',
+  `p4` int(11) NOT NULL DEFAULT '0',
+  `p5` int(11) NOT NULL DEFAULT '0',
+  `test` int(11) NOT NULL DEFAULT '0' COMMENT 'daily build bug',
+  `dev` int(11) NOT NULL DEFAULT '0' COMMENT 'rc bug',
+  `prerelease` int(11) NOT NULL DEFAULT '0' COMMENT '真机测试bug',
+  `production` int(11) NOT NULL DEFAULT '0' COMMENT '线上bug',
+  `pmtId` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `NewIndex1` (`pmtId`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='项目报表';
 
+/*Table structure for table `rp_projectbug_type` */
 
-delimiter $$
+DROP TABLE IF EXISTS `rp_projectbug_type`;
 
 CREATE TABLE `rp_projectbug_type` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `type` varchar(45) NOT NULL COMMENT '类型',
-        `com_id` int(11) NOT NULL DEFAULT '0' COMMENT '分类id',
-        `count` int(11) NOT NULL DEFAULT '0' COMMENT 'bug数量',
-        `pmtId` int(11) NOT NULL DEFAULT '0',
-        `created` int(11) NOT NULL,
-        PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='bug 原因和component统计'$$
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(45) NOT NULL COMMENT '类型',
+  `com_id` int(11) NOT NULL DEFAULT '0' COMMENT '分类id',
+  `count` int(11) NOT NULL DEFAULT '0' COMMENT 'bug数量',
+  `pmtId` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `NewIndex1` (`type`,`com_id`,`pmtId`)
+) ENGINE=InnoDB AUTO_INCREMENT=515 DEFAULT CHARSET=utf8 COMMENT='bug 原因和component统计';
 
+/*Table structure for table `rp_qa` */
 
-delimiter $$
+DROP TABLE IF EXISTS `rp_qa`;
 
 CREATE TABLE `rp_qa` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `staff_no` varchar(45) NOT NULL COMMENT '工号',
-        `chinese_name` varchar(45) NOT NULL,
-        `pmtId` int(11) NOT NULL DEFAULT '0',
-        `total` int(11) NOT NULL DEFAULT '0',
-        `workload` decimal(10,2) NOT NULL DEFAULT '0.00',
-        `p1` int(11) NOT NULL DEFAULT '0',
-        `p2` int(11) NOT NULL DEFAULT '0',
-        `p3` int(11) NOT NULL DEFAULT '0',
-        `p4` int(11) NOT NULL DEFAULT '0',
-        `dailybuild` int(11) NOT NULL DEFAULT '0' COMMENT 'daily build bug',
-        `user_from` int(11) NOT NULL COMMENT '1是pmt 2是ibug',
-        PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='qa报表'$$
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_no` varchar(45) NOT NULL COMMENT '工号',
+  `chinese_name` varchar(45) NOT NULL,
+  `pmtId` int(11) NOT NULL DEFAULT '0',
+  `total` int(11) NOT NULL DEFAULT '0',
+  `workload` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `p1` int(11) NOT NULL DEFAULT '0',
+  `p2` int(11) NOT NULL DEFAULT '0',
+  `p3` int(11) NOT NULL DEFAULT '0',
+  `p4` int(11) NOT NULL DEFAULT '0',
+  `dailybuild` int(11) NOT NULL DEFAULT '0' COMMENT 'daily build bug',
+  `user_from` int(11) NOT NULL COMMENT '1是pmt 2是ibug',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `NewIndex1` (`staff_no`,`pmtId`)
+) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8 COMMENT='qa报表';
 
+/*Table structure for table `ticket` */
 
-delimiter $$
+DROP TABLE IF EXISTS `ticket`;
 
 CREATE TABLE `ticket` (
-        `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-        `ticket_id` int(11) NOT NULL,
-        `created_at` datetime DEFAULT NULL COMMENT '创建时间',
-        `updated_at` datetime DEFAULT NULL COMMENT '最后更新时间',
-        `closed_at` datetime DEFAULT NULL COMMENT '关闭时间',
-        `priority` varchar(45) DEFAULT NULL COMMENT '优先级',
-        `reporter` varchar(45) DEFAULT NULL COMMENT '创建者',
-        `owner` varchar(45) DEFAULT NULL COMMENT 'owner',
-        `status` varchar(45) DEFAULT NULL COMMENT '状态',
-        `summary` varchar(256) NOT NULL COMMENT '摘要',
-        `pmtId` int(10) unsigned DEFAULT NULL COMMENT '关联的外部项目id',
-        `environment` varchar(45) NOT NULL COMMENT '环境',
-        `component` varchar(45) DEFAULT NULL COMMENT '组件',
-        `resolution` varchar(45) DEFAULT '' COMMENT '解决的状态',
-        `reason` varchar(45) DEFAULT '' COMMENT '解决原因',
-        `is_reopen` int(11) DEFAULT '0',
-        `is_reject` int(11) DEFAULT '0',
-        `is_daily_to_rc` int(11) DEFAULT NULL,
-        PRIMARY KEY (`id`,`ticket_id`),
-        KEY `reporter` (`reporter`),
-        KEY `owner` (`owner`)
-    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ticket信息'$$
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `ticket_id` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '最后更新时间',
+  `closed_at` datetime DEFAULT NULL COMMENT '关闭时间',
+  `priority` varchar(45) DEFAULT NULL COMMENT '优先级',
+  `reporter` varchar(45) DEFAULT NULL COMMENT '创建者',
+  `owner` varchar(45) DEFAULT NULL COMMENT 'owner',
+  `status` varchar(45) DEFAULT NULL COMMENT '状态',
+  `summary` varchar(256) NOT NULL COMMENT '摘要',
+  `pmtId` int(10) unsigned DEFAULT NULL COMMENT '关联的外部项目id',
+  `environment` varchar(45) NOT NULL COMMENT '环境',
+  `component` varchar(45) DEFAULT NULL COMMENT '组件',
+  `resolution` varchar(45) DEFAULT '' COMMENT '解决的状态',
+  `reason` varchar(45) DEFAULT '' COMMENT '解决原因',
+  `is_reopen` int(11) DEFAULT '0',
+  `is_reject` int(11) DEFAULT '0',
+  `is_daily_to_rc` int(11) DEFAULT NULL,
+  `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`,`ticket_id`),
+  KEY `reporter` (`reporter`),
+  KEY `owner` (`owner`)
+) ENGINE=InnoDB AUTO_INCREMENT=1760 DEFAULT CHARSET=utf8 COMMENT='ticket信息';
 
-delimiter $$
-CREATE TABLE `rp_projectList` (
-        `id` int(11) NOT NULL auto_increment,
-        `rate` varchar(50) default NULL,
-        `last_update` timestamp NOT NULL default CURRENT_TIMESTAMP,
-        PRIMARY KEY  (`id`)
-     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC  $$
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

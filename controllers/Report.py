@@ -439,18 +439,35 @@ class Detail:
 class Update:
     def GET(self):
         params = web.input()
-        pmt_id = params.get('pmt_id')
-        if pmt_id :
-            data['pmt_id'] = pmt_id
+        rate = params.get('rate')
+        is_updated = params.get('is_updated')
+        update= params.get('update')
+        if rate:
+            data['rate'] = rate
         else:
-            data['pmt_id'] = ''
-        value = {'pmt_id':pmt_id}
+            data['rate'] = ''
+        if is_updated:
+            data['is_updated'] = is_updated
+        else:
+            data['is_updated'] = ''
+        if update:
+            data['update'] = update
+        else:
+            data['update'] = ''
+            update = 0
+        data['pmt_id_job'] =''
+        data['pmt_id_pro'] =''
         data['info'] = ''
         #获取当前日期
         data['currentDate'] = time.strftime('%Y-%m-%d,%A',time.localtime(time.time()))
-        is_update = params.get('is_update')
-        data['is_update'] = is_update
-        if pmt_id and is_update:
+        if int(update)==1:
+            pmt_id = params.get('pmt_id_job')
+
+            if pmt_id :
+                data['pmt_id_job'] = pmt_id
+            else:
+                data['pmt_id_job'] = ''
+            value = {'pmt_id':pmt_id}
             try:
                 data['ticket'] = ibug_db.select('ticket', where='pmt_id=' + pmt_id)
                 puzzle_db.delete('ticket', where='pmtId=' + pmt_id)
@@ -746,9 +763,25 @@ class Update:
                 else:
                     puzzle_db.insert('rp_projectList',pmtId=pmt_id)
 
-                data['info'] = '更新成功'
+                data['info'] = '统计信息更新成功'
             except:
-                data['info'] = '更新失败'
+                data['info'] = '统计信息更新失败'
+        if int(update)==2:
+            pmt_id = params.get('pmt_id_pro')
+
+            if pmt_id :
+                data['pmt_id_pro'] = pmt_id
+            else:
+                data['pmt_id_pro'] = ''
+            try:
+                rp_projectList = puzzle_db.select('rp_projectList',where='pmtId=$pmt_id',vars={'pmt_id':pmt_id})
+                if len(rp_projectList) == 1:
+                    puzzle_db.update('rp_projectList',where ='pmtId=$pmt_id',vars={'pmt_id':pmt_id},rate=rate,is_updated=is_updated,last_updated=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+                else:
+                    puzzle_db.insert('rp_projectList',pmtId=pmt_id,rate=rate,is_updated=is_updated)
+                data['info'] = '项目信息更新成功'
+            except:
+                data['info'] = '项目信息更新失败'
         #获取数据
         return render.reportUpdate(data=data)
 
