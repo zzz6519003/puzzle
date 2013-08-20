@@ -719,7 +719,7 @@ class Update:
                                    + pmt_to_ibug_user_sql, vars=dev_value)[0]['count']
 
                     puzzle_db.insert('rp_developer', staff_no=devs[i]['staff_no'], chinese_name=devs[i]['chinese_name'],
-                                 total=dev_count, workload=devs[i]['workload'] / 8, unclose=unclose, reject=reject,
+                                 total=dev_count, workload=devs[i]['workload_plan'] / 8, unclose=unclose, reject=reject,
                                  reopen=reopen, repair_time=repair_time, major_bug=major_bug, daily_to_rc=daily_to_rc,
                                  rc=rc, user_from=devs[i]['from'], pmtId=pmt_id)
 
@@ -754,7 +754,7 @@ class Update:
                         qa_priority[name] = priority['count']
 
                     puzzle_db.insert('rp_qa', staff_no=qas[i]['staff_no'], chinese_name=qas[i]['chinese_name'],
-                                 total=qa_count, workload=qas[i]['workload'] / 8, p1=qa_priority['p1'],
+                                 total=qa_count, workload=qas[i]['workload_plan'] / 8, p1=qa_priority['p1'],
                                  p2=qa_priority['p2'], p3=qa_priority['p3'], p4=qa_priority['p4'],
                                  dailybuild=dailybuild, user_from=qas[i]['from'], pmtId=pmt_id)
                 rp_projectList = puzzle_db.select('rp_projectList',where='pmtId=$pmt_id',vars={'pmt_id':pmt_id})
@@ -913,7 +913,7 @@ def get_created_time(pmt_id):
 def get_task_owners_from_pmt(pmt_id):
     dev = {}
     qa = {}
-    owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload) AS workload,s.chinese_name AS chinese_name "
+    owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload_plan) AS workload_plan,s.chinese_name AS chinese_name "
                         "FROM task AS t,staff AS s "
                         "WHERE project_id = $pmt_id AND t.owner = s.id "
                         "GROUP BY staff_no",vars ={'pmt_id':pmt_id})
@@ -946,7 +946,7 @@ def get_ticket_owners_from_ibug(pmt_id):
         tmp = get_user_from_pmt(value)
         if len(tmp) > 0:
             id = len(owners)
-            owners[id] ={'workload':0,'from':2}
+            owners[id] ={'workload_plan':0,'from':2}
             user_tmp = tmp[0]
             for key in user_tmp:
                 owners[id][key] = user_tmp[key]
