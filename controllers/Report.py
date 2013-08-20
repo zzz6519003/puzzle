@@ -4,7 +4,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 from config import settings
 import json
-import web 
+import web
 import string
 import time
 import urllib
@@ -77,7 +77,7 @@ class Reason:
             id = reason['id']
             data['th'][id] = {'name':reason['name'],'count':0}
         data['th'][0] ={'name':'无原因','count':0}
-        
+
         project_list = get_project_list(appName,category,version)
         data['project_bug_reason'] = {}
         index = 0
@@ -101,7 +101,7 @@ class Reason:
             for item in project_bug_reason:
                 bug_reason[item['com_id']] = {'count':item['count']}
                 data['project_bug_reason'][index]['total'] += bug_reason[item['com_id']]['count']
-            
+
             for id in data['th']:
                 if  id in bug_reason :
                     data['project_bug_reason'][index]['reason'][id] = bug_reason[id]
@@ -109,7 +109,7 @@ class Reason:
                 else:
                     data['project_bug_reason'][index]['reason'][id] = {'count':0}
             index+=1
-        
+
         for id in data['th'].keys() :
             if data['th'][id]['count'] ==0:
                 data['th'].pop(id)
@@ -125,7 +125,7 @@ class Component:
     def GET(self):
         data = {'pageIndex':'report'}
         data = get_select(data)
-        
+
         params = web.input()
         appName = params.get('appName')
         if appName :
@@ -134,13 +134,13 @@ class Component:
         category = params.get('category')
         version =params.get('version')
         data['params'] = {'appName':appName,'category':category,'version':version}
-        
+
         component_all_tmp = ibug_db.select('dd_component')
         data['th'] = {}
         for com in component_all_tmp:
             id = com['int']
             data['th'][id] = {'name':com['name'],'count':0}
-        
+
         project_list = get_project_list(appName,category,version)
         data['project_bug_component'] = {}
         index = 0
@@ -157,7 +157,7 @@ class Component:
             data['project_bug_component'][index]['total'] = 0
 
             data['project_bug_component'][index]['project']['created'] = get_created_time(pmt_id)
-            
+
             project_bug_component = puzzle_db.select('rp_projectbug_type',where ="pmtId =$pmt_id AND type='component'",vars = {'pmt_id':pmt_id})
             bug_component = {}
             for item in project_bug_component:
@@ -179,9 +179,9 @@ class Component:
             else:
                 for index in data['project_bug_component']:
                     data['project_bug_component'][index]['component'][id]['name'] = data['th'][id]['name']
-        
+
         data['colspan'] = len(data['th'])+1
-        
+
         return render.reportComponent(data=data)
 
 class Developer:
@@ -197,7 +197,7 @@ class Developer:
         category = params.get('category')
         version =params.get('version')
         data['params'] = {'appName':appName,'category':category,'version':version}
-        
+
         data['data'] = {}
         project_list = get_project_list(appName,category,version)
         index = 0
@@ -208,7 +208,7 @@ class Developer:
             dev_str = get_owner_str(devs)
             qas = get_owners(pmt_id,'qa')
             qa_str = get_owner_str(qas)
-           
+
             project_info ={}
             project_info['pmt_id'] = pmt_id
             project_info['name'] = get_pro_name(project['appName'],project['category'],project['version'])
@@ -240,7 +240,7 @@ class Developer:
                 user['daily_to_rc_div'] = div(user['daily_to_rc'],user['rc'])
                 users[user_id] = user
                 max_id = user_id+1
-            
+
             if max_id > 0 :
                 total_id = max_id
                 user_tmp = {}.fromkeys(('total','workload','unclose','reject','reopen','repair_time','major_bug','daily_to_rc','rc'),0)
@@ -279,7 +279,7 @@ class Qa:
 
         data = {'pageIndex':'report'}
         data = get_select(data)
-        
+
         params = web.input()
         appName = params.get('appName')
         if appName :
@@ -288,14 +288,14 @@ class Qa:
         category = params.get('category')
         version =params.get('version')
         data['params'] = {'appName':appName,'category':category,'version':version}
-        
+
         project_list = get_project_list(appName,category,version)
-        
+
         data['data'] = {}
         index = 0
         for project in project_list:
             pmt_id = project['pmtId']
-            
+
             users = {}
 
             devs = get_owners(pmt_id,'dev')
@@ -310,13 +310,13 @@ class Qa:
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
             project_info['created'] = get_created_time(pmt_id)
-            
+
             data['data'][index] ={'project':project_info}
 
             qas_bug = puzzle_db.select('rp_qa',where = "pmtId = $pmt_id",vars = {'pmt_id':pmt_id},order='user_from')
             max_id = 0
             result = {}.fromkeys(('total','workload','workload_div','p1','p2','p3','p4','dailybuild','no_dailybuild','dr_div','chinese_name'),'')
-            
+
             for item in qas_bug:
                 user_id = len(users)
                 user = item
@@ -334,7 +334,7 @@ class Qa:
                 user['dr_div'] = div(dailybuild,no_dailybuild)
                 users[user_id] = user
                 max_id = user_id+1
-            
+
             if max_id > 0:
                 total_id = max_id
                 user_tmp = {}.fromkeys(('total','workload','p1','p2','p3','p4','dailybuild','no_dailybuild'),0)
@@ -358,12 +358,12 @@ class Qa:
                                     result[key] += '<span  style="background-color:'+color+';">'+str(users[user_id][key])+'<br></span>'
 
                 for key in users[total_id]:
-                    if key in result:                                                             
-                        result[key] += '<span>'+str(users[total_id][key])+'<br><span>' 
+                    if key in result:
+                        result[key] += '<span>'+str(users[total_id][key])+'<br><span>'
             data['data'][index]['count'] = result
             data['data'][index]['count_s'] =users
             index+=1
-        
+
         return render.reportQa(data=data)
 
 class Detail:
@@ -793,7 +793,7 @@ class Job:
         projects = puzzle_db.select('rp_projectList',where="is_updated=1")
         for project in projects:
             #url = "http://puzzle.corp.anjuke.com/report/update?pmt_id_job="+str(project['pmtId'])+"&update=1"
-            url = "http://localhost:8080/report/update?pmt_id_job="+str(project['pmtId'])+"&update=1"
+            url = "http://puzzle.corp.anjuke.com/report/update?pmt_id_job="+str(project['pmtId'])+"&update=1"
             fd = urllib2.urlopen(url)
             content = fd.read()
             print content
@@ -960,15 +960,15 @@ def get_ticket_reporters_from_ibug(pmt_id):
             ON t.reporter = u.user_name \
             WHERE pmt_id =$pmt_id  \
             AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27))",vars={'pmt_id':pmt_id})
-    for reporter in reporters_tmp:  
+    for reporter in reporters_tmp:
         #user = reporter['email'].split('@')[0]
         value ={'chinese_name':reporter['chinese_name']}
         tmp = get_user_from_pmt(value)
-        if len(tmp) > 0:      
-            id = len(reporters)      
-            reporters[id] ={'workload':0,'from':2} 
-            user_tmp = tmp[0] 
-            for key in user_tmp:               
+        if len(tmp) > 0:
+            id = len(reporters)
+            reporters[id] ={'workload':0,'from':2}
+            user_tmp = tmp[0]
+            for key in user_tmp:
                 reporters[id][key] = user_tmp[key]
 
     return reporters
