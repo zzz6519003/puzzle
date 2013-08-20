@@ -16,7 +16,7 @@
          <br>
         <input name="update" type="hidden" value="2">
         <button id="project" class="btn btn-info" type="button">更新项目信息</button><br>
-          % if int(data['update'])==2:
+          % if data['update']!='' and int(data['update'])==2:
             ${data['info']}
           % endif
     </form>
@@ -26,7 +26,7 @@
         pmt_id:&nbsp<input name="pmt_id_job" type="text" class="input-medium" value="${data['pmt_id_job']}"><br>
         <input name="update" type="hidden" value="1">
         <button id="job" class="btn btn-info" type="sumbit">更新统计信息</button><br>
-        % if int(data['update'])==1:
+        % if data['update']!='' and int(data['update'])==1:
         ${data['info']}
     % endif
     </form>
