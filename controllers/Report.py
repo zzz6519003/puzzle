@@ -764,7 +764,8 @@ class Update:
                     puzzle_db.insert('rp_projectList',pmtId=pmt_id)
 
                 data['info'] = '统计信息更新成功'
-            except:
+            except Exception as err:
+                print(err)
                 data['info'] = '统计信息更新失败'
         if int(update)==2:
             pmt_id = params.get('pmt_id_pro')
@@ -966,7 +967,7 @@ def get_ticket_reporters_from_ibug(pmt_id):
         tmp = get_user_from_pmt(value)
         if len(tmp) > 0:
             id = len(reporters)
-            reporters[id] ={'workload':0,'from':2}
+            reporters[id] ={'workload_plan':0,'from':2}
             user_tmp = tmp[0]
             for key in user_tmp:
                 reporters[id][key] = user_tmp[key]
