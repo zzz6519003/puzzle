@@ -470,7 +470,7 @@ class Update:
             value = {'pmt_id':pmt_id}
             try:
                 data['ticket'] = ibug_db.select('ticket', where='pmt_id=' + pmt_id)
-                puzzle_db.delete('ticket', where='pmtId=' + pmt_id)
+                puzzle_db.delete('ticket1', where='pmtId=' + pmt_id)
                 ticket_detail = ibug_db.query("SELECT t.resolution,t.id AS ticket_id,created_at , \
                     updated_at,closed_at,p.name AS priority,\
                     r.chinese_name AS reporter,o.chinese_name AS owner,\
@@ -765,8 +765,9 @@ class Update:
 
                 data['info'] = '统计信息更新成功'
             except Exception as err:
-                print(err)
                 data['info'] = '统计信息更新失败'
+                from model.GlobalFunc import send_mail
+                send_mail(pmt_id+'项目统计信息更新失败','错误信息：'+str(err))
         if int(update)==2:
             pmt_id = params.get('pmt_id_pro')
 
@@ -783,6 +784,8 @@ class Update:
                 data['info'] = '项目信息更新成功'
             except:
                 data['info'] = '项目信息更新失败'
+
+
             #获取数据
         return render.reportUpdate(data=data)
 
