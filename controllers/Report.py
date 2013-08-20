@@ -470,7 +470,7 @@ class Update:
             value = {'pmt_id':pmt_id}
             try:
                 data['ticket'] = ibug_db.select('ticket', where='pmt_id=' + pmt_id)
-                puzzle_db.delete('ticket1', where='pmtId=' + pmt_id)
+                puzzle_db.delete('ticket', where='pmtId=' + pmt_id)
                 ticket_detail = ibug_db.query("SELECT t.resolution,t.id AS ticket_id,created_at , \
                     updated_at,closed_at,p.name AS priority,\
                     r.chinese_name AS reporter,o.chinese_name AS owner,\
