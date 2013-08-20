@@ -34,8 +34,12 @@
         project = data['project_bug_reason'][index]['project']
         pmt_url = get_pmt_url(project['pmt_id'])
         reason = data['project_bug_reason'][index]['reason']
+        if project['endtime']=='':
+            bgcolor = '#F6F0F0'
+        else:
+            bgcolor =''
         %>
-            <tr>
+            <tr bgcolor='${bgcolor}'>
                 <td><a href="${pmt_url}" target="_blank">${project['pmt_id']}</a></td>
                 <td>${project['name']}<a class="label label-info tTip"  rel="popover" tt="${project['created']}">注</a></td>
                 <td>${project['endtime']}</td>

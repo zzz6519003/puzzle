@@ -797,7 +797,6 @@ class Job:
             url = "http://puzzle.corp.anjuke.com/report/update?pmt_id_job="+str(project['pmtId'])+"&update=1"
             fd = urllib2.urlopen(url)
             content = fd.read()
-            print content
 
             if content.find('统计信息更新失败')>0:
                 data['error'] += str(project['pmtId'])+'更新失败.<br>'
@@ -1018,7 +1017,7 @@ def get_project_list(appName,category,version):
     if not appName and not category and not version:
         return {}
     sql = "SELECT b.pmtId AS pmtId,b.projectName AS projectName,b.version AS version,\
-    b.appName AS appName,b.category AS category,e.endDate AS endDate \
+    b.appName AS appName,b.category AS category,e.startDate AS endDate \
     FROM (SELECT p.id AS id,p.pmtId AS pmtId,p.projectName AS projectName ,\
     p.version AS version,a.appGroup as appName,a.category AS category \
     FROM projectlist AS p ,applist AS a \
