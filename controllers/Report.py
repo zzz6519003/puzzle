@@ -87,7 +87,7 @@ class Reason:
             data['project_bug_reason'][index]['project'] ={}
             data['project_bug_reason'][index]['reason'] ={}
             data['project_bug_reason'][index]['total'] = 0
-            data['project_bug_reason'][index]['project'] ={'name':project['appName']+get_os(project['category'])+project['version'],'pmt_id':pmt_id}
+            data['project_bug_reason'][index]['project'] ={'name':get_pro_name(project['appName'],project['category'],project['version']),'pmt_id':pmt_id}
             devs = get_owners(pmt_id,'dev')
             qas = get_owners(pmt_id,'qa')
             data['project_bug_reason'][index]['project']['developer'] = get_owner_str(devs)
@@ -147,7 +147,7 @@ class Component:
         for project in project_list:
             pmt_id = project['pmtId']
             data['project_bug_component'][index] = {}
-            data['project_bug_component'][index]['project'] = {'name':project['appName']+get_os(project['category'])+project['version'],'pmt_id':pmt_id}
+            data['project_bug_component'][index]['project'] = {'name':get_pro_name(project['appName'],project['category'],project['version']),'pmt_id':pmt_id}
             devs = get_owners(pmt_id,'dev')
             qas = get_owners(pmt_id,'qa')
             data['project_bug_component'][index]['project']['developer'] = get_owner_str(devs)
@@ -211,7 +211,7 @@ class Developer:
            
             project_info ={}
             project_info['pmt_id'] = pmt_id
-            project_info['name'] = project['appName']+get_os(project['category'])+project['version']
+            project_info['name'] = get_pro_name(project['appName'],project['category'],project['version'])
             project_info['endtime'] = format_time(project['endDate'])
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
@@ -305,7 +305,7 @@ class Qa:
 
             project_info = {}
             project_info['pmt_id'] = pmt_id
-            project_info['name'] = project['appName']+get_os(project['category'])+project['version']
+            project_info['name'] = get_pro_name(project['appName'],project['category'],project['version'])
             project_info['endtime'] = format_time(project['endDate'])
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
@@ -764,7 +764,6 @@ class Update:
                     puzzle_db.insert('rp_projectList',pmtId=pmt_id)
 
                 data['info'] = '统计信息更新成功'
-                print  data['devs'],'==================='
             except:
                 data['info'] = '统计信息更新失败'
         if int(update)==2:
@@ -783,7 +782,7 @@ class Update:
                 data['info'] = '项目信息更新成功'
             except:
                 data['info'] = '项目信息更新失败'
-        #获取数据
+            #获取数据
         return render.reportUpdate(data=data)
 
 class Job:
@@ -793,14 +792,16 @@ class Job:
         data = {'pageIndex':'report','error':''}
         projects = puzzle_db.select('rp_projectList',where="is_updated=1")
         for project in projects:
-            url = "http://puzzle.corp.anjuke.com/report/update?pmt_id_job="+str(project['pmtId'])+"&update=1"
+            #url = "http://puzzle.corp.anjuke.com/report/update?pmt_id_job="+str(project['pmtId'])+"&update=1"
+            url = "http://localhost:8080/report/update?pmt_id_job="+str(project['pmtId'])+"&update=1"
             fd = urllib2.urlopen(url)
-            import re
-            pattern = re.compile(r'失败')
-            match = pattern.match(str(fd.readlines))
-            data['error'] +=str(fd.readlines)
-            if match:
-                data['error'] += str(project['pmtId'])+'更新失败'+str(fd.readlines)
+            content = fd.read()
+            print content
+
+            if content.find('统计信息更新失败')>0:
+                data['error'] += str(project['pmtId'])+'更新失败.<br>'
+            else:
+                data['error'] += str(project['pmtId'])+'更新成功.<br>'
 
         return render.reportJob(data=data)
 
@@ -881,12 +882,22 @@ def get_dev_daily_to_rc_bugs_from_puzzle(pmt_id,cn_name):
 def filter_project_info(fl_project,project,dev_str,qa_str):
 
     fl_project['pmt_id'] = project['pmtId']
-    fl_project['name'] = project['appName']+get_os(project['category'])+project['version']
+    fl_project['name'] = get_pro_name(project['appName'],project['category'],project['version'])
     fl_project['endtime'] = format_time(project['endDate'])
     fl_project['developer'] = dev_str
     fl_project['qa'] = qa_str
 
     return fl_project
+
+def get_os_img(category):
+    if int(category) ==1:
+        img ='i.png'
+    else:
+        img = 'a.png'
+    return '<img border="0" src="/static/img/'+img+'" width="20" height="20"> '
+
+def get_pro_name(appName,category,version):
+    return get_os_img(category)+appName+' '+version+' '
 
 
 def get_created_time(pmt_id):

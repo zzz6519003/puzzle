@@ -6,6 +6,7 @@
     <div class='container'>
     <table class='table table-bordered'>
         <tr>
+            <td>id</td>
             <td>Ticket</td>
             <td>Summary</td>
             <td>Owner</td>
@@ -18,13 +19,17 @@
             <td>Resolution</td>
             <td>Reason</td>
         </tr>
-            
+    <%
+        i=0
+        %>
     % for item in data['tickets']:
     <tr>
     <%
+    i = i+1
     from model.GlobalFunc import get_ticket_url
     ticket_url = get_ticket_url(item['ticket_id'])
     %>
+        <td>${i}</td>
         <td><a href="${ticket_url}" target="_blank">${item['ticket_id']}</a></td>
         <td><a href="${ticket_url}" target="_blank">${item['summary']}</a></td>
         <td>${item['owner']}</td>

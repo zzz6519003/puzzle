@@ -4,7 +4,7 @@
 <%block name='body'>
     <div class='container'>
 
-     <form id='pro'>
+     <form id='pro' class="hero-unit span5">
         pmt_id:&nbsp<input id='pmt_id_pro' name="pmt_id_pro" type="text" class="input-medium" value="${data['pmt_id_pro']}"><br>
         自测通过率:&nbsp<input id="rate" name="rate" type="text" class="input-medium" value="${data['rate']}"><br>
         是否自动更新:&nbsp
@@ -18,12 +18,15 @@
         <button id="project" class="btn btn-info" type="button">更新项目信息</button><br>
     </form>
     <br>
-    <form>
+    <form class="hero-unit span5">
         pmt_id:&nbsp<input name="pmt_id_job" type="text" class="input-medium" value="${data['pmt_id_job']}"><br>
         <input name="update" type="hidden" value="1">
-        <button id="job" class="btn btn-info" type="sumbit">更新统计信息</button><br>
+        <button id="job" class="btn btn-info" type="sumbit">更新统计信息</button>&nbsp
     </form>
-    ${data['info']}
+    ${data['info']}<br>
+    <div class="hero-unit span5">
+    更新所有项目：<a href="/report/job" target="_blank"><button  class="btn btn-danger" type="button">Job</button></a><br>
+    </div>
     </div>
 <script>$(document).ready(function(){
       $('#project').bind('click',function(){
@@ -37,4 +40,6 @@
       });
     $('#is_updated').val("${data['is_updated']}");
 });</script>
+
 </%block>
+
