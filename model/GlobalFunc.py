@@ -65,5 +65,44 @@ def report_html(data,name,pmt_id,page,is_hyperlink,limit,is_color):
     s += '</ul>'
     return s
 
+# 导入 smtplib 和 MIMEText
+import smtplib
+from email.mime.text import MIMEText
+
+# 定义发送列表
+mailto_list=["yuetingqian@anjuke.com"]
+
+# 设置服务器名称、用户名、密码以及邮件后缀
+mail_host = "smtp.anjuke.com"
+mail_user = "hibug@anjuke.com"
+mail_pass = "anjukeqa2012"
+mail_postfix="anjuke.com"
+
+# 发送邮件函数
+def send_mail(sub, context):
+    '''''
+    to_list: 发送给谁
+    sub: 主题
+    context: 内容
+    send_mail("xxx@126.com","sub","context")
+    '''
+    to_list = mailto_list
+    me = mail_user + "<"+mail_user+"@"+mail_postfix+">"
+    msg = MIMEText(context,_subtype='html',_charset='utf-8')
+    msg['Subject'] = sub
+    msg['From'] = me
+    msg['To'] = ";".join(to_list)
+    try:
+        send_smtp = smtplib.SMTP()
+        send_smtp.connect(mail_host)
+        send_smtp.login(mail_user, mail_pass)
+        send_smtp.sendmail(me, to_list, msg.as_string())
+        send_smtp.close()
+        return True
+    except Exception,e:
+        print(str(e))
+        return False
+
+
 
     
