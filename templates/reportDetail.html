@@ -3,12 +3,12 @@
 </%block>
 
 <%block name='body'>
-    <div class='container'>
-    <table class='table table-bordered'>
+    <div class="container">
+    <table class="table table-bordered" style="TABLE-LAYOUT: fixed;; WORD-BREAK: break-all;;border-collapse: collapse">
         <tr>
             <td>id</td>
             <td>Ticket</td>
-            <td>Summary</td>
+            <td width="30%">Summary</td>
             <td>Owner</td>
             <td>Reporter</td>
             <td>Priority</td>
@@ -31,7 +31,7 @@
     %>
         <td>${i}</td>
         <td><a href="${ticket_url}" target="_blank">${item['ticket_id']}</a></td>
-        <td><a href="${ticket_url}" target="_blank">${item['summary']}</a></td>
+        <td><a href="${ticket_url}" target="_blank" nowrap>${item['summary']}</a></td>
         <td>${item['owner']}</td>
         <td>${item['reporter']}</td>
         <td>${item['priority']}</td>
