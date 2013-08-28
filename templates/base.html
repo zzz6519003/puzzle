@@ -20,6 +20,9 @@ if data == None:
         <meta name="author" content="">
 
         <link href="/static/css/bootmetro.css" rel="stylesheet">
+        <link href="/static/css/bootmetro-icons.css" rel="stylesheet">
+        <link href="/static/css/bootmetro-ui-light.css" rel="stylesheet">
+
         <link rel="icon" type="image/png" href="/static/favicon.ico">
 
         <style type="text/css">
@@ -34,6 +37,8 @@ if data == None:
         </style>
 
         <link href="/static/css/bootmetro-responsive.css" rel="stylesheet">
+        <link href="/static/css/bootmetro-ui-light.css" rel="stylesheet">
+
         <link href="/static/css/main.css" rel="stylesheet">
 
         <!--[if lt IE9]>
@@ -80,7 +85,7 @@ if data == None:
                     <a class = "brand" href="#">Puzzle - 安居客移动协作平台</a>
                     <div class="nav-collapse collapse">
                         <p class="navbar-text pull-right">
-                        <button id="J_setupButton">setup</button>
+                        
                         </p>
                         <ul class="nav">
 
@@ -129,10 +134,9 @@ if data == None:
 
         ${self.body()}
 
-        <%include file='components/setupUsernameAndPath.html'/>
     </div>
     <footer>
-    <p>&copy; Anjuke Inc iOS Development Department 2013</p>
+    <p class="offset1">&copy; Anjuke Inc iOS Development Department 2013</p>
     </footer>
 </body>
 </html>

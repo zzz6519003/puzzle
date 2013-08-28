@@ -1,31 +1,87 @@
 <%inherit file='base.html'/>
-<%block name="header"></%block>
+<%block name="header">
+<script type="text/javascript" src="/static/js/bootstrap-carousel.js"></script>
+
+</%block>
 <%block name="body">
     <div class="row-fluid">
-        <div class="span4 offset1">    
-        <pre>
-  @autoreleasepool {
-      NSString *welcomeInfo = @"Welcome To iOS Development Department!";
-      [iOSDevelopment sendInfo:welcomeInfo];
-  }
-
-  sudo python -c "$(curl -fsSL https://raw.github.com/wadecong/iostools/master/access.py)"
-        </pre>        
-            <p>iOS开发部常用链接：</p>
-            <ol>
-                <li><a target="blank" href="http://pmt.corp.anjuke.com">PMT -- 项目开发管理平台</a></li>
-                <li><a target="blank" href="http://ios.dev.anjuke.com/wordpress/">iOS博客 -- 帮助他人，帮助自己</a></li>
-                <li><a target="blank" href="http://wiki.corp.anjuke.com/index.php?title=Mobile:main#Iphone">wiki -- iOS业务整理</a></li>
-                <li><a target="blank" href="http://git.corp.anjuke.com/mobile/iShare">iShare -- iOS团队分享仓库</a></li>
-            </ol>
+        <div class="span5 offset1">
+                <div class="searchInput">
+                    <h4><span class="icon-globe"></span>快捷搜索</h4><br/>
+                    <form class="form-search">
+                        <input type="text" class="input-large search-query search-input" />
+                        <button type="submit" onclick="alert('上当了吧？功能还未完善，请勿胡乱点击！ps.我希望这是个万能的框，谁能帮助实现。');" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+                <div class="row-fluid">
+                <div class="span4">
+                    <div class="metro">
+                        <div class="tile square text tilesquareblock">
+                            <div class="text">${data['currentYearAndMonth']}</div>
+                            <div class="text-big">${data['currentDay']}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="friendlink span8"><br/><br/><br/>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <button class="win-command" rel="tootlip" title="PMT">
+                                <span class="win-commandicon win-commandring icon-cog-4"></span>
+                                <span class="win-label">PMT-项目管理工具</span>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="win-command" rel="tootlip" title="PMT">
+                                <span class="win-commandicon win-commandring icon-feather"></span>
+                                <span class="win-label">iShare-移动分享平台</span>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="win-command" rel="tootlip" title="PMT">
+                                <span class="win-commandicon win-commandring icon-graduation"></span>
+                                <span class="win-label">Blog-技术信息园地</span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                </div>
         </div>
-        <div class="span6">
-            <div class="hero-unit ">
-            <h4><i class="icon-home"></i>关于iOS开发发布平台：</h4>
-            <p>
-                iOS开发平台专注于解决目前开发部门日常的Daily Build以及渠道包及将来appstore发布的人为问题，
-                通过对git仓库的版本进行严格控制，保证测试团队在进行RC测试及渠道包的发布是同一第三方包依赖以及主分支是可发布版本。
-            </p>
+        <div class="span5">
+            <div class="bs-docs-example">
+                <div id="myCarousel" class="carousel slide">
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class=""></li>
+                        <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="2" class=""></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="item">
+                            <img src="../static/img/bootstrap-mdo-sfmoma-01.jpg" alt="">
+                            <div class="carousel-caption">
+                                <h4>我们的团队</h4>
+                                <p>我们的团队由一群热情、可爱、聪明、饱含创造力的年轻人组成，我们开心，为我们的朋友欢呼；我们进取，为我们完成的每一个产品</p>
+                            </div>
+                        </div>
+                        <div class="item active">
+                            <img src="../static/img/bootstrap-mdo-sfmoma-02.jpg" alt="">
+                            <div class="carousel-caption">
+                                <h4>我们的工作</h4>
+                                <p>我们开发5款iPhone应用、5款android应用，同时还负责3款iPad应用，我们保证我们产品的质量，让用户更加喜欢我们的产品</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="../static/img/bootstrap-mdo-sfmoma-03.jpg" alt="">
+                            <div class="carousel-caption">
+                                <h4>我们的创意</h4>
+                                <p>我们热爱创意，愿意用我们的大脑改变人的生活，改变这个世界</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="left carousel-control" href="#myCarousel" data-slide="prev"></a>
+                    <a class="right carousel-control" href="#myCarousel" data-slide="next"></a>
+                </div>
             </div>
         </div>
     </div>

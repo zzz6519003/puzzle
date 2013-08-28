@@ -25,7 +25,9 @@ class Index:
         #获取当前日期
         import time
         data['currentDate'] = time.strftime('%Y-%m-%d,%A',time.localtime(time.time()))
-
+        timeStamp = time.localtime(time.time());
+        data['currentDay'] = time.strftime('%d',timeStamp);
+        data['currentYearAndMonth'] = time.strftime('%Y年%m月',timeStamp);
         #获取项目列表
         data['projectList'] = db.select('projectList', order="id DESC", where="appId="+appId, _test=False)
         temp = [];

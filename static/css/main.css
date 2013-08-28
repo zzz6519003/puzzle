@@ -32,3 +32,8 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
 a.menu:after,.dropdown-toggle:after {
     content: none;
 }
+
+.search-input {
+    width:80%;
+    height:100px;
+}
