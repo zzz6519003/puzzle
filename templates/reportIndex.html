@@ -21,9 +21,18 @@
             <td rowspan="2" align="center" bgcolor="${color}">开发</td>
             <td rowspan="2" bgcolor="${color}">测试</td>
             <td rowspan="2" bgcolor="${color}">自测通过率</td>
-            <td colspan="4" align="center" bgcolor="${color2}">Bug数（项目bug）</td>
-            <td colspan="5" align="center" bgcolor="${color3}">bug等级（APP&项目bug）</td>
-            <td colspan="4" align="center" bgcolor="${color4}">测试阶段（APP）</td>
+            <td colspan="4" align="center" bgcolor="${color2}">
+                <a  href="#" class="label label-important tTip" rel="popover"
+                            tt="项目bug,rc+真机+线上的bug">Bug数
+                </a></td>
+            <td colspan="5" align="center" bgcolor="${color3}">
+                <a  href="#" class="label label-important tTip" rel="popover"
+                            tt="rc+真机+线上的app bug ，不包括api和产品设计">bug等级
+                </a></td>
+            <td colspan="4" align="center" bgcolor="${color4}">
+                 <a  href="#" class="label label-important tTip" rel="popover"
+                            tt="app bug,不包括api和产品设计的所有bug">测试阶段
+                </a></td>
         </tr>
         <tr>
             <td align="center" bgcolor="${color2}">总数</td>
@@ -83,4 +92,5 @@
 );</script>
 <link href="/static/js/plugins/tinytip/tinyTips.css" rel="stylesheet">
 <script type="text/javascript" src="/static/js/plugins/tinytip/jquery.tinyTips.js"></script>
+<script type="text/javascript" src="/static/js/pages/report_index.js"></script>
 </%block>

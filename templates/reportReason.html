@@ -19,7 +19,10 @@
             <td rowspan="2" width="80px" bgcolor="${color}">工程结束</td>
             <td rowspan="2" width="80px" bgcolor="${color}">开发</td>
             <td rowspan="2" width="80px" bgcolor="${color}">测试</td>
-            <td colspan="${data['colspan']}">bug原因(APP)</td>
+            <td colspan="${data['colspan']}">
+                <a  href="#" class="label label-important tTip" rel="popover"
+                            tt="app bug,不包括api和产品设计的所有bug">bug原因(APP)
+                </a></td>
         </tr>
         <tr bgcolor="${color}">
             <td>总数</td>
@@ -58,10 +61,8 @@
 
     </table>
 </div>
-<script>$(document).ready(function(){
-    $('a.tTip').tinyTips();
-}
-);</script>
+
 <link href="/static/js/plugins/tinytip/tinyTips.css" rel="stylesheet">
 <script type="text/javascript" src="/static/js/plugins/tinytip/jquery.tinyTips.js"></script>
+<script type="text/javascript" src="/static/js/pages/report_reason.js"></script>
 </%block>

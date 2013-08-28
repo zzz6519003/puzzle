@@ -18,7 +18,10 @@
             <td rowspan="2" width="80px">工程结束</td>
             <td rowspan="2" width="80px">开发</td>
             <td rowspan="2" width="80px">测试</td>
-            <td colspan="${data['colspan']}">bug产生模块(APP)</td>
+            <td colspan="${data['colspan']}">
+                 <a  href="#" class="label label-important tTip" rel="popover"
+                            tt="app bug,不包括api和产品设计的所有bug">bug产生模块
+                </a></td>
         </tr>
         <tr bgcolor="${color}">
             <td>总数</td>
@@ -56,10 +59,8 @@
         % endfor
     </table>
     </div>
-<script>$(document).ready(function(){
-    $('a.tTip').tinyTips();
-}
-);</script>
+
 <link href="/static/js/plugins/tinytip/tinyTips.css" rel="stylesheet">
 <script type="text/javascript" src="/static/js/plugins/tinytip/jquery.tinyTips.js"></script>
+<script type="text/javascript" src="/static/js/pages/report_component.js"></script>
 </%block>
