@@ -2,12 +2,11 @@
 
 import web
 from web.contrib.template import render_mako
-from settingsPersonality import getConnection
+from settingsPersonality import getConnection, changeDirect
 from settingsReport import getConnectionV2
 import os
 
-os.chdir("/Users/anjuke/project/puzzle")
-#os.chdir("/Users/casa/projects/puzzle")
+changeDirect()
 
 render = render_mako(
                     directories = ['templates'],
@@ -19,8 +18,8 @@ web.config.cache = False
 
 config = web.storage(
         email = 'lenyemeng@anjukeinc.com',
-        site_name = 'Puzzle -- iOS开发发布平台',
-        site_desc = 'iOS开发发布平台',
+        site_name = 'Puzzle -- 移动开发发布平台',
+        site_desc = '安居客移动开发发布平台',
         static = '/static',
         )
 

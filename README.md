@@ -20,6 +20,9 @@ iOS管理发布平台
 * web.py (`easy_install web.py`)
 * MySQLdb (`easy_install MySQL-python`)
   Mako (`cd Mako-0.8.0 && python setup.py install`)
+* Iostools
+  IOSTools (`git clone https://github.com/wadecong/iostools.git && python setup.py develop`)
+
 run `python server.py` 
 
 *mako文档地址: [Mako Document](http://docs.makotemplates.org/en/latest/)*

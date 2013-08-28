@@ -45,3 +45,7 @@ settingsPersonality.py
 
 # tag files
 tags
+
+# pycharm
+.idea
+.idea/*
