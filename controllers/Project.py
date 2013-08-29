@@ -35,8 +35,12 @@ class Index:
             item['lastUpdate'] = time.strftime('%Y-%m-%d,%H:%M',time.localtime(item['lastUpdate']))
             temp.append(item)
 
-        appList = db.select('appList')
-
+        appList = db.select('appList').list()
+        data['appMain'] = []
+        data['appMain'].append(appList.pop(0))
+        data['appMain'].append(appList.pop(4))
+        data['appMain'].append(appList.pop(6))
+        print data['appMain']
         data['projectList'] = temp
         data['currentAppId'] = appId
         data['appList'] = appList
