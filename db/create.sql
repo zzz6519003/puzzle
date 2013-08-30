@@ -232,3 +232,36 @@ CREATE TABLE `ticket` (
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+
+/*Table structure for table `qa_crashcount` */
+
+DROP TABLE IF EXISTS `qa_crashcount`;
+
+CREATE TABLE `qa_crashcount` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_name` varchar(100) NOT NULL,
+  `app_platform` varchar(100) NOT NULL,
+  `crash_count` int(11) NOT NULL,
+  `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `NewIndex1` (`app_name`,`app_platform`,`start_time`,`end_time`)
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+/*Table structure for table `qa_crashcount_limit` */
+
+DROP TABLE IF EXISTS `qa_crashcount_limit`;
+
+CREATE TABLE `qa_crashcount_limit` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_name` varchar(100) NOT NULL,
+  `app_platform` varchar(100) NOT NULL,
+  `crash_count` int(11) NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `NewIndex1` (`app_name`,`app_platform`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
