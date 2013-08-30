@@ -1,5 +1,4 @@
 #encoding=utf8
-db = settings.db
 data = {'pageIndex':'appstore'}
 from config import settings
 
