@@ -13,6 +13,8 @@ urls = (
 
         "/aboutUs", pre_fix + "AboutUs.AboutUs",
 
+        "/appStore", pre_fix + "AppStore.Index",
+
         "/timeline", pre_fix + "TimeLine.Index",
 
         "/clipAdd", pre_fix + "UiClipper.clipAdd",

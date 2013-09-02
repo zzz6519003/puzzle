@@ -1,0 +1,22 @@
+<%inherit file='base.html'/>
+<%block name="header">
+
+</%block>
+<%block name="body">
+    <div class="row-fluid">
+        <div class='span10 offset1'>
+            <table class="table">
+                <tr>
+                    <th>最新应用</th><th>最后更新时间</th>
+                </tr>
+                %for item in data['appList']:
+                <tr>
+                    <td><a href="${item['downloadurl']}" >${item['realname']}</a></td><td>${item['mktime']}</td>
+                </tr>
+                %endfor
+            </table>
+        </div>
+
+    </div>
+</%block>
+
