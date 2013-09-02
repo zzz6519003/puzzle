@@ -44,7 +44,7 @@ class Set:
         data['crash_limit']=puzzle_db.select('qa_crashcount_limit',order="app_name,app_platform")
         data['apps'] = puzzle_db.query('SELECT DISTINCT app_name FROM qa_crashcount_limit')
         data['params'] = {'app_name':app_name,'app_platform':app_platform,'crash_count':crash_count}
-        return render.CrashSet(data=data)
+        return render.crashSet(data=data)
 
 
 class Job:
@@ -64,6 +64,7 @@ class Job:
             #     end = str(synctime[0]['datetime'])
             # end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M:%S')
             # start = str(end - datetime.timedelta(minutes=20))
+            apps = puzzle_db.select('qa_crashcount_limit')
             if not start or not end:
                 now = datetime.datetime.now()
                 format_now = str(now.strftime('%Y-%m-%d %H:%M:%S'))
@@ -81,6 +82,13 @@ class Job:
             sub = '['+start+']crash report'
             context = ''
             for item in crash:
+                for app in apps:
+                    res = False
+                    if item['app_name'] == app['app_name'] and item['app_platform'] == app['app_platform']:
+                        del app
+                        break
+
+
                 value = {'app_name':item['app_name'],'app_platform':item['app_platform'],
                         'start_time':start,'end_time':end}
                 crash_count = puzzle_db.select('qa_crashcount',where = "app_name=$app_name AND app_platform =$app_platform "
@@ -106,7 +114,9 @@ class Job:
 
                 else:
                     context += item['app_name']+item['app_platform']+'未设置crash数量<br>'
-
+            for item in apps:
+                puzzle_db.insert('qa_crashcount',app_name = item['app_name'],app_platform = item['app_platform'],
+                                 crash_count=0,start_time=start,end_time=end)
             if context!='':
                 send_mail(sub,context)
             data['result'] = context
@@ -114,4 +124,4 @@ class Job:
             error = '错误信息：'+str(err)
             data['result'] = '错误信息：'+error
             send_mail('['+start+']crash信息更新失败',error)
-        return render.CrashJob(data=data)
+        return render.crashJob(data=data)
