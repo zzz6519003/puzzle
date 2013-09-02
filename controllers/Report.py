@@ -641,6 +641,7 @@ class Update:
                 data['devs'] = ticket_owners
                 ticket_reporters = get_ticket_reporters_from_ibug(pmt_id)
                 qas = get_compose_users(task_owners['qa'], ticket_reporters)
+
                 puzzle_db.delete('rp_developer', where='pmtId=$pmt_id', vars=value)
                 pmt_to_ibug_user_sql = ' AND chinese_name =$chinese_name '
                 for i in devs:
@@ -940,7 +941,7 @@ def get_task_owners_from_pmt(pmt_id):
     qa = {}
     owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload_plan) AS workload_plan,s.chinese_name AS chinese_name "
                         "FROM task AS t,staff AS s "
-                        "WHERE project_id = $pmt_id AND t.owner = s.id "
+                        "WHERE project_id = $pmt_id AND t.owner = s.id AND (stage=107 OR stage=108)"
                         "GROUP BY staff_no",vars ={'pmt_id':pmt_id})
     for owner in owners:
         if owner['stage'] == 107:
@@ -1041,9 +1042,9 @@ def get_owner_str(owners):
 def get_project_list(appName,category,version):
     if not appName and not category and not version:
         return {}
-    sql = "SELECT b.pmtId AS pmtId,b.projectName AS projectName,b.version AS version,\
+    sql = "SELECT b.pmtId AS pmtId,b.version AS version,\
     b.appName AS appName,b.category AS category,e.startDate AS endDate \
-    FROM (SELECT p.id AS id,p.pmtId AS pmtId,p.projectName AS projectName ,\
+    FROM (SELECT p.id AS id,p.pmtId AS pmtId,\
     p.version AS version,a.appGroup as appName,a.category AS category \
     FROM projectlist AS p ,applist AS a \
     WHERE p.appId = a.id "
@@ -1059,7 +1060,8 @@ def get_project_list(appName,category,version):
         value['version'] = version
     sql += ") as b \
     LEFT JOIN projectevent AS e \
-    ON b.id = e.projectId AND e.category =10 ORDER BY pmtId DESC"
+    ON b.id = e.projectId AND e.category =10  \
+    GROUP BY  appName,category,version,pmtId ORDER BY pmtId DESC "
     project_list = puzzle_db.query(sql,vars = value)
     return project_list
 
