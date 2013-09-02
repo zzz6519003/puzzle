@@ -49,8 +49,9 @@ class Set:
 
 class Job:
     def GET(self):
-        try:
+        # try:
             data['result'] = ''
+            start =''
             params = web.input()
             start = params.get('start')
             end = params.get('end')
@@ -64,7 +65,14 @@ class Job:
             #     end = str(synctime[0]['datetime'])
             # end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M:%S')
             # start = str(end - datetime.timedelta(minutes=20))
-            apps = puzzle_db.select('qa_crashcount_limit')
+            apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit")
+            apps = {}
+            for app in apps_tmp:
+                id = len(apps)
+                apps[id] ={}
+                for key in app:
+                    apps[id][key] =app[key]
+
             if not start or not end:
                 now = datetime.datetime.now()
                 format_now = str(now.strftime('%Y-%m-%d %H:%M:%S'))
@@ -82,10 +90,11 @@ class Job:
             sub = '['+start+']crash report'
             context = ''
             for item in crash:
-                for app in apps:
+                for i in apps:
+                    app =apps[i]
                     res = False
                     if item['app_name'] == app['app_name'] and item['app_platform'] == app['app_platform']:
-                        del app
+                        del apps[i]
                         break
 
 
@@ -114,14 +123,14 @@ class Job:
 
                 else:
                     context += item['app_name']+item['app_platform']+'未设置crash数量<br>'
-            for item in apps:
-                puzzle_db.insert('qa_crashcount',app_name = item['app_name'],app_platform = item['app_platform'],
+            for i in apps:
+                puzzle_db.insert('qa_crashcount',app_name = apps[i]['app_name'],app_platform = apps[i]['app_platform'],
                                  crash_count=0,start_time=start,end_time=end)
             if context!='':
                 send_mail(sub,context)
             data['result'] = context
-        except Exception as err:
-            error = '错误信息：'+str(err)
-            data['result'] = '错误信息：'+error
-            send_mail('['+start+']crash信息更新失败',error)
-        return render.crashJob(data=data)
+        # except Exception as err:
+        #     error = '错误信息：'+str(err)
+        #     data['result'] = '错误信息：'+error
+        #     send_mail('['+start+']crash信息更新失败',error)
+            return render.crashJob(data=data)
