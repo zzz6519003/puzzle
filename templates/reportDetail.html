@@ -5,7 +5,7 @@
 <%block name='body'>
     <div class="container">
     <table class="table table-bordered" style="TABLE-LAYOUT: fixed;; WORD-BREAK: break-all;;border-collapse: collapse">
-        <tr>
+        <tr bgcolor="#F7F7F0">
             <td>id</td>
             <td>Ticket</td>
             <td width="30%">Summary</td>
@@ -23,7 +23,19 @@
         i=0
     %>
     % for item in data['tickets']:
-    <tr>
+    <%
+        index = item['priority'][1:2]
+        style = {
+        '1': lambda:"background: #fdc; border-color: #e88",
+        '2': lambda:"background: #ffb; border-color: #eea ",
+        '3': lambda:"background: #fbfbfb; border-color: #ddd",
+        '4': lambda:"background: #e7ffff; border-color: #cee",
+        '5': lambda:"background: #e7eeff; border-color: #cde",
+        '0': lambda:"background: #f0f0f0; border-color: #ddd ",
+
+        }[index]()
+        %>
+    <tr style="${style}">
     <%
     i = i+1
     from model.GlobalFunc import get_ticket_url
