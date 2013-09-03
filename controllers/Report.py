@@ -413,20 +413,20 @@ class Detail:
             elif location in ('p1','p2','p3','p4','p5'):
                 tickets = puzzle_db.query("SELECT * FROM ticket \
                         WHERE pmtId=$pmt_id AND component NOT LIKE '%api%' \
-                        AND priority  LIKE $priority AND environment !='test' AND reason !='产品设计' ",vars={'pmt_id':pmt_id,'priority':location+'%'})
+                        AND priority  LIKE $priority AND environment !='test' AND reason  NOT LIKE '%产品设计%' ",vars={'pmt_id':pmt_id,'priority':location+'%'})
             elif location in ('test','dev','prerelease','production'):
                 tickets = puzzle_db.query("SELECT * FROM ticket \
                         WHERE pmtId=$pmt_id AND component NOT LIKE '%api%' \
-                        AND environment=$environment AND reason !='产品设计' ",vars={'pmt_id':pmt_id,'environment':location})
+                        AND environment=$environment AND reason  NOT LIKE '%产品设计%' ",vars={'pmt_id':pmt_id,'environment':location})
         elif page == 'reason':
-            sql = "SELECT * FROM ticket WHERE pmtId=$pmt_id AND component NOT LIKE '%api%' AND reason !='产品设计' "
+            sql = "SELECT * FROM ticket WHERE pmtId=$pmt_id AND component NOT LIKE '%api%' AND reason  NOT LIKE '%产品设计%' "
             if location =='无原因':
                 sql += "AND reason = ''"
             elif location !='total':
                 sql += "AND reason = $reason"
             tickets = puzzle_db.query(sql,vars={'pmt_id':urllib.unquote(pmt_id),'reason':location})
         elif page =='component':
-            sql = "SELECT * FROM ticket WHERE pmtId=$pmt_id AND reason !='产品设计' "
+            sql = "SELECT * FROM ticket WHERE pmtId=$pmt_id AND reason NOT LIKE '%产品设计%' "
             if location !='total':
                 sql += "AND component =$component"
             tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'component':urllib.unquote(location)})
