@@ -25,15 +25,17 @@
     % for item in data['tickets']:
     <%
         index = item['priority'][1:2]
-        style = {
-        '1': lambda:"background: #fdc; border-color: #e88",
-        '2': lambda:"background: #ffb; border-color: #eea ",
-        '3': lambda:"background: #fbfbfb; border-color: #ddd",
-        '4': lambda:"background: #e7ffff; border-color: #cee",
-        '5': lambda:"background: #e7eeff; border-color: #cde",
-        '0': lambda:"background: #f0f0f0; border-color: #ddd ",
-
-        }[index]()
+        try:
+            style = {
+                '1': lambda:"background: #fdc; border-color: #e88",
+                '2': lambda:"background: #ffb; border-color: #eea ",
+                '3': lambda:"background: #fbfbfb; border-color: #ddd",
+                '4': lambda:"background: #e7ffff; border-color: #cee",
+                '5': lambda:"background: #e7eeff; border-color: #cde",
+                '0': lambda:"background: #f0f0f0; border-color: #ddd ",
+                }[index]()
+        except KeyError:
+            style = "lambda:"background: #fdc; border-color: #e88"
         %>
     <tr style="${style}">
     <%
