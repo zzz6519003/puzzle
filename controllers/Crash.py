@@ -85,7 +85,7 @@ class Job:
                                  "FROM crashdata c "
                                  "LEFT JOIN bs_appid b "
                                  "ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer "
-                                 "WHERE c.ExecDateTime < $end AND	c.ExecDateTime >= $start AND b.isShow = 1 "
+                                 "WHERE c.ExecDateTime <= $end AND	c.ExecDateTime >= $start AND b.isShow = 1 "
                                  "GROUP BY c.AppName,c.AppPlatform",vars = {'start':start,'end':end})
             sub = '['+start+']crash report'
             context = ''
