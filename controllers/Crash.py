@@ -125,8 +125,20 @@ class Job:
                 else:
                     context += item['app_name'] + item['app_platform'] + '未设置crash数量<br>'
             for i in apps:
-                puzzle_db.insert('qa_crashcount', app_name=apps[i]['app_name'], app_platform=apps[i]['app_platform'],
+                value = {'app_name': apps[i]['app_name'], 'app_platform': apps[i]['app_platform'],
+                         'start_time': start, 'end_time': end}
+                crash_count = puzzle_db.select('qa_crashcount',
+                                               where="app_name=$app_name AND app_platform =$app_platform "
+                                                     " AND start_time =$start_time AND end_time=$end_time", vars=value)
+                if len(crash_count)==0:
+                    puzzle_db.insert('qa_crashcount', app_name=apps[i]['app_name'], app_platform=apps[i]['app_platform'],
                                  crash_count=0, start_time=start, end_time=end)
+                else:
+                    now = datetime.datetime.now()
+                    now = now.strftime('%Y-%m-%d %H:%M:%S')
+                    puzzle_db.update('qa_crashcount', where="id=" + str(crash_count[0]['id']),
+                                     crash_count=1,
+                                     start_time=start, end_time=end, updated_at=now)
             if context != '':
                 send_mail(sub, context)
             data['result'] = context
