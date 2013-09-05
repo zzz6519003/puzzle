@@ -103,7 +103,7 @@ def get_data(value):
     return result
 
 def get_all_data(app_name,app_platform,start,end):
-    lastweek = 1;
+    lastweek = 7;
     value = {'app_name': app_name, 'app_platform': app_platform, 'start': start, 'end': end}
     result = []
     today = get_data(value)
