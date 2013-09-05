@@ -18,7 +18,7 @@ ama_db = settings.ama_db
 
 class ChartList:
     def GET(self):
-        apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit WHERE is_show=1 ORDER BY id")
+        apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit ORDER BY id")
         apps = {}
         for app in apps_tmp:
             apps[app['id']] = app

@@ -82,12 +82,15 @@ class Job:
             sub = '[' + end + ']crash report'
             context = ''
             for item in crash:
+                res = False
                 for i in apps:
                     app = apps[i]
                     if item['app_name'] == app['app_name'] and item['app_platform'] == app['app_platform']:
                         del apps[i]
+                        res =True
                         break
-
+                if res == False:
+                    continue
                 value = {'app_name': item['app_name'], 'app_platform': item['app_platform'],
                          'start_time': start, 'end_time': end}
                 crash_count = puzzle_db.select('qa_crashcount',
