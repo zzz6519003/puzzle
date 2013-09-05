@@ -43,4 +43,8 @@ urls = (
        
         "/crash/job", pre_fix + "Crash.Job",
         "/crash/set", pre_fix + "Crash.Set",
+
+        "/monitor/getdata", pre_fix +"Monitor.GetData",
+        "/monitor/detail", pre_fix +"Monitor.Detail",
+        "/monitor/chartlist", pre_fix +"Monitor.ChartList",
         )

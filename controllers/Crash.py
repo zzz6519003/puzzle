@@ -5,8 +5,9 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 from config import settings
-import time
+import os
 import datetime
+
 from model.GlobalFunc import send_mail
 
 render = settings.render
@@ -42,15 +43,15 @@ class Set:
                 puzzle_db.update('qa_crashcount_limit', where="id=" + str(crash_limit[0]['id']),
                                  crash_count=crash_count, updated_at=now)
 
-        data['crash_limit'] = puzzle_db.select('qa_crashcount_limit', order="app_name,app_platform")
-        data['apps'] = puzzle_db.query('SELECT DISTINCT app_name FROM qa_crashcount_limit')
+        data['crash_limit'] = puzzle_db.select('qa_crashcount_limit', order="id")
+        data['apps'] = puzzle_db.query('SELECT DISTINCT app_name FROM qa_crashcount_limit ORDER BY id')
         data['params'] = {'app_name': app_name, 'app_platform': app_platform, 'crash_count': crash_count}
         return render.crashSet(data=data)
 
 
 class Job:
     def GET(self):
-        try:
+        # try:
             data['result'] = ''
             start = ''
             params = web.input()
@@ -73,6 +74,7 @@ class Job:
                 apps[id] = {}
                 for key in app:
                     apps[id][key] = app[key]
+            apps_t = apps
 
             if not start or not end:
                 now = datetime.datetime.now()
@@ -137,13 +139,160 @@ class Job:
                     now = datetime.datetime.now()
                     now = now.strftime('%Y-%m-%d %H:%M:%S')
                     puzzle_db.update('qa_crashcount', where="id=" + str(crash_count[0]['id']),
-                                     crash_count=1,
+                                     crash_count=0,
                                      start_time=start, end_time=end, updated_at=now)
             if context != '':
                 send_mail(sub, context)
             data['result'] = context
-        except Exception as err:
-            error = '错误信息：' + str(err)
-            data['result'] = error
-            send_mail('[' + start + ']crash信息更新失败', error)
-        return render.crashJob(data=data)
+            apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit ORDER BY id")
+            for item in apps_tmp:
+                file_name = str(item['id'])
+                path = 'static/chart/'
+                file_object = open(path+file_name+'.js', 'w')
+                js = get_chart_js(item['app_name'],item['app_platform'])
+                file_object.write(js)
+                file_object.close()
+                from config import common
+                os.system(common.phantomjs_path+' static/js/highcharts-convert.js '
+                          '-infile '+path+file_name+'.js -outfile '+path+file_name+'.png')
+
+        # except Exception as err:
+        #     error = '错误信息：' + str(err)
+        #     data['result'] = error
+        #     send_mail('[' + start + ']crash信息更新失败', error)
+            return render.crashJob(data=data)
+
+
+def get_chart_js(app_name,app_platform,start=None,end=None):
+
+    now = datetime.datetime.now()
+    dt_date = now.strftime('%Y-%m-%d')
+    if not start or not end:
+        dt_date = datetime.datetime.now()
+        dt_date = dt_date.strftime('%Y-%m-%d')
+        start=dt_date
+        end = dt_date
+        start = start + ' 00:00:00'
+        end = end + ' 23:59:59'
+    from controllers.Monitor import get_all_data
+    result=get_all_data(app_name,app_platform,start,end)
+    js = "\
+        Highcharts.theme = {\
+            colors: ['#4572a7', '#c0c0c0', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],\
+            title: {\
+                style: {\
+                    color: '#000',\
+                    font: 'bold 16px \"Trebuchet MS\", Verdana, sans-serif'\
+                }\
+            },\
+            subtitle: {\
+                style: {\
+                    color: '#666666',\
+                    font: 'bold 12px \"Trebuchet MS\", Verdana, sans-serif'\
+                }\
+            },\
+            legend: {\
+                itemStyle: {\
+                    font: '9pt Trebuchet MS, Verdana, sans-serif',\
+                    color: 'black'\
+                },\
+                itemHoverStyle: {\
+                    color: 'gray'\
+                }\
+            }\
+        };\
+        Highcharts.setOptions(Highcharts.theme);\
+        var options = {\
+            chart: {\
+                type: 'spline',\
+                renderTo: 'container'\
+            },\
+            credits: {\
+                enabled: false\
+            },\
+            title: {\
+                text: 'Crash Count'\
+            },\
+            xAxis: {\
+                type: 'datetime',\
+                dateTimeLabelFormats: { \
+                    second: '%H:%M:%S',\
+                    minute: '%H:%M',\
+                    hour: '%H:%M',\
+                    day: '%m-%d',\
+                    week: '%m-%d',\
+                    month: '%Y-%m',\
+                    year: '%Y'\
+                }\
+            },\
+            yAxis: {\
+                title: {\
+                    text: 'Count'\
+                },\
+                min: 0\
+            },\
+            tooltip: {\
+                crosshairs: true,\
+                formatter: function () {\
+                    if (this.series.name == 'lastweek') {\
+                        this.x = this.x / 1000 - 7*24*60*60;\
+                        this.x = this.x*1000;\
+                    }\
+                    html = Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x);\
+                    html += '<br>' + this.series.name + '：' +\
+                        '<span style=\"font-weight:bold;color:' + this.series.color + '\">' +\
+                        this.y + '</span>';\
+                    return html;\
+                },\
+                valueSuffix: '个'\
+            },\
+            plotOptions: {\
+                spline: {\
+                    lineWidth: 2,\
+                    states: {\
+                        hover: {\
+                            lineWidth: 3\
+                        }\
+                    },\
+                    marker: {\
+                        enabled: false,\
+                        states: {\
+                            hover: {\
+                                enabled: true,\
+                                radius: 4\
+                            }\
+                        }\
+                    },\
+                    pointInterval: 3600000\
+                }\
+            },\
+            series: [\
+                {\
+                    name: 'today',\
+                    data:["
+    for i in result[0]:
+        utc = get_utc(i[0])
+
+        js +="["+utc+","+str(i[1])+"],"
+    js += "]\
+                },\
+                {\
+                    name: 'lastweek',\
+                    data:["
+    for i in result[1]:
+        utc = get_utc(i[0],7)
+        js +="["+utc+","+str(i[1])+"],"
+    js +="]\
+                }\
+            ]\
+        };\
+        Highcharts.setOptions({\
+            global: {\
+                useUTC: false\
+            }\
+        });"
+    return js
+
+def get_utc(timestamp,days=0):
+    utc = str((timestamp+days*24*60*60)*1000)
+    return utc

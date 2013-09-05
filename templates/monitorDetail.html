@@ -1,0 +1,33 @@
+<%inherit file='base.html'/>
+<%block name="header">
+<script src="/static/js/pages/monitor_detail.js"></script>
+<script src="/static/js/highcharts.js"></script>
+</%block>
+
+<%block name='body'>
+<div class="container">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <h3>${data['app_name']}${data['app_platform']}</h3><br>
+    <form class="form-inline" >
+        日期： <input type="text" class="J_pickTime J_formData input-small" value="${data['dt_date']}" id="dt_date">&nbsp;&nbsp;&nbsp;&nbsp;
+        范围： <input type="text" class="J_pickTime J_formData input-small" value="${data['dt_date']}" id="dt_start">
+        - <input type="text" class="J_pickTime J_formData input-small" value="${data['dt_date']}" id="dt_end">&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <input class="btn btn-success J_operationButton" type="button" id="btn_submit" value="提交">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="btn-group" id="btngrp_date_range">
+            <input type="button" class="btn btn-info" dt_date="${data['dt_date']}" value="今天">
+            <input type="button" class="btn btn-info" dt_date="${data['yesterday']}" value="昨天">
+            <input type="button" class="btn btn-info" dt_start="${data['three']}" value="近3天">
+            <input type="button" class="btn btn-info" dt_start="${data['seven']}" value="近7天">
+            <input type="button" class="btn btn-info" dt_start="${data['fifteen']}" value="近15天">
+            <input type="button" class="btn btn-info" dt_start="${data['thirty']}" value="近30天">
+        </div>
+        <input type="hidden" id ="app_name" value="${data['app_name']}">
+        <input type="hidden" id ="app_platform" value="${data['app_platform']}">
+        &nbsp;&nbsp;&nbsp;&nbsp;
+    </form>
+    <div id="container"></div>
+</div>
+
+</%block>

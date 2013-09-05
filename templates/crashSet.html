@@ -33,6 +33,7 @@
             <td>app</td>
             <td>platform</td>
             <td>count</td>
+            <td>图表</td>
         </tr>
         % if len(data['crash_limit']):
             % for item in data['crash_limit']:
@@ -40,6 +41,11 @@
                 <td>${item['app_name']}</td>
                 <td>${item['app_platform']}</td>
                 <td>${item['crash_count']}</td>
+                <td>
+                    <a href="/monitor/detail?app_name=${item['app_name']}&app_platform=${item['app_platform']}" target="_blank">
+                    <font color="#2e8bcc">详情</font>
+                    </a>
+                </td>
             </tr>
             % endfor
         % endif
