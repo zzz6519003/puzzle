@@ -95,7 +95,8 @@ $(document).ready(
                         }
                     },
                     marker: {
-                        enabled: false,
+                        enabled: true,
+                        radius:3,
                         states: {
                             hover: {
                                 enabled: true,
