@@ -90,19 +90,20 @@ class GetData:
 def get_data(value):
     crashs = puzzle_db.select('qa_crashcount',
                               where="app_name=$app_name AND app_platform=$app_platform "
-                                    "AND start_time >=$start AND start_time < $end ORDER BY start_time",
+                                    "AND end_time >=$start AND end_time < $end ORDER BY end_time",
                               vars=value
     )
     result = []
     for item in crashs:
-        dt = datetime.datetime.strptime(str(item['start_time']), '%Y-%m-%d %H:%M:%S')
+        time_tmp=str(item['end_time'])[:-3]
+        dt = datetime.datetime.strptime(time_tmp, '%Y-%m-%d %H:%M')
         list = [int(time.mktime(dt.timetuple()))]
         list.append(int(item['crash_count']))
         result.append(list)
     return result
 
 def get_all_data(app_name,app_platform,start,end):
-    lastweek = 7;
+    lastweek = 1;
     value = {'app_name': app_name, 'app_platform': app_platform, 'start': start, 'end': end}
     result = []
     today = get_data(value)
@@ -112,7 +113,6 @@ def get_all_data(app_name,app_platform,start,end):
 
     pre_start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
     pre_start = str(pre_start - datetime.timedelta(days=lastweek))
-    print pre_end, pre_start
     value = {'app_name': app_name, 'app_platform': app_platform, 'start': pre_start, 'end': pre_end}
     pre_week = get_data(value)
     result.append(today)

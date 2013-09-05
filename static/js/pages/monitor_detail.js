@@ -8,7 +8,7 @@
 
 $(document).ready(
     function () {
-        lastweek = 7 * 24 * 60 * 60;
+        lastweek = 1 * 24 * 60 * 60;
 
         Highcharts.theme = {
             colors: ['#4572a7', '#c0c0c0', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
@@ -78,7 +78,7 @@ $(document).ready(
                         this.x = this.x / 1000 - lastweek;
                         this.x = timestampToUTC(this.x);
                     }
-                    html = Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x);
+                    html = Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x);
                     html += '<br>' + this.series.name + '：' +
                         '<span style="font-weight:bold;color:' + this.series.color + '">' +
                         this.y + '</span>';

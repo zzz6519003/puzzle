@@ -79,15 +79,18 @@ mail_pass = "anjukeqa2012"
 mail_postfix="anjuke.com"
 
 # 发送邮件函数
-def send_mail(sub, context):
+def send_mail(sub, context,user=mail_user,to_list=None):
     '''''
     to_list: 发送给谁
     sub: 主题
     context: 内容
     send_mail("xxx@126.com","sub","context")
     '''
-    to_list = mailto_list
-    me = mail_user + "<"+mail_user+"@"+mail_postfix+">"
+    if not to_list:
+        to_list = mailto_list
+    if not user:
+        user =mail_user
+    me = user + "<"+mail_user+"@"+mail_postfix+">"
     msg = MIMEText(context,_subtype='html',_charset='utf-8')
     msg['Subject'] = sub
     msg['From'] = me
