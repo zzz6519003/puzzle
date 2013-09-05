@@ -52,6 +52,8 @@ class Set:
 class Job:
     def GET(self):
         try:
+            mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com",
+                           "clairyin@anjuke.com","angelazhang@anjuke.com"]
             data['result'] = ''
             start = ''
             params = web.input()
@@ -59,6 +61,16 @@ class Job:
             end = params.get('end')
             is_old = params.get('is_old')
             apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit")
+            app_count = len(apps_tmp)
+            end_tmp = datetime.datetime.strptime(end,'%Y-%m-%d %H:%M:%S')
+            check_start = str(end_tmp-datetime.timedelta(minutes=11))
+            check_end = str(end_tmp-datetime.timedelta(minutes=9))
+            tmp = puzzle_db.query("SELECT * FROM qa_crashcount WHERE end_time>=$start AND end_time <$end",
+                                  vars={'start':check_start,'end':check_end})
+            check_count = len(tmp)
+            if app_count != check_count:
+                dt = str(end_tmp-datetime.timedelta(minutes=10))
+                send_mail('['+dt+']crash update fail',dt+'缺少记录','Crash No-Reply',mail_to)
             apps = {}
             for app in apps_tmp:
                 id = len(apps)
@@ -102,7 +114,7 @@ class Job:
                                      crash_count=item['count'], start_time=start, end_time=end)
                     else:
                         puzzle_db.insert('qa_crashcount', app_name=item['app_name'], app_platform=item['app_platform'],
-                                     crash_count=item['count'], start_time=start, end_time=end,updated=end)
+                                     crash_count=item['count'], start_time=start, end_time=end,updated_at=end)
                 else:
                     if not is_old:
                         now = datetime.datetime.now()
@@ -152,8 +164,7 @@ class Job:
                                      crash_count=0,
                                      start_time=start, end_time=end, updated_at=now)
             if context != '':
-                mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com",
-                           "clairyin@anjuke.com","angelazhang@anjuke.com"]
+
                 send_mail(sub, context,'Crash No-Reply',mail_to)
             data['result'] = context
             if not is_old:
