@@ -113,6 +113,9 @@ if data == None:
                             ["Developer","/report/developer"],
                             ["QA","/report/qa"],
                             ]
+                            monitor =[
+                            ["Crash","/monitor/chartlist"]
+                            ]
                             %>
 
                             % for item in navData:
@@ -128,6 +131,13 @@ if data == None:
                                 <li><a href="${value[1]}">${value[0]}</a></li>
                                 % endfor
                              </ul>
+                            % endif
+                            %if item[0] == "Monitor":
+                            <ul class="dropdown-menu">
+                                %for value in monitor:
+                                <li><a href="${value[1]}">${value[0]}</a></li>
+                                 % endfor
+                            </ul>
                             % endif
                             </li>
                             % endfor    
