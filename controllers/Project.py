@@ -85,7 +85,7 @@ class Add:
             'projectName':data['projectName'],
             'projectId':lastInsertedId,
 
-            'openXcode':data['openXcode'],
+            'openXcode':False,
             'IP':web.ctx.ip,
             'whoami':data['whoami'],
             'clientProjectPath':data["clientProjectPath"],
