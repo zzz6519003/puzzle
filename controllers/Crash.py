@@ -55,6 +55,7 @@ class Job:
             mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com",
                            "clairyin@anjuke.com","angelazhang@anjuke.com"]
             data['result'] = ''
+            error =''
             start = ''
             params = web.input()
             start = params.get('start')
@@ -170,18 +171,25 @@ class Job:
             if not is_old:
                 apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit ORDER BY id")
                 for item in apps_tmp:
+                    error +='1'
                     file_name = str(item['id'])
                     path = 'static/chart/'
                     file_object = open(path+file_name+'.js', 'w')
+                    error +='2'
                     js = get_chart_js(item['app_name'],item['app_platform'])
+                    error +='3'
                     file_object.write(js)
+                    error +='4'
                     file_object.close()
+                    error +='5'
                     from config import common
+                    error +='6'
                     os.system(common.phantomjs_path+' static/js/highcharts-convert.js '
                               '-infile '+path+file_name+'.js -outfile '+path+file_name+'.png')
+                    error +='7'
 
         except Exception as err:
-            error = '错误信息：' + str(err)
+            error = '错误信息：' +error+ str(err)
             data['result'] = error
             send_mail('[' + start + ']crash信息更新失败', error,'Crash No-Reply')
         return render.crashJob(data=data)
