@@ -1,16 +1,6 @@
 $(document).ready(function(){
     var addProject = new AddProject();
     addProject.init();
-    //var contentHtml = ""
-    //    +"<img src=\"/static/img/kamehameha.gif\" height=\"50px\"></img>"
-    //    +"<div class=\"progress progress-striped active\">"
-    //    +"  <div class=\"bar\" style=\"width: 100%;\" id=\"J_progressBar\"></div>"
-    //    +"</div>";
-    //$.colorbox({
-    //    html:contentHtml,
-    //    width:"1024px",
-    //    height:"300px",
-    //});
 });
 
 function AddProject()
@@ -140,9 +130,9 @@ function AddProject()
 
                     function stop(){
                         clearInterval(intervalId);
-                        if(formData['openXcode']){
-                            //window.location.href="/project";
-                        }else{
+                        //if(formData['openXcode']){
+                        //    //window.location.href="/project";
+                        //}else{
                             var appId = formData['appId'];
                             var version = formData['version'];
                             console.log(formData);
@@ -154,7 +144,7 @@ function AddProject()
                                 $("#J_progressContent").html(contentHtml);
                                 $.colorbox.resize();
                             });
-                        }
+                        //}
                     }
                 },
                 onClosed:function(){
@@ -218,8 +208,6 @@ function AddProject()
                 data.eventList.push(item);
             }
         });
-
-        data['openXcode'] = $("#J_openXcode")[0].checked;
 
         data['whoami'] = $.cookie("puzzleUsername")?$.cookie("puzzleUsername"):"";
         data['clientProjectPath'] = $.cookie("puzzleProjectPath")?$.cookie("puzzleProjectPath"):"";
