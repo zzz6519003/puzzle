@@ -2,8 +2,11 @@ pre_fix = 'controllers.'
 
 urls = (
         "/", pre_fix + "index.Index",
+
         "/index", pre_fix + "index.Index",
         "/login", pre_fix + "index.Login",
+
+        "/startGearman", pre_fix + "BackGround.StartGearman",
 
         "/project", pre_fix + "Project.Index",
         "/project/add", pre_fix + "Project.Add",
@@ -30,7 +33,7 @@ urls = (
         "/showCmdLog", pre_fix + "BuildProgress.ShowCmdLog",
         "/progressNumber", pre_fix + "BuildProgress.ProgressNumber",
         "/initProjectProgress", pre_fix + "BuildProgress.InitProjectProgressBar",
-        
+
         "/report/update" , pre_fix +"Report.Update",
         "/report/index",pre_fix + "Report.Index",
         "/report/reason",pre_fix + "Report.Reason",
@@ -40,7 +43,7 @@ urls = (
         "/report/detail",pre_fix + "Report.Detail",
         "/report/job",pre_fix + "Report.Job",
 
-       
+
         "/crash/job", pre_fix + "Crash.Job",
         "/crash/set", pre_fix + "Crash.Set",
 
