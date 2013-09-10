@@ -1,0 +1,34 @@
+
+{
+    "timeline":
+    {
+        "headline":"项目KickOff",
+        "type":"default",
+		"text":"好租5.3改版内容",
+		"startDate":"2013,5,3",
+        "date": [
+            {
+                "startDate":"2013,5,5",
+		"endDate":"2013,5,5",
+                "headline":"BackLog",
+                "text":"<p>BackLog内容:</p><ul><li>首页改版</li><li>Applog</li><li>电话方案修改</li></ul>",
+                "asset":
+                {
+                                    }
+            },
+            {
+                "startDate":"2013,5,10",
+				"endDate":"2013,5,20",
+                "headline":"伪接口提供",
+                "text":"<p>In true political fashion, his character rattles off common jargon heard from people running for office.</p>",
+                "asset":
+                {
+                    "media":"http://youtu.be/u4XpeU9erbg",
+                    "credit":"",
+                    "caption":""
+                }
+            }
+            
+        ]
+    }
+}

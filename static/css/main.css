@@ -1,0 +1,38 @@
+@CHARSET "UTF-8";
+.clr {
+	
+	
+}
+
+tr.break td {
+    word-break:break-all;
+    word-wrap:break-word;
+    border-color: #e3e3e3;
+}
+
+.table th {
+    border-color: #e3e3e3;
+    background:#F7F7F0;
+}
+.table ul[class="report"]{width:50px; margin:0 auto; }
+
+li{
+    list-style:none;
+    text-align:left;
+}
+
+
+ul.nav li.dropdown:hover ul.dropdown-menu {
+    display: block;
+    margin-top: -3px;
+    margin-left: 10px;
+}
+
+a.menu:after,.dropdown-toggle:after {
+    content: none;
+}
+
+.search-input {
+    width:80%;
+    height:100px;
+}

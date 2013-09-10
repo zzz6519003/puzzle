@@ -1,0 +1,109 @@
+<%inherit file='base.html'/>
+
+<%block name="header">
+    <script type="text/javascript" src="/static/js/pages/selectVersions.js"></script>
+</%block>
+
+<%block name="body">
+
+<%
+packageInfo = data['packageInfoForBuild']
+dependencyInfoArray = packageInfo['dependencyArray']
+%>
+
+<p>
+    <p>usage:</p>
+    <p>如果要使用线下版本的依赖库，请将修改merge到temp分支，然后push这个temp分支。系统会自动检测到temp的新修改。</p>
+    <span class="badge badge-success">当前选中的版本</span>
+    <span class="badge badge-info">项目开始时使用的版本</span>
+</p>
+
+<span id="J_projectInfo"
+    data-project-id="${packageInfo['projectId']}"
+    data-category="${packageInfo['category']}"
+    data-version="${packageInfo['version']}"
+    data-app-name="${packageInfo['appName']}"
+    data-project-path="${packageInfo['projectPath']}"
+></span>
+
+% if packageInfo['category'] == '100' :
+    ${selectChannelId()}
+% endif
+
+<table cellpadding="20">
+    <tr>
+        <th></th>
+        <th>依赖包名字</th>
+        <th>依赖包版本</th>
+    </tr>
+    % for dependencyDict in packageInfo['dependencyArray']:
+        ${makerow(dependencyDict)}
+    % endfor
+</table>
+
+<label class="checkbox">
+    <input type="checkbox" id="J_isRelease">release
+</label>
+
+<button id="J_inputCommitButton"
+    data-project-id="${packageInfo['projectId']}"
+    data-category="${packageInfo['category']}"
+    data-version="${packageInfo['version']}"
+    data-app-name="${packageInfo['appName']}"
+    data-project-path="${packageInfo['projectPath']}"
+>开始打包</button>
+
+<%def name="makerow(dependencyDict)">
+<tr>
+    <td>
+        <select class="J_selectDependencyType"
+            data-dependency-id="${dependencyDict['dependencyId']}"
+            data-dependency-name="${dependencyDict['name']}"
+            >
+            <option
+                class="J_versionOption"
+                value="1"
+                data-init-sha1=""
+                data-dependency-id="${dependencyDict['dependencyId']}"
+            >线上版</option>
+            <option
+                value="0"
+                data-init-sha1=""
+            >线下版</option>
+        </select>
+    </td>
+    <td>
+        ${dependencyDict['name']}
+    </td>
+    <td>
+        % for hashItem in dependencyDict['SHA1Array']:
+        <a
+            data-repo-id="${dependencyDict['dependencyId']}"
+            data-repo-name="${dependencyDict['name']}"
+            data-sha1="${hashItem['hash']}"
+            data-type="${hashItem['type']}"
+            data-is-current="${hashItem['isCurrent']}"
+            data-is-init="${hashItem['isInit']}"
+            data-is-off-line="${hashItem['isOffLine']}"
+            data-commit="${hashItem['commit']}"
+            class="J_versionBadge badge"
+            >${hashItem['versionName']}</a>
+        % endfor
+    </td>
+</tr>
+</%def>
+
+<%def name="selectChannelId()">
+<div>
+    <%
+    channelArray = ['A%02d'%a for a in range(21)]
+    %>
+    <p>选择渠道号:</p>
+
+    % for channel in channelArray:
+    <input type="checkbox" class="J_channelBox" value="${channel}">${channel}
+    % endfor
+</div>
+</%def>
+
+</%block>

@@ -1,0 +1,160 @@
+## base.html
+<%!
+import sys
+default_encoding = 'utf-8'
+if sys.getdefaultencoding() != default_encoding:
+    reload(sys)
+    sys.setdefaultencoding(default_encoding)
+%>
+<%
+if data == None:
+    return "";
+%>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset='utf-8'>
+        <title>Puzzle - 安居客移动协作平台 </title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <link href="/static/css/bootmetro.css" rel="stylesheet">
+        <link href="/static/css/bootmetro-icons.css" rel="stylesheet">
+        <link href="/static/css/bootmetro-ui-light.css" rel="stylesheet">
+
+        <link rel="icon" type="image/png" href="/static/favicon.ico">
+
+        <style type="text/css">
+            body {
+                padding-top:60px;
+                padding-bottom:40px;
+            }
+
+            .sidebar-nav {
+                padding: 9px 0;
+            }
+        </style>
+
+        <link href="/static/css/bootmetro-responsive.css" rel="stylesheet">
+        <link href="/static/css/bootmetro-ui-light.css" rel="stylesheet">
+
+        <link href="/static/css/main.css" rel="stylesheet">
+
+        <!--[if lt IE9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!-- jQuery -->
+        <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+        <link href="/static/js/plugins/jquery-ui/css/smoothness/jquery-ui.min.css" rel="stylesheet">
+        <script type="text/javascript" src="/static/js/plugins/jquery-ui/js/jquery-ui.min.js"></script>
+
+        <!-- jQuery cookie -->
+        <script type="text/javascript" src="/static/js/plugins/jquery-cookie/jquery.cookie.js"></script>
+
+        <!-- jQuery json -->
+        <script type="text/javascript" src="/static/js/plugins/jquery-json/jquery.json.js"></script>
+
+        <!-- JGrowl -->
+        <link href="/static/js/plugins/jgrowl/jquery.jgrowl.min.css" rel="stylesheet">
+        <script type="text/javascript" src="/static/js/plugins/jgrowl/jquery.jgrowl.min.js"></script>
+
+        <!-- colorbox -->
+        <link href="/static/js/plugins/colorbox/colorbox.css" rel="stylesheet">
+        <script type="text/javascript" src="/static/js/plugins/colorbox/jquery.colorbox-min.js"></script>
+
+        <!-- tinytips -->
+        <link href="/static/js/plugins/tinytip/tinyTips.css" rel="stylesheet">
+        <script type="text/javascript" src="/static/js/plugins/tinytip/jquery.tinyTips.js"></script>
+
+        <!-- common -->
+        <script type="text/javascript" src="/static/js/pages/common/notice.js"></script>
+        <script type="text/javascript" src="/static/js/pages/common/main.js"></script>
+
+        <script type="text/javascript" src="/static/js/bootstrap-dropdown.js"></script>
+	 	${self.header()}
+    </head>
+
+    <body>
+   <!--[if lt IE 7]>
+   <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+   <![endif]-->
+        <div class = "navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class = "btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+
+                    <a class = "brand" href="#">Puzzle - 安居客移动协作平台</a>
+                    <div class="nav-collapse collapse">
+                        <p class="navbar-text pull-right">
+                        
+                        </p>
+                        <ul class="nav">
+
+                            <%def name="generateNavigation()"> 
+                            <%
+                            navData = [
+                            ["Home","/index"],
+                            ["Project","/project"],
+                            #['UIComponent',"/mobileUi"],
+                            ["Report","/report/index"],
+                            #["AboutUs","/aboutUs"],
+                            ["Monitor","/monitor/chartlist"],
+                            ["AppStore","/appStore"],
+                            ]
+                            report = [
+                            ["Project","/report/index"],
+                            ["Reason","/report/reason"],
+                            ["Component","/report/component"],
+                            ["Developer","/report/developer"],
+                            ["QA","/report/qa"],
+                            ]
+                            monitor =[
+                            ["Crash","/monitor/chartlist"]
+                            ]
+                            %>
+
+                            % for item in navData:
+                            <li class="dropdown
+                            % if data['pageIndex'].lower() == item[0].lower():
+                            active
+                            % endif
+                            ">
+                            <a href="${item[1]}"  class="dropdown-toggle" data-toggle="dropdown">${item[0]}</a>
+                            %if item[0] == "Report":
+                             <ul class="dropdown-menu">
+                                %for value in report:
+                                <li><a href="${value[1]}">${value[0]}</a></li>
+                                % endfor
+                             </ul>
+                            % endif
+                            %if item[0] == "Monitor":
+                            <ul class="dropdown-menu">
+                                %for value in monitor:
+                                <li><a href="${value[1]}">${value[0]}</a></li>
+                                 % endfor
+                            </ul>
+                            % endif
+                            </li>
+                            % endfor    
+                            </%def>
+
+                            ${generateNavigation()}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        ${self.body()}
+
+    </div>
+    <footer>
+    <p class="offset1">&copy; Anjuke Inc iOS Development Department 2013</p>
+    </footer>
+</body>
+</html>

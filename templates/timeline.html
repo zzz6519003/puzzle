@@ -1,0 +1,116 @@
+<%!
+import time
+%>
+
+<%inherit file='base.html'/>
+
+<%block name="header">
+    <!-- colorbox -->
+    <script type="text/javascript" src="/static/js/plugins/colorbox/jquery.colorbox-min.js"></script>
+    <link href="/static/js/plugins/colorbox/colorbox.css" rel="stylesheet">
+
+    <!-- smooth scroll -->
+    <script type="text/javascript" src="static/js/plugins/smoothScroll/jquery.smooth-scroll.min.js"></script>
+
+    <!-- sticky -->
+    <script type="text/javascript" src="static/js/plugins/sticky/jquery.sticky.js"></script>
+
+    <!-- bootstrap -->
+    <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+
+    <!-- timeline -->
+    <link href="static/timeline/css/timeline.css" rel="stylesheet">
+    <script type="text/javascript" src="static/js/pages/timeline.js"></script>
+
+</%block>
+
+<%block name="body">
+
+<br>
+
+<style type="text/css">
+    ol, li {list-style:none;}
+    .timeline li:after {clear:both;content:" ";display:block;font-size:0;height:0;line-height:0;visibility:hidden;}
+    .timeline li {position:relative;margin-bottom:10px;padding-left:5px;border-left:1px solid #ccc;zoom:1;}
+    .timeline .line {display:block;position:absolute;top:50%;width:20px;height:0;border-top:1px solid #ccc;}
+    .timeline .detail {float:left;display:inline;padding:5px 10px;margin-left:25px;line-height:1.6em;border:1px solid #ccc;box-shadow:#dbdbdb 1px 2px 2px;border-radius:3px;}
+    .selfcontent {float:left;display:inline;padding:5px 10px;width:960px;height:600px;margin:0px 0 0 20px;line-height:1.6em;border:1px solid #ccc;box-shadow:#dbdbdb 1px 2px 2px;border-radius:3px;}
+
+    .left {float:left;}
+
+    .past {background-color:lightgray;}
+    .today {background-color:lightyellow;}
+    .current {background-color:lightgreen;}
+    #J_buttons {left:1250px;}
+</style>
+<br>
+
+<%
+    categoryList = {
+        '1' : "BackLog",
+        '2' : "KickOff",
+        '3' : "PRD交付",
+        '4' : "api伪接口",
+        '5' : "api正式移交",
+        '6' : "切片交付",
+        '7' : "Daily Build",
+        '8' : "RC Build",
+        '9' : "真机",
+        '10': "Release"
+    }
+    lastItem = None
+%>
+
+<div>
+    <div class="left">
+        <ol class="timeline" id="J_timeLine">
+
+            % for item in data['eventList']:
+            <%
+                lastItem = item
+            %>
+            <li>
+            <i class="line"></i>
+            <div class="detail J_event" data-id="${item['id']}" data-project-id="${item['projectId']}" data-category="${item['category']}" data-time="${item['startDate']}">
+                <p>
+                ${categoryList[item['category']]}
+                </p>
+
+                <p>
+                start time:
+                ${
+                    time.strftime('%Y-%m-%d', time.localtime(item['startDate']))
+                }
+                </p>
+            </div>
+            </li>
+            % endfor
+
+        </ol>
+    </div>
+
+    <div id="J_buttons" style="position:fixed; top:100px;">
+        <button id="J_copyProject" class="left" data-project-id="${lastItem['projectId']}"
+            >复制项目到本地</button>
+    </div>
+
+    <div class="left selfcontent" id="J_eventContent">
+    </div>
+</div>
+<div style="clear:both;"></div>
+
+<%include file='components/addEventTemplate.html'/>
+<%include file='components/eventTemplate.html'/>
+
+<%include file='components/timelineMileStoneContent/APIDeliverTemplate.html'/>
+<%include file='components/timelineMileStoneContent/KickOffTemplate.html'/>
+<%include file='components/timelineMileStoneContent/RealDeviceTemplate.html'/>
+<%include file='components/timelineMileStoneContent/BackLogTemplate.html'/>
+<%include file='components/timelineMileStoneContent/APIFakeInterfaceTemplate.html'/>
+<%include file='components/timelineMileStoneContent/PRDDeliverTemplate.html'/>
+<%include file='components/timelineMileStoneContent/ReleaseTemplate.html'/>
+<%include file='components/timelineMileStoneContent/DailyBuildTemplate.html'/>
+<%include file='components/timelineMileStoneContent/RCBuildTemplate.html'/>
+<%include file='components/timelineMileStoneContent/SliceDeliverTemplate.html'/>
+
+</%block>
