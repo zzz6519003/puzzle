@@ -64,7 +64,6 @@ def stopAllWorkers():
 
 
 def getWorkerPids(pidFilePath):
-    print pidFilePath
     if(os.path.isfile(pidFilePath)):
         fp = open(pidFilePath, "r")
         pidString = fp.read()
@@ -76,6 +75,8 @@ def killWorkersByPidFile(pidFilePath):
     pidString = getWorkerPids(pidFilePath)
     if (pidString != ""):
         #这个命令不需要空格，因为储存pid的时候前面已经加了空格了
+        print "file path is %s" % pidFilePath
+        print "kill%s" % pidString
         os.system("kill%s" % pidString)
         os.remove(pidFilePath)
     pass
@@ -91,11 +92,12 @@ def startCreateProjectWorkers():
         result = os.fork()
         if result == 0:
             workerPid = os.getpid()
-            print workerPid
             fp = open(CreateProjectWorkerPidFilePath, "a")
             fp.write(" %s" % workerPid)
             fp.close()
 
+            print "ceate project worker started, pid# %s" % workerPid
+            print "task name is %s" % JobList.Job_createProject
             worker = PuzzleCreateProjectWorker([GearmanConfig.gearmanConnection])
             worker.register_task(JobList.Job_createProject, CreateProjectWorker.task_callback)
             worker.work()
@@ -108,13 +110,16 @@ def startTranslateCrashLogWorkers():
     pass
 
 def stopCreateProjectWorkers():
+    print "stopping create project worker"
     killWorkersByPidFile(CreateProjectWorkerPidFilePath)
     pass
 
 def stopPackageWorkers():
+    print "stopping package worker"
     killWorkersByPidFile(PackageWorkerPidFilePath)
     pass
 
 def stopTranslateCrashLogWorkers():
+    print "stopping translate worker"
     killWorkersByPidFile(TranslateCrashLogWorkerPidFilePath)
     pass

@@ -1,8 +1,11 @@
 #test
-Job_test = "createProject"
+Job_test            =  "testtesttest"
+
 #CreateProjectWorker
-Job_createProject = "createProject"
+Job_createProject   =  "createProject"
+
 #PackageWorker
-Job_package = "package"
+Job_package         =  "buildPackage"
+
 #TranslateCrashLogWorker
-Job_translate = "translate"
+Job_translate       =  "translateLog"
