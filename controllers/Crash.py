@@ -92,7 +92,7 @@ class Job:
                                  "ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer "
                                  "WHERE c.edt < $end AND	c.edt >= $start AND b.isShow = 1 "
                                  "GROUP BY c.AppName,c.AppPlatform", vars={'start': start, 'end': end})
-            sub = '[' + end + ']crash report'
+            sub = '非常重要[' + end + ']crash report'
             context = ''
             for item in crash:
                 res = False
