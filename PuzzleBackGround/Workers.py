@@ -3,7 +3,6 @@
 import gearman
 import time
 import JobList
-import GearmanConfig
 import json
 
 class CustomGearmanWorker(gearman.GearmanWorker):
@@ -19,6 +18,3 @@ def task_callback(gearmanWorker, job):
     print "here is call back"
     return job.data
 
-newWorker = CustomGearmanWorker([GearmanConfig.gearmanConnection])
-newWorker.register_task(JobList.Job_test, task_callback)
-newWorker.work()

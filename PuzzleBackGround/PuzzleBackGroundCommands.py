@@ -5,6 +5,7 @@ import JobList
 import GearmanConfig
 import json
 import os
+import time
 
 CreateProjectWorkerPidFilePath      =  "/tmp/CreateProjectWorkerPid"
 PackageWorkerPidFilePath            =  "/tmp/PackageWorkerPid"
@@ -79,7 +80,24 @@ def killWorkersByPidFile(pidFilePath):
     pass
 
 def startCreateProjectWorkers():
+    import CreateProjectWorker
+    from CreateProjectWorker import PuzzleCreateProjectWorker
+
     stopCreateProjectWorkers()
+
+    for i in range(0, 1):
+        time.sleep(1)
+        result = os.fork()
+        if result == 0:
+            workerPid = os.getpid()
+            print workerPid
+            fp = open(CreateProjectWorkerPidFilePath, "a")
+            fp.write(" %s" % workerPid)
+            fp.close()
+
+            worker = PuzzleCreateProjectWorker([GearmanConfig.gearmanConnection])
+            worker.register_task(JobList.Job_test, Workers.task_callback)
+            worker.work()
     pass
 
 def startPackageWorkers():

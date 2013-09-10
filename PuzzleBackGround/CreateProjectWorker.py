@@ -5,7 +5,7 @@ import time
 import JobList
 import GearmanConfig
 
-class CreateProjectWorker(gearman.GearmanWorker):
+class PuzzleCreateProjectWorker(gearman.GearmanWorker):
     def on_job_execute(self, currentJob):
         return super(CustomGearmanWorker, self).on_job_execute(currentJob)
 
