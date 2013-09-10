@@ -1,4 +1,4 @@
 #!/usr/bin/python
 import PuzzleBackGroundCommands
 
-PuzzleBackGroundCommands.startAllWorkers()
+PuzzleBackGroundCommands.stopAllWorkers()

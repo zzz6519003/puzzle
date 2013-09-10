@@ -2,4 +2,4 @@
 
 import PuzzleBackGroundCommands
 
-PuzzleBackGroundCommands.stopCreateProjectWorkers()
+PuzzleBackGroundCommands.sayHello()

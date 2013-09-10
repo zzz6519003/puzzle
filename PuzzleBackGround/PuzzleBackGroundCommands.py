@@ -27,13 +27,10 @@ class PuzzleGearmanClient(GearmanClient):
 def sayHello():
     data = {"key1":"value1", "key2":"value2"}
     newClient = PuzzleGearmanClient([GearmanConfig.gearmanConnection])
-    currentRequest = newClient.submit_job(JobList.Job_test, data, wait_until_complete=False)
+    currentRequest = newClient.submit_job(JobList.Job_createProject, data, wait_until_complete=False)
     newResult = currentRequest.result
     print "here is new result in PuzzleBackGroundCommands:"
     print currentRequest
-    pass
-
-def test():
     pass
 
 #status functions
@@ -79,7 +76,8 @@ def killWorkersByPidFile(pidFilePath):
         print "kill%s" % pidString
         os.system("kill%s" % pidString)
         os.remove(pidFilePath)
-    pass
+    else:
+        print "no need to kill any pid"
 
 def startCreateProjectWorkers():
     import CreateProjectWorker
@@ -88,26 +86,75 @@ def startCreateProjectWorkers():
     stopCreateProjectWorkers()
 
     for i in range(0, 1):
+
         time.sleep(1)
         result = os.fork()
+
         if result == 0:
             workerPid = os.getpid()
-            print workerPid
+
             fp = open(CreateProjectWorkerPidFilePath, "a")
             fp.write(" %s" % workerPid)
             fp.close()
 
             print "ceate project worker started, pid# %s" % workerPid
             print "task name is %s" % JobList.Job_createProject
+
             worker = PuzzleCreateProjectWorker([GearmanConfig.gearmanConnection])
             worker.register_task(JobList.Job_createProject, CreateProjectWorker.task_callback)
             worker.work()
     pass
 
 def startPackageWorkers():
+    import PackageWorker
+    from PackageWorker import PuzzlePackageWorker
+
+    stopPackageWorkers()
+
+    for i in range(0, 1):
+
+        time.sleep(1)
+        result = os.fork()
+
+        if result == 0:
+            workerPid = os.getpid()
+
+            fp = open(PackageWorkerPidFilePath, "a")
+            fp.write(" %s" % workerPid)
+            fp.close()
+
+            print "ceate project worker started, pid# %s" % workerPid
+            print "task name is %s" % JobList.Job_package
+
+            worker = PuzzlePackageWorker([GearmanConfig.gearmanConnection])
+            worker.register_task(JobList.Job_package, PackageWorker.task_callback)
+            worker.work()
     pass
 
 def startTranslateCrashLogWorkers():
+    import TranslateCrashLogWorker
+    from TranslateCrashLogWorker import PuzzleTranslateCrashLogWorker
+
+    stopTranslateCrashLogWorkers()
+
+    for i in range(0, 1):
+
+        time.sleep(1)
+        result = os.fork()
+
+        if result == 0:
+            workerPid = os.getpid()
+
+            fp = open(TranslateCrashLogWorkerPidFilePath, "a")
+            fp.write(" %s" % workerPid)
+            fp.close()
+
+            print "ceate project worker started, pid# %s" % workerPid
+            print "task name is %s" % JobList.Job_translate
+
+            worker = PuzzleTranslateCrashLogWorker([GearmanConfig.gearmanConnection])
+            worker.register_task(JobList.Job_translate, TranslateCrashLogWorker.task_callback)
+            worker.work()
     pass
 
 def stopCreateProjectWorkers():
