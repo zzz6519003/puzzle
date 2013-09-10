@@ -7,6 +7,8 @@ urls = (
         "/login", pre_fix + "index.Login",
 
         "/startGearman", pre_fix + "BackGround.StartGearman",
+        "/gearmanWorkers", pre_fix + "BackGround.GearmanWorkers",
+        "/gearmanStatus", pre_fix + "BackGround.GearmanStatus",
 
         "/project", pre_fix + "Project.Index",
         "/project/add", pre_fix + "Project.Add",
