@@ -12,4 +12,5 @@ class PuzzleCreateProjectWorker(gearman.GearmanWorker):
 
 
 def task_callback(gearmanWorker, job):
+    print "here is call back"
     return job.data

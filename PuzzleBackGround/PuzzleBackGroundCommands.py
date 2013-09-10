@@ -92,6 +92,7 @@ def startCreateProjectWorkers():
         result = os.fork()
         if result == 0:
             workerPid = os.getpid()
+            print workerPid
             fp = open(CreateProjectWorkerPidFilePath, "a")
             fp.write(" %s" % workerPid)
             fp.close()
