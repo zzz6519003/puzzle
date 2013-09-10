@@ -64,6 +64,7 @@ def stopAllWorkers():
 
 
 def getWorkerPids(pidFilePath):
+    print pidFilePath
     if(os.path.isfile(pidFilePath)):
         fp = open(pidFilePath, "r")
         pidString = fp.read()
@@ -96,7 +97,7 @@ def startCreateProjectWorkers():
             fp.close()
 
             worker = PuzzleCreateProjectWorker([GearmanConfig.gearmanConnection])
-            worker.register_task(JobList.Job_test, Workers.task_callback)
+            worker.register_task(JobList.Job_test, CreateProjectWorker.task_callback)
             worker.work()
     pass
 

@@ -7,3 +7,4 @@ import PuzzleBackGroundCommands
 import JobList
 import time
 
+PuzzleBackGroundCommands.startCreateProjectWorkers()

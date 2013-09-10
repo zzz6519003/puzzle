@@ -4,15 +4,13 @@ import gearman
 import time
 import JobList
 import GearmanConfig
+import os
 
 class PuzzleCreateProjectWorker(gearman.GearmanWorker):
     def on_job_execute(self, currentJob):
-        return super(CustomGearmanWorker, self).on_job_execute(currentJob)
+        os.system("touch /tmp/test")
+        return super(PuzzleCreateProjectWorker, self).on_job_execute(currentJob)
 
 
 def task_callback(gearmanWorker, job):
     return job.data
-
-newWorker = CreateProjectWorker([GearmanConfig.gearmanConnection])
-newWorker.register_task(JobList.createProject, task_callback)
-newWorker.work()
