@@ -53,7 +53,7 @@ class Job:
     def GET(self):
         try:
             mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com",
-                           "clairyin@anjuke.com","angelazhang@anjuke.com"]
+                       "clairyin@anjuke.com","angelazhang@anjuke.com"]
             data['result'] = ''
             error =''
             start = ''
@@ -137,6 +137,31 @@ class Job:
                                    + str(item['count']) + ' , 超过设定值 ' + str(limit_count) + \
                                    ', <a href="http://puzzle.corp.anjuke.com/monitor/detail?app_name='+item['app_name']+\
                                    '&app_platform='+item['app_platform']+'">查看</a><br>'
+                        crash_context = ama_db.query("SELECT c.AppVer AS ver,c.DeviceID AS DeviceID,"
+                                                     "c.NewID AS NewId,c.CrashTitle AS title,c.edt AS edt "
+                                                     "FROM crashdata c "
+                                                     "LEFT JOIN bs_appid b "
+                                                     "ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer "
+                                                     "WHERE c.edt < $end AND	c.edt >= $start AND b.isShow = 1 "
+                                                     "AND c.AppName = $app_name AND c.AppPlatform=$app_platform",
+                                                     vars={'start': start, 'end': end,'app_name':item['app_name'],
+                                                           'app_platform':item['app_platform']})
+                        style ='style="font-size:13px;font-family:Arial;background:#F7F7F0;border:1px solid #D7D7D7;' \
+                               'border-collapse: collapse;font-weight:bold;padding:2px 8px;vertical-align:bottom;' \
+                               'white-space:nowrap;border-image:initial;text-align:left;"'
+                        context += '<table style="TABLE-LAYOUT: fixed;; WORD-BREAK: break-all;;border-collapse: collapse">'
+                        context += '<tr><td '+style+'>id</td><td '+style+'>app</td><td '+style+'>os</td>' \
+                        '<td '+style+'>version</td><td  '+style+' width="10%">title</td><td  '+style+'>time</td></tr>'
+                        i = 1
+
+                        for detail in crash_context:
+
+                            context += '<tr><td '+style+'>'+str(i)+'</td><td '+style+'>'+item['app_name']+\
+                                       '</td><td '+style+'>'+item['app_platform']+'</td '+style+'><td '+style+'>'\
+                                       +detail['ver']+'</td><td '+style+' nowrap>'+detail['title']+'</td><td '+style+'>'+str(detail['edt'])+'</td></tr>'
+                            i = i+1
+
+                        context +='</table><br>'
 
                 else:
                     context += item['app_name'] + item['app_platform'] + '未设置crash数量<br>'

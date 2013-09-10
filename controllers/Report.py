@@ -1079,7 +1079,7 @@ def get_select(data):
 
     versions = puzzle_db.query("SELECT DISTINCT a.appGroup as appName ,p.version as version \
                                 FROM applist AS a,projectlist AS p \
-                                WHERE a.id = p.appId ORDER BY version DESC")
+                                WHERE a.id = p.appId AND appGroup <> '' ORDER BY version DESC")
     for item in versions:
         index = dict_index[item['appName']]
         pos = len(data['version'][index])
