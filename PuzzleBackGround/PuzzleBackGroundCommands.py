@@ -26,11 +26,16 @@ class PuzzleGearmanClient(GearmanClient):
 #test
 def sayHello():
     data = {"key1":"value1", "key2":"value2"}
-    newClient = PuzzleGearmanClient([GearmanConfig.gearmanConnection])
-    currentRequest = newClient.submit_job(JobList.Job_createProject, data, wait_until_complete=False)
-    newResult = currentRequest.result
+    #newClient = PuzzleGearmanClient([GearmanConfig.gearmanConnection])
+    #currentRequest = newClient.submit_job(JobList.Job_createProject, data, wait_until_complete=False)
+    #newResult = currentRequest.result
     print "here is new result in PuzzleBackGroundCommands:"
     print currentRequest
+    pass
+
+def packageProjectByPackageInfo(packageInfo):
+    client = PuzzleGearmanClient([GearmanConfig.gearmanConnection])
+    request = client.submit_job(JobList.Job_package, packageInfo, wait_until_complete=False)
     pass
 
 #status functions
