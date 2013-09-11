@@ -52,6 +52,7 @@ class Set:
 class Job:
     def GET(self):
         try:
+            job_start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com",
                        "clairyin@anjuke.com","angelazhang@anjuke.com"]
             data['result'] = ''
@@ -83,15 +84,20 @@ class Job:
                 now = datetime.datetime.now()
                 format_now = str(now.strftime('%Y-%m-%d %H:%M:%S'))
                 send_mail('[' + format_now + ']缺少同步时间', '缺少同步时间')
+                job_end = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                puzzle_db.insert('qa_jobtime',start=job_start,end=job_end)
                 return render.CrashJob(data=data)
 
-            crash = ama_db.query("SELECT c.AppName AS app_name ,c.AppPlatform AS app_platform, "
-                                 "count(*) AS count "
-                                 "FROM crashdata c "
-                                 "LEFT JOIN bs_appid b "
-                                 "ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer "
-                                 "WHERE c.edt < $end AND	c.edt >= $start AND b.isShow = 1 "
-                                 "GROUP BY c.AppName,c.AppPlatform", vars={'start': start, 'end': end})
+            crash = ama_db.query("SELECT c.AppName AS app_name ,c.AppPlatform AS app_platform, \
+                                 count(*) AS count \
+                                 FROM (SELECT DISTINCT CrashTitle,CrashDetail,AppPlatform, \
+                                 AppName,AppVer,DeviceID,NewID,CrashTime \
+				                 FROM crashdata  \
+                                 WHERE edt < $end AND	edt >= $start ) c \
+                                 LEFT JOIN bs_appid b \
+                                 ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer \
+                                 WHERE  b.isShow = 1 \
+                                 GROUP BY c.AppName,c.AppPlatform",vars={'start': start, 'end': end})
             sub = '非常重要[' + end + ']crash report'
             context = ''
             for item in crash:
@@ -137,8 +143,8 @@ class Job:
                                    + str(item['count']) + ' , 超过设定值 ' + str(limit_count) + \
                                    ', <a href="http://puzzle.corp.anjuke.com/monitor/detail?app_name='+item['app_name']+\
                                    '&app_platform='+item['app_platform']+'">查看</a><br>'
-                        crash_context = ama_db.query("SELECT c.AppVer AS ver,c.DeviceID AS DeviceID,"
-                                                     "c.NewID AS NewId,c.CrashTitle AS title,c.edt AS edt "
+                        crash_context = ama_db.query("SELECT DISTINCT c.CrashTitle AS title,c.AppVer AS ver,"
+                                                     "c.DeviceID AS DeviceID,c.NewID AS NewId,c.CrashTime AS crashTime "
                                                      "FROM crashdata c "
                                                      "LEFT JOIN bs_appid b "
                                                      "ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer "
@@ -158,7 +164,8 @@ class Job:
 
                             context += '<tr><td '+style+'>'+str(i)+'</td><td '+style+'>'+item['app_name']+\
                                        '</td><td '+style+'>'+item['app_platform']+'</td '+style+'><td '+style+'>'\
-                                       +detail['ver']+'</td><td '+style+' nowrap>'+detail['title']+'</td><td '+style+'>'+str(detail['edt'])+'</td></tr>'
+                                       +detail['ver']+'</td><td '+style+' nowrap>'+detail['title']+'</td><td '+style+'>'\
+                                       +str(detail['crashTime'])+'</td></tr>'
                             i = i+1
 
                         context +='</table><br>'
@@ -171,7 +178,6 @@ class Job:
                 crash_count = puzzle_db.select('qa_crashcount',
                                                where="app_name=$app_name AND app_platform =$app_platform "
                                                      " AND start_time =$start_time AND end_time=$end_time", vars=value)
-
                 if len(crash_count)==0:
                     if not is_old:
                         puzzle_db.insert('qa_crashcount', app_name=apps[i]['app_name'], app_platform=apps[i]['app_platform'],
@@ -212,11 +218,14 @@ class Job:
                     os.system(common.phantomjs_path+' static/js/highcharts-convert.js '
                               '-infile '+path+file_name+'.js -outfile '+path+file_name+'.png')
                     error +='7'
-
+            job_end = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            puzzle_db.insert('qa_jobtime',start=job_start,end=job_end)
         except Exception as err:
             error = '错误信息：' +error+ str(err)
             data['result'] = error
             send_mail('[' + start + ']crash信息更新失败', error,'Crash No-Reply')
+            job_end = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            puzzle_db.insert('qa_jobtime',start=job_start,end=job_end)
         return render.crashJob(data=data)
 
 
