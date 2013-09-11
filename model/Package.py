@@ -3,6 +3,7 @@ import web
 from iostools.commandLine import *
 import json
 import urllib
+from PuzzleBackGround import PuzzleBackGroundCommands
 
 db = settings.db
 
@@ -68,7 +69,8 @@ def getPackageInfoForBuild(projectId, category, type=1):
 def buildPackage(packageInfo):
     print "buildPackage is here"
     print packageInfo
-    package(packageInfo)
+    #package(packageInfo)
+    PuzzleBackGroundCommands.doWork_packageByPackageInfo(packageInfo)
     return True
 
 def getProjectPath(appId, version):

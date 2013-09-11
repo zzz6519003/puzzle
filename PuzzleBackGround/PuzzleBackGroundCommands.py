@@ -33,7 +33,7 @@ def sayHello():
     print currentRequest
     pass
 
-def packageProjectByPackageInfo(packageInfo):
+def doWork_packageByPackageInfo(packageInfo):
     client = PuzzleGearmanClient([GearmanConfig.gearmanConnection])
     request = client.submit_job(JobList.Job_package, packageInfo, wait_until_complete=False)
     pass
