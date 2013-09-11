@@ -7,7 +7,7 @@ import GearmanConfig
 
 class PuzzlePackageWorker(gearman.GearmanWorker):
     def on_job_execute(self, currentJob):
-        return super(CustomGearmanWorker, self).on_job_execute(currentJob)
+        return super(PuzzlePackageWorker, self).on_job_execute(currentJob)
 
 
 def task_callback(gearmanWorker, job):

@@ -12,7 +12,4 @@ class PuzzleCreateProjectWorker(gearman.GearmanWorker):
 
 
 def task_callback(gearmanWorker, job):
-    #fp = open("/tmp/test", "a")
-    #fp.write("here is task call back")
-    #fp.close()
     return job.data
