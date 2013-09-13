@@ -1,0 +1,79 @@
+<%inherit file='base.html'/>
+<%block name='header'>
+    <script type="text/javascript" src="/static/js/pages/project.js"></script>
+</%block>
+<%block name='body'>
+<div class='row-fluid'>
+	<div class='offset1 span1'>
+		<a class='btn btn-primary' href="/project/add">添加</a>
+	</div>
+	<div class="span7"><i class="icon-th"></i>我们把一次新的kickoff当作一个项目，在每个项目中，我们需要把每个项目的相关属性定义好</div>
+    </div>
+<br/>
+</div>
+<div class='row-fluid'>
+	<div class='offset1 span10'>
+    <ul class="nav nav-tabs span6">
+        % for app in data['appMain']:
+            ${makeNavItem(app)}
+        % endfor
+    </ul>
+
+  <div class="btn-group">
+  <button id="otherApp" class="btn btn-primary">其他应用</button>
+  <button class="btn dropdown-toggle btn-primary" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    % for dropdownitem in data['appList']:
+      % if dropdownitem['id']==int(data['currentAppId']):
+      <script>
+            $('#otherApp').html('${dropdownitem['appName']}');
+      </script>
+      % endif
+      <li>
+      <a href="/project?appId=${dropdownitem['id']}">${dropdownitem['appName']}</a></li>
+    % endfor
+  </ul>
+</div>
+
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>应用名称</th>
+				<th>版本号</th>
+				<th>最后提交时间</th>
+				<th>SHA1</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+	
+			% for item in data['projectList']:
+			<tr>
+				<td>${item['id']}</td>
+				<td>${item['projectName']}</td>
+                <td>${item['version']}</td>
+				<td>${item['lastUpdate']}</td>
+                <td>${item['sha1']}</td>
+                <td><button class='btn btn-success J_operationButton' type='button' data-id="${item['id']}">操作</button><button class='btn btn-success J_deleteButton' type='button' data-id="${item['id']}">删除</button></td>
+			</tr>
+			% endfor
+
+		</tbody>
+	</table>
+	</div>
+</div>
+
+</%block>
+
+<%def name="makeNavItem(app)">
+% if app['id']==int(data['currentAppId']):
+    <li class="active">
+% else:
+    <li>
+% endif
+        <a href="/project?appId=${app['id']}">${app['appName']}</a>
+    </li>
+</%def>
