@@ -13,6 +13,9 @@ function dailyBuildButtonClicked(actionItem){
         overlayClose:false,
         escKey:false,
         closeButton:false,
+        onLoad:function(){
+            $('#cboxClose').remove();
+        },
         onComplete:function(){
             gotoSelectVersion(actionItem);
         }
