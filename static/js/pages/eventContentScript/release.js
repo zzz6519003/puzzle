@@ -21,9 +21,15 @@ function Release(){
     }
 
     function channelButtonClicked(actionItem){
-        var projectId = actionItem.context.dataset['projectId'];
-        var category = actionItem.context.dataset['category'];
-        gotoSelectVersion(actionItem);
+        $.colorbox({
+            html:'<img src="/static/img/ajax-loader.gif">',
+            overlayClose:false,
+            escKey:false,
+            closeButton:false,
+            onComplete:function(){
+                gotoSelectVersion(actionItem);
+            }
+        });
     }
 
     function releaseButtonClicked(actionItem){

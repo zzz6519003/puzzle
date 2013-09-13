@@ -22,6 +22,13 @@ class Index:
         else:
             appId = GET_data['appId']
 
+        shouldDelete = GET_data.has_key("delete")
+        print "here i am"
+        print "here i am"
+        print "here i am"
+        print "here i am"
+        print shouldDelete
+
         #获取当前日期
         import time
         data['currentDate'] = time.strftime('%Y-%m-%d,%A',time.localtime(time.time()))
@@ -46,7 +53,10 @@ class Index:
         data['appList'] = appList
 
         #获取数据
-        return render.projectList(data=data)
+        if shouldDelete:
+            return render.deleteProjectList(data=data)
+        else:
+            return render.projectList(data=data)
 
 class Add:
     def GET(self):
@@ -94,6 +104,12 @@ class Add:
 
         initProject(initInfo)
         return
+
+class Del:
+    def POST(self):
+        postData = web.input();
+        print postData
+        pass
 
 class InitScript:
     def GET(self):

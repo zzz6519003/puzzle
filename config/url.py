@@ -12,6 +12,7 @@ urls = (
 
         "/project", pre_fix + "Project.Index",
         "/project/add", pre_fix + "Project.Add",
+        "/project/del", pre_fix + "Project.Del",
         "/project/initScript", pre_fix + "Project.InitScript",
 
         "/dailyBuild", pre_fix + "DailyBuild.Index",
