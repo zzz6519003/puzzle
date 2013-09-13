@@ -1,41 +1,37 @@
 #encoding=utf8
 
-from gearman import GearmanClient, GearmanAdminClient, DataEncoder
+from gearman import GearmanClient, GearmanAdminClient, GearmanWorker
 import JobList
 import GearmanConfig
 import json
 import os
 import time
 
-CreateProjectWorkerPidFilePath      =  "/tmp/CreateProjectWorkerPid"
-PackageWorkerPidFilePath            =  "/tmp/PackageWorkerPid"
-TranslateCrashLogWorkerPidFilePath  =  "/tmp/TranslateWorkerPid"
+CreateProjectWorkerPidFilePath        =  "/tmp/CreateProjectWorkerPid"
+PackageWorkerPidFilePath              =  "/tmp/PackageWorkerPid"
+TranslateCrashLogWorkerPidFilePath    =  "/tmp/TranslateWorkerPid"
+FetchDependencyInfoWorkerPidFilePath  =  "/tmp/FetchDependencyInfoWorkerPid"
 
-class PickleDataEncoder(DataEncoder):
-    @classmethod
-    def encode(cls, encodable_object):
-        return json.dumps(encodable_object)
-
-    @classmethod
-    def decode(cls, decodable_string):
-        return json.loads(decodable_string)
-
-class PuzzleGearmanClient(GearmanClient):
-    data_encoder = PickleDataEncoder
-
-#test
-def sayHello():
-    data = {"key1":"value1", "key2":"value2"}
-    #newClient = PuzzleGearmanClient([GearmanConfig.gearmanConnection])
-    #currentRequest = newClient.submit_job(JobList.Job_createProject, data, wait_until_complete=False)
-    #newResult = currentRequest.result
-    print "here is new result in PuzzleBackGroundCommands:"
-    print currentRequest
+#do work
+def doWork_packageByPackageInfo(packageInfo):
+    client = GearmanClient([GearmanConfig.gearmanConnection])
+    data = json.dumps(packageInfo)
+    request = client.submit_job(JobList.Job_package, data, wait_until_complete=False)
     pass
 
-def doWork_packageByPackageInfo(packageInfo):
-    client = PuzzleGearmanClient([GearmanConfig.gearmanConnection])
-    request = client.submit_job(JobList.Job_package, packageInfo, wait_until_complete=False)
+def doWork_fetchDependencyInfo(params):
+    """
+        params = {
+            'projectId':projectId,
+            'projectPath':projectInfo['projectPath'],
+            'appName':data['appName'],
+            'dependencyType':1,
+        }
+    """
+    client = GearmanClient([GearmanConfig.gearmanConnection])
+    data = json.dumps(params)
+    request = client.submit_job(JobList.Job_fetchDependencyInfo, data, wait_until_complete=True)
+    return request.result
     pass
 
 #status functions
@@ -56,12 +52,14 @@ def startAllWorkers():
     startCreateProjectWorkers()
     startPackageWorkers()
     startTranslateCrashLogWorkers()
+    startFetchDependencyInfoWorkers()
     pass
 
 def stopAllWorkers():
     stopCreateProjectWorkers()
     stopPackageWorkers()
     stopTranslateCrashLogWorkers()
+    stopFetchDependencyInfoWorker()
     pass
 
 
@@ -161,6 +159,34 @@ def startTranslateCrashLogWorkers():
             worker.register_task(JobList.Job_translate, TranslateCrashLogWorker.task_callback)
             worker.work()
     pass
+
+def startFetchDependencyInfoWorkers():
+    import FetchDependencyInfoWorker
+
+    stopFetchDependencyInfoWorker()
+
+    for i in range(0, 1):
+        time.sleep(1)
+        result = os.fork()
+
+        if result == 0:
+            workerPid = os.getpid()
+
+            fp = open(FetchDependencyInfoWorkerPidFilePath, "a")
+            fp.write(" %s" % workerPid)
+            fp.close()
+
+            worker = GearmanWorker([GearmanConfig.gearmanConnection])
+            worker.register_task(JobList.Job_fetchDependencyInfo, FetchDependencyInfoWorker.doWork)
+            worker.work()
+    pass
+
+
+def stopFetchDependencyInfoWorker():
+    print "stopping fetch dependency info worker"
+    killWorkersByPidFile(FetchDependencyInfoWorkerPidFilePath)
+    pass
+
 
 def stopCreateProjectWorkers():
     print "stopping create project worker"

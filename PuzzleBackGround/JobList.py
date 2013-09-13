@@ -9,3 +9,6 @@ Job_package         =  "buildPackage"
 
 #TranslateCrashLogWorker
 Job_translate       =  "translateLog"
+
+#TranslateCrashLogWorker
+Job_fetchDependencyInfo =  "fetchDepInfo"

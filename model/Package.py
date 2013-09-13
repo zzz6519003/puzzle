@@ -10,22 +10,14 @@ db = settings.db
 def getPackageInfoForBuild(projectId, category, type=1):
     """
         the result of this function is used for user to choose which version need to be build
-    """
 
-    data = {}
-
-    #casa = "casa"
-    #package(casa)
-    #getDependencyArray(casa)
-    #getVersionArray(casa, casa)
-    #initProject(casa)
-
-    """
         type's definition is:
         0   common node
         1   initial node
         2   offline node
     """
+
+    data = {}
 
     projectInfo = (db.select('projectList', where="id=" + projectId))[0]
 
@@ -45,7 +37,11 @@ def getPackageInfoForBuild(projectId, category, type=1):
         'dependencyType':1,
     }
 
-    data['dependencyArray'] = getOrganizedDepInfo(params)
+    print params
+
+    result = PuzzleBackGroundCommands.doWork_fetchDependencyInfo(params)
+
+    data['dependencyArray'] = json.loads(result)
 
     #data['dependencyArray'] = [{
     #        'name':'RTApiProxy',
