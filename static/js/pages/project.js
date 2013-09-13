@@ -24,12 +24,13 @@ function Project(){
     }
 
     function deleteButtonClicked(actionItem){
-        var appId = actionItem[0].dataset.id;
+        var projectId = actionItem[0].dataset.id;
         var data = {
-            "appId":appId
+            "projectId":projectId
         };
-        $.post("/project/del", {data:data}, function(result){
-            
+        var paramString = $.toJSON(data);
+        $.post("/project/del", {data:paramString}, function(result){
+            location.reload();
         }, "json");
     }
 }

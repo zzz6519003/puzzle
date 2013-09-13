@@ -6,6 +6,7 @@ import string
 import time
 import urllib
 from iostools.commandLine import *
+import shutil
 
 render = settings.render
 db = settings.db
@@ -108,7 +109,20 @@ class Add:
 class Del:
     def POST(self):
         postData = web.input();
-        print postData
+        data = json.loads(urllib.unquote(postData['data']))
+        projectId = data['projectId']
+        print projectId
+
+        projectPath = (db.select('projectList', where="id="+projectId))[0]['projectPath']
+        print projectPath
+
+        db.delete('projectEvent', where="projectId="+projectId)
+        db.delete('projectList', where="id="+projectId)
+        try:
+            shutil.rmtree(projectPath)
+        except:
+            pass
+
         pass
 
 class InitScript:
