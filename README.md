@@ -22,6 +22,9 @@ iOS管理发布平台
   Mako (`cd Mako-0.8.0 && python setup.py install`)
 * Iostools
   IOSTools (`git clone https://github.com/wadecong/iostools.git && python setup.py develop`)
+* gitPython (`https://pypi.python.org/pypi/GitPython/`)
+* gearmand (`https://launchpad.net/gearmand`)
+* gearman API for python (`https://pypi.python.org/pypi/gearman/`)
 
 run `python server.py` 
 
