@@ -64,7 +64,6 @@ function AddProject()
     function submitButtonClicked(actionItem){
         if(isAvailable()){
             var formData = generateFormData();
-            //var jsonData = JSON.stringify(formData);
             var jsonData = $.toJSON(formData);
             $.post("/project/add", {data:jsonData});
             var contentHtml = ""
@@ -81,6 +80,9 @@ function AddProject()
                 overlayClose:false,
                 escKey:false,
                 closeButton:false,
+                onLoad:function(){
+                    $("#cboxClose").remove();
+                },
                 onComplete:function(){
                     progressNumberUrl = "/initProjectProgress";
 
