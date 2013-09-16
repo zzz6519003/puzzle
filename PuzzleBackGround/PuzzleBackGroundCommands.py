@@ -36,11 +36,10 @@ def doWork_fetchDependencyInfo(params):
     pass
 
 def doWork_calculateCrashCount(params):
-    client = GearmanAdminClient([GearmanConfig.gearmanConnection])
+    client = GearmanClient([GearmanConfig.gearmanConnection])
     data = json.dumps(params)
     request = client.submit_job(JobList.Job_calculateCrashCount, data,wait_until_complete=True)
-    return request.result
-
+    pass
 #status functions
 def getStatus():
     adminClient = GearmanAdminClient([GearmanConfig.gearmanConnection])
@@ -196,9 +195,9 @@ def startCalculateCrashCountWorkers():
     if result == 0:
         workerPid = os.getpid()
 
-        fp = open(CaculateCrashCountPidFilePath, "a")
-        fp.write(" %s" % workerPid)
-        fp.close()
+        #fp = open(CaculateCrashCountPidFilePath, "a")
+        #fp.write(" %s" % workerPid)
+        #fp.close()
 
         print "caculate crash job  worker started, pid# %s" % workerPid
         print "task name is %s" % JobList.Job_calculateCrashCount
