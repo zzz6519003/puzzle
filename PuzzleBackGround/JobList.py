@@ -12,3 +12,6 @@ Job_translate       =  "translateLog"
 
 #TranslateCrashLogWorker
 Job_fetchDependencyInfo =  "fetchDepInfo"
+
+#CaculateCrashCountWorker
+Job_caculateCrashCount = "caculateCrashCount"

@@ -11,6 +11,7 @@ CreateProjectWorkerPidFilePath        =  "/tmp/CreateProjectWorkerPid"
 PackageWorkerPidFilePath              =  "/tmp/PackageWorkerPid"
 TranslateCrashLogWorkerPidFilePath    =  "/tmp/TranslateWorkerPid"
 FetchDependencyInfoWorkerPidFilePath  =  "/tmp/FetchDependencyInfoWorkerPid"
+CaculateCrashCountPidFilePath         =  "/tmp/CaculateCrashCountWorkerPid"
 
 #do work
 def doWork_packageByPackageInfo(packageInfo):
@@ -33,6 +34,12 @@ def doWork_fetchDependencyInfo(params):
     request = client.submit_job(JobList.Job_fetchDependencyInfo, data, wait_until_complete=True)
     return request.result
     pass
+
+def doWork_caculateCrashCount(params):
+    client = GearmanAdminClient([GearmanConfig.gearmanConnection])
+    data = json.dumps(params)
+    request = client.submit_job(JobList.Job_caculateCrashCount, data,wait_until_complete=True)
+    return request.result
 
 #status functions
 def getStatus():
@@ -181,6 +188,29 @@ def startFetchDependencyInfoWorkers():
             worker.work()
     pass
 
+def startCaculateCrashCountWorkers():
+    import CreateProjectWorkerPidFilePath
+    stopCaculateCrashCountWorkers()
+    result = os.fork()
+
+    if result == 0:
+        workerPid = os.getpid()
+
+        fp = open(CaculateCrashCountPidFilePath, "a")
+        fp.write(" %s" % workerPid)
+        fp.close()
+
+        print "caculate crash job  worker started, pid# %s" % workerPid
+        print "task name is %s" % JobList.Job_caculateCrashCount
+
+        worker = CaculateCrashCountWorker([GearmanConfig.gearmanConnection])
+        worker.register_task(JobList.Job_caculateCrashCount, CaculateCrashCountWorker.doWork)
+        worker.work()
+    pass
+
+
+
+
 
 def stopFetchDependencyInfoWorker():
     print "stopping fetch dependency info worker"
@@ -201,4 +231,9 @@ def stopPackageWorkers():
 def stopTranslateCrashLogWorkers():
     print "stopping translate worker"
     killWorkersByPidFile(TranslateCrashLogWorkerPidFilePath)
+    pass
+
+def stopCaculateCrashCountWorkers():
+    print "stopping caculate crash count worker":
+    killWorkersByPidFile(CaculateCrashCountPidFilePath)
     pass
