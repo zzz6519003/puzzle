@@ -35,10 +35,10 @@ def doWork_fetchDependencyInfo(params):
     return request.result
     pass
 
-def doWork_caculateCrashCount(params):
+def doWork_calculateCrashCount(params):
     client = GearmanAdminClient([GearmanConfig.gearmanConnection])
     data = json.dumps(params)
-    request = client.submit_job(JobList.Job_caculateCrashCount, data,wait_until_complete=True)
+    request = client.submit_job(JobList.Job_calculateCrashCount, data,wait_until_complete=True)
     return request.result
 
 #status functions
@@ -188,9 +188,9 @@ def startFetchDependencyInfoWorkers():
             worker.work()
     pass
 
-def startCaculateCrashCountWorkers():
-    import CreateProjectWorkerPidFilePath
-    stopCaculateCrashCountWorkers()
+def startCalculateCrashCountWorkers():
+    import CalculateCrashCountWorker
+    stopCalculateCrashCountWorkers()
     result = os.fork()
 
     if result == 0:
@@ -201,10 +201,10 @@ def startCaculateCrashCountWorkers():
         fp.close()
 
         print "caculate crash job  worker started, pid# %s" % workerPid
-        print "task name is %s" % JobList.Job_caculateCrashCount
+        print "task name is %s" % JobList.Job_calculateCrashCount
 
-        worker = CaculateCrashCountWorker([GearmanConfig.gearmanConnection])
-        worker.register_task(JobList.Job_caculateCrashCount, CaculateCrashCountWorker.doWork)
+        worker = GearmanWorker([GearmanConfig.gearmanConnection])
+        worker.register_task(JobList.Job_calculateCrashCount, CalculateCrashCountWorker.doWork)
         worker.work()
     pass
 
@@ -233,7 +233,7 @@ def stopTranslateCrashLogWorkers():
     killWorkersByPidFile(TranslateCrashLogWorkerPidFilePath)
     pass
 
-def stopCaculateCrashCountWorkers():
-    print "stopping caculate crash count worker":
+def stopCalculateCrashCountWorkers():
+    print "stopping caculate crash count worker"
     killWorkersByPidFile(CaculateCrashCountPidFilePath)
     pass

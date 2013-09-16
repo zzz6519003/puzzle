@@ -263,5 +263,13 @@ CREATE TABLE `qa_crashcount_limit` (
   UNIQUE KEY `NewIndex1` (`app_name`,`app_platform`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
+CREATE TABLE `qa_jobtime` (
+              `id` int(11) NOT NULL AUTO_INCREMENT,
+              `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+              `update_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
