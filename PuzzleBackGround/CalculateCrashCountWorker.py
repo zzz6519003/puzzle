@@ -1,34 +1,32 @@
 #!/usr/bin/python
-
+#encoding=utf8
 import json
 import sys
+import web
 reload(sys)
 sys.setdefaultencoding('utf8')
-from config import settings
 import os
 import datetime
-
-from model.GlobalFunc import send_mail
+sys.path.append("../config")
+import common
+import settings
+sys.path.append("../model")
+from GlobalFunc import send_mail
 puzzle_db = settings.puzzle_db
 ama_db = settings.ama_db
 data={}
 
 def doWork(gearmanWorker, job):
-    print "here i am"
     params = json.loads(job.data)
-    print params
-    print "\n\n\nresult is:\n%s" % params
     try:
         job_start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        mail_to = ["yuetingqian@anjuke.com", "vingowang@anjukeinc.com",
-                   "clairyin@anjuke.com", "angelazhang@anjuke.com"]
+        mail_to = ["yuetingqian@anjuke.com"]
         data['result'] = ''
         error = ''
         start = ''
-        params = web.input()
-        start = params.get('start')
-        end = params.get('end')
-        is_old = params.get('is_old')
+        start = params['start']
+        end = params['end']
+        is_old = params['is_old']
         apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit")
         app_count = len(apps_tmp)
         end_tmp = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M:%S')
@@ -171,23 +169,14 @@ def doWork(gearmanWorker, job):
         if not is_old:
             apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit ORDER BY id")
             for item in apps_tmp:
-                error += '1'
                 file_name = str(item['id'])
                 path = 'static/chart/'
                 file_object = open(path + file_name + '.js', 'w')
-                error += '2'
                 js = get_chart_js(item['app_name'], item['app_platform'])
-                error += '3'
                 file_object.write(js)
-                error += '4'
                 file_object.close()
-                error += '5'
-                from config import common
-
-                error += '6'
                 os.system(common.phantomjs_path + ' static/js/highcharts-convert.js '
                                                   '-infile ' + path + file_name + '.js -outfile ' + path + file_name + '.png')
-                error += '7'
         job_end = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         puzzle_db.insert('qa_jobtime', start=job_start, end=job_end)
     except Exception as err:
@@ -196,7 +185,11 @@ def doWork(gearmanWorker, job):
         send_mail('[' + start + ']crash信息更新失败', error, 'Crash No-Reply')
         job_end = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         puzzle_db.insert('qa_jobtime', start=job_start, end=job_end)
-    pass
+    if error == '':
+        result = '更新成功'
+    else:
+        result = '更新失败 '+error
+    return result
 
 
 def get_chart_js(app_name, app_platform, start=None, end=None):

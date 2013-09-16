@@ -39,7 +39,8 @@ def doWork_calculateCrashCount(params):
     client = GearmanClient([GearmanConfig.gearmanConnection])
     data = json.dumps(params)
     request = client.submit_job(JobList.Job_calculateCrashCount, data,wait_until_complete=True)
-    pass
+    return request.result
+
 #status functions
 def getStatus():
     adminClient = GearmanAdminClient([GearmanConfig.gearmanConnection])
@@ -59,6 +60,7 @@ def startAllWorkers():
     startPackageWorkers()
     startTranslateCrashLogWorkers()
     startFetchDependencyInfoWorkers()
+    startCalculateCrashCountWorkers()
     pass
 
 def stopAllWorkers():
@@ -66,6 +68,7 @@ def stopAllWorkers():
     stopPackageWorkers()
     stopTranslateCrashLogWorkers()
     stopFetchDependencyInfoWorker()
+    stopCalculateCrashCountWorkers()
     pass
 
 
