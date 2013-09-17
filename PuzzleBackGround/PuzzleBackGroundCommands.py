@@ -41,6 +41,13 @@ def doWork_calculateCrashCount(params):
     request = client.submit_job(JobList.Job_calculateCrashCount, data,wait_until_complete=True)
     return request.result
 
+def doWork_calculateBugCount(params):
+    client = GearmanClient([GearmanConfig.gearmanConnection])
+    data = json.dumps(params)
+    request = client.submit_job(JobList.Job_calculateBugCount, data,wait_until_complete=True)
+    return request.result
+
+
 #status functions
 def getStatus():
     adminClient = GearmanAdminClient([GearmanConfig.gearmanConnection])

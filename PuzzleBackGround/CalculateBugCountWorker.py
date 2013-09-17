@@ -17,11 +17,6 @@ import time
 sys.path.append("../model")
 from GlobalFunc import send_mail
 
-sys.path.append("../controller")
-from Report import *
-
-puzzle_db = settings.puzzle_db
-ama_db = settings.ama_db
 data = {}
 puzzle_db = settings.puzzle_db
 pmt_db = settings.pmt_db
@@ -29,7 +24,7 @@ ibug_db = settings.ibug_db
 
 def doWork(gearmanWorker, job):
     params = json.loads(job.data)
-    pmt_id = params.get(params['pmt_id'])
+    pmt_id = params['pmt_id']
 
     value = {'pmt_id': pmt_id}
     try:
@@ -359,6 +354,105 @@ def doWork(gearmanWorker, job):
 
         send_mail(pmt_id + '项目统计信息更新失败', '错误信息：' + str(err))
     return result
+
+def get_task_owners_from_pmt(pmt_id):
+    dev = {}
+    qa = {}
+    owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload_plan) AS workload_plan,s.chinese_name AS chinese_name "
+                        "FROM task AS t,staff AS s "
+                        "WHERE project_id = $pmt_id AND t.owner = s.id AND (stage=107 OR stage=108)"
+                        "GROUP BY staff_no",vars ={'pmt_id':pmt_id})
+    for owner in owners:
+        if owner['stage'] == 107:
+            id = len(dev)
+            dev[id] = owner
+            dev[id]['from'] = 1
+        elif owner['stage'] == 108:
+            id = len(qa)
+            qa[id] = owner
+            qa[id]['from'] = 1
+
+    return {'dev':dev,'qa':qa}
+
+
+
+
+def get_ticket_owners_from_ibug(pmt_id):
+    owners = {}
+    owners_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email \
+            FROM ticket AS t \
+            LEFT JOIN user AS u \
+            ON t.owner = u.user_name \
+            LEFT JOIN dd_component AS c \
+            ON t.component = c.int \
+            WHERE pmt_id =$pmt_id \
+            AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) \
+            ",vars={'pmt_id':pmt_id})
+    for owner in owners_tmp:
+        #user = owner['email'].split('@')[0]
+        value ={'chinese_name':owner['chinese_name']}
+        tmp = get_user_from_pmt(value)
+        if len(tmp) > 0:
+            id = len(owners)
+            owners[id] ={'workload_plan':0,'from':2}
+            user_tmp = tmp[0]
+            for key in user_tmp:
+                owners[id][key] = user_tmp[key]
+
+    return owners
+
+def get_ticket_reporters_from_ibug(pmt_id):
+    reporters = {}
+    reporters_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email FROM ticket AS t  \
+            LEFT JOIN user AS u \
+            ON t.reporter = u.user_name \
+            WHERE pmt_id =$pmt_id  \
+            AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27))",vars={'pmt_id':pmt_id})
+    for reporter in reporters_tmp:
+        #user = reporter['email'].split('@')[0]
+        value ={'chinese_name':reporter['chinese_name']}
+        tmp = get_user_from_pmt(value)
+        if len(tmp) > 0:
+            id = len(reporters)
+            reporters[id] ={'workload_plan':0,'from':2}
+            user_tmp = tmp[0]
+            for key in user_tmp:
+                reporters[id][key] = user_tmp[key]
+
+    return reporters
+
+def get_user_from_pmt(value):
+    tmp = pmt_db.query("SELECT staff_no,email,chinese_name \
+            FROM staff \
+            WHERE chinese_name=$chinese_name \
+            ORDER BY id DESC ",vars=value)
+    return tmp
+
+
+def get_compose_users(pmt,ibug):
+    for i in ibug:
+        res = False
+        for j in pmt:
+            if pmt[j]['email']  == ibug[i]['email']:
+                res = True
+        if res == False :
+            id = len(pmt)
+            pmt[id] = ibug[i]
+    return pmt
+
+def datetime_to_timestamp(dt):
+    ## time.struct_time(tm_year=2012, tm_mon=3, tm_mday=28, tm_hour=6, tm_min=53, tm_sec=40, tm_wday=2, tm_yday=88, tm_isdst=-1)
+    #将"2012-03-28 06:53:40"转化为时间戳
+    s = time.mktime(time.strptime(str(dt), '%Y-%m-%d %H:%M:%S'))
+    return int(s)
+
+
+
+
+
+
+
+
 
 
 
