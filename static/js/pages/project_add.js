@@ -187,7 +187,7 @@ function AddProject()
         var selectedValue = selector.val();
         var selectedOption = actionItem.find("option:selected");
 
-        var replacedHtml = "<label><font color=\"pink\">"+selectedOption.text()+":</font></label>";
+        var replacedHtml = "<label><font color=\"blue\">"+selectedOption.text()+":</font></label>";
         datePicker.attr("data-type", selectedValue);
 
         actionItem.html(replacedHtml);
