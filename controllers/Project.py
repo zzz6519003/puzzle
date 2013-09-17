@@ -24,10 +24,7 @@ class Index:
             appId = GET_data['appId']
 
         shouldDelete = GET_data.has_key("delete")
-        print "here i am"
-        print "here i am"
-        print "here i am"
-        print "here i am"
+
         print shouldDelete
 
         #获取当前日期
