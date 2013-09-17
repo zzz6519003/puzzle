@@ -20,7 +20,7 @@ data={}
 def doWork(gearmanWorker, job):
     params = json.loads(job.data)
     job_start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    mail_to = ["yuetingqian@anjuke.com"]
+    mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com","clairyin@anjuke.com","angelazhang@anjuke.com"]
     data['result'] = ''
     error = ''
     start = params['start']
