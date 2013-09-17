@@ -32,7 +32,6 @@ def doWork_fetchDependencyInfo(params):
     data = json.dumps(params)
     request = client.submit_job(JobList.Job_fetchDependencyInfo, data, wait_until_complete=True)
     return request.result
-    pass
 
 #status functions
 def getStatus():

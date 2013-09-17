@@ -103,6 +103,7 @@ class Add:
             'version':data['version']
         }
 
+        print initInfo
         initProject(initInfo)
         return
 
