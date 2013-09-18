@@ -24,27 +24,34 @@ def doWork(gearmanWorker, job):
     data['result'] = ''
     error = ''
     start = params['start']
-    end_tmp = params['end']
+    end_actual = params['end']
+    end_tmp = end_actual
     is_old = params['is_old']
     result = ''
     db_end_obj = puzzle_db.query("SELECT end FROM qa_jobtime WHERE end <=$end ORDER BY end DESC LIMIT 1",
             vars={'end':end_tmp})
     date_end = datetime.datetime.strptime(end_tmp,'%Y-%m-%d %H:%M:%S')
-    timestamp = time.mktime(date_end.timetuple())
-    ten_count = int(timestamp/600)
     if len(db_end_obj)==0:
-        tmp = (ten_count-1)*600
-        db_end = datetime.datetime.fromtimestamp(tmp)
+        db_end = end_tmp
+        one = 1
     else:
-        db_end = db_end_obj[0]['end']
+        db_end = str(db_end_obj[0]['end'])
+        one = 0
+    db_end = datetime.datetime.strptime(db_end,'%Y-%m-%d %H:%M:%S')
+    timestamp = time.mktime(db_end.timetuple())
+    ten_count = int(timestamp/600)
+    tmp = (ten_count-one)*600
+
+    db_end = datetime.datetime.fromtimestamp(tmp)
     db_end = datetime.datetime.strptime(str(db_end),'%Y-%m-%d %H:%M:%S')
     diff_time = (date_end - db_end).seconds
-
     count = int(diff_time/600)
     i = 0
     lack_context = ''
     start_tmp = db_end + datetime.timedelta(seconds=1)
     end_tmp = db_end + datetime.timedelta(seconds=600)
+    if count < 1:
+        result = str(start_tmp)+'至'+str(end_actual)+'时间小于10分钟，不更新<br>'
     for i in range(0,count):
         try:
             start = str(start_tmp)
