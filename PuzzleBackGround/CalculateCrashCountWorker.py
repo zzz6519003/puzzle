@@ -40,10 +40,7 @@ def doWork(gearmanWorker, job):
     db_end = datetime.datetime.strptime(str(db_end),'%Y-%m-%d %H:%M:%S')
     diff_time = (date_end - db_end).seconds
 
-    if diff_time <1200:
-        count = 1
-    else:
-        count = int(diff_time/600)
+    count = int(diff_time/600)
     i = 0
     lack_context = ''
     start_tmp = db_end + datetime.timedelta(seconds=1)
