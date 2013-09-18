@@ -40,11 +40,13 @@ def doWork(gearmanWorker, job):
     db_end = datetime.datetime.strptime(db_end,'%Y-%m-%d %H:%M:%S')
     timestamp = time.mktime(db_end.timetuple())
     ten_count = int(timestamp/600)
-    tmp = (ten_count-one)*600
+    tmp =int((ten_count-one)*600)
+
+    date_end_tmp = int(time.mktime(date_end.timetuple()))
 
     db_end = datetime.datetime.fromtimestamp(tmp)
     db_end = datetime.datetime.strptime(str(db_end),'%Y-%m-%d %H:%M:%S')
-    diff_time = (date_end - db_end).seconds
+    diff_time = date_end_tmp - tmp
     count = int(diff_time/600)
     i = 0
     lack_context = ''
