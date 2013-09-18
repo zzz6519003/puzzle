@@ -1,12 +1,17 @@
 #encoding=utf8
-from config import common
 import sys
 import urllib
 
 def get_pmt_url(pmt_id):
+    from config import common
     return common.pmt_url+pmt_id
+
 def get_ticket_url(ticket_id):
+    from config import common
     return common.ticket_url+str(ticket_id)
+def get_report_url(pmt_id):
+    from config import common
+    return common.report_url+pmt_id
 
 def report_html(data,name,pmt_id,page,is_hyperlink,limit,is_color):
     color = ''
@@ -28,7 +33,7 @@ def report_html(data,name,pmt_id,page,is_hyperlink,limit,is_color):
             s+= '<a href="/report/detail?'+param+'" target="_blank"><font color="'+color+'">'+ str(content)+'</font></a>'
         else:
             s+= content
-                                                                                                                                    
+
         s +='</span>'
 
         return s
@@ -51,7 +56,7 @@ def report_html(data,name,pmt_id,page,is_hyperlink,limit,is_color):
                 s+= '<a href="/report/detail?'+param+'" target="_blank"><font color="'+color+'">'+str(data[i][name])+'</font></a>'
             else:
                 s+= str(data[i][name])
-            
+
             s +='</span></li>'
     if len(data) > 0:
         pos = len(data)-1
@@ -108,4 +113,4 @@ def send_mail(sub, context,user=mail_user,to_list=None):
 
 
 
-    
+

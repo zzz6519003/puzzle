@@ -7,12 +7,12 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import os
 import datetime
+sys.path.append("../model")
+from GlobalFunc import send_mail
 sys.path.append("../config")
 import common
 import settings
 import time
-sys.path.append("../model")
-from GlobalFunc import send_mail
 puzzle_db = settings.puzzle_db
 ama_db = settings.ama_db
 data={}

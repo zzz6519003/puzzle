@@ -207,9 +207,9 @@ def startCalculateCrashCountWorkers():
     if result == 0:
         workerPid = os.getpid()
 
-        #fp = open(CaculateCrashCountPidFilePath, "a")
-        #fp.write(" %s" % workerPid)
-        #fp.close()
+        fp = open(CaculateCrashCountPidFilePath, "a")
+        fp.write(" %s" % workerPid)
+        fp.close()
 
         print "caculate crash job  worker started, pid# %s" % workerPid
         print "task name is %s" % JobList.Job_calculateCrashCount
@@ -227,9 +227,9 @@ def startCalculateBugCountWorkers():
     if result == 0:
         workerPid = os.getpid()
 
-        #fp = open(CaculateCrashCountPidFilePath, "a")
-        #fp.write(" %s" % workerPid)
-        #fp.close()
+        fp = open(CaculateBugCountPidFilePath, "a")
+        fp.write(" %s" % workerPid)
+        fp.close()
 
         print "caculate bug job  worker started, pid# %s" % workerPid
         print "task name is %s" % JobList.Job_calculateBugCount

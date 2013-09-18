@@ -21,6 +21,7 @@
             <td rowspan="2" align="center" bgcolor="${color}">开发</td>
             <td rowspan="2" bgcolor="${color}">测试</td>
             <td rowspan="2" bgcolor="${color}">自测通过率</td>
+            <td rowspan="2" bgcolor="${color}">测试报告</td>
             <td colspan="4" align="center" bgcolor="${color2}">
                 <a  href="#" class="label label-important tTip" rel="popover"
                             tt="项目bug,rc+真机+线上的bug">Bug数
@@ -54,8 +55,9 @@
             item = data['project_bug'][index]
             from model.GlobalFunc import get_pmt_url
             from model.GlobalFunc import report_html
+            from model.GlobalFunc import get_report_url
             pmt_url = get_pmt_url(item['pmt_id'])
-
+            report_url = get_report_url(item['pmt_id'])
             if item['endtime']=='':
                 bgcolor = '#F6F0F0'
             else:
@@ -68,6 +70,7 @@
             <td>${item['developer']}</td>
             <td>${item['qa']}</td>
             <td>${item['rate']}</td>
+            <td><a href="${report_url}" target="_blank">查看报告</a></td>
             <td>${report_html(item,'total',item['pmt_id'],'index',True,0,0)}</td>
             <td>${report_html(item,'app',item['pmt_id'],'index',True,0,0)}</td>
             <td>${report_html(item,'api',item['pmt_id'],'index',True,0,0)}</td>
