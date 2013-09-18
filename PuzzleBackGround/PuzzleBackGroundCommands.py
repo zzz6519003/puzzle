@@ -67,8 +67,8 @@ def startAllWorkers():
     startPackageWorkers()
     startTranslateCrashLogWorkers()
     startFetchDependencyInfoWorkers()
-    #startCalculateCrashCountWorkers()
-    #startCalculateBugCountWorkers()
+    startCalculateCrashCountWorkers()
+    startCalculateBugCountWorkers()
     pass
 
 def stopAllWorkers():
