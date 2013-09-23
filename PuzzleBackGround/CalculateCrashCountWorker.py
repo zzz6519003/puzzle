@@ -320,18 +320,18 @@ def get_chart_js(app_name, app_platform, start=None, end=None):
             },\
             series: [\
                 {\
-                    name: 'today',\
+                    name: 'lastweek',\
                     data:["
-    for i in result[0]:
+    for i in result[1]:
         utc = get_utc(i[0],7)
 
         js += "[" + utc + "," + str(i[1]) + "],"
     js += "]\
                 },\
                 {\
-                    name: 'lastweek',\
+                    name: 'today',\
                     data:["
-    for i in result[1]:
+    for i in result[0]:
         utc = get_utc(i[0])
         js += "[" + utc + "," + str(i[1]) + "],"
     js += "]\
