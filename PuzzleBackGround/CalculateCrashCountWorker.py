@@ -326,7 +326,6 @@ def get_chart_js(app_name, app_platform, start=None, end=None):
         utc = get_utc(i[0])
 
         js += "[" + utc + "," + str(i[1]) + "],"
-        puzzle_db.query("select * from qa_jobtime limit 1")
     js += "]\
                 },\
                 {\
