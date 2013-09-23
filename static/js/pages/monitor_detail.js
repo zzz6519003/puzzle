@@ -11,7 +11,7 @@ $(document).ready(
         lastweek = 7 * 24 * 60 * 60;
 
         Highcharts.theme = {
-            colors: ['#4572a7', '#c0c0c0', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+            colors: ['#c0c0c0','#4572a7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
 
             title: {
                 style: {
@@ -95,7 +95,7 @@ $(document).ready(
                         }
                     },
                     marker: {
-                        enabled: true,
+                        enabled: false,
                         radius:3,
                         states: {
                             hover: {
@@ -110,10 +110,10 @@ $(document).ready(
             },
             series: [
                 {
-                    name: 'today'
+                    name: 'lastweek'
                 },
                 {
-                    name: 'lastweek'
+                    name: 'today'
                 }
 
             ]
@@ -213,8 +213,8 @@ function getData(params, options) {
             }
         }
 
-        options.series[0].data = data[0];
-        options.series[1].data = data[1];
+        options.series[1].data = data[0];
+        options.series[0].data = data[1];
         var chart = new Highcharts.Chart(options);
         // setMinMax();
     });
