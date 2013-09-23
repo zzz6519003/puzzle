@@ -189,21 +189,24 @@ def doWork(gearmanWorker, job):
                     file_name = str(item['id'])
                     path = 'static/chart/'
                     file_object = open(path + file_name + '.js', 'w')
-                    js = get_chart_js(item['app_name'], item['app_platform'])
+                    js_time = datetime.datetime.strptime(start,'%Y-%m-%d %H:%M:%S')
+                    js_time = int(time.mktime(js_time.timetuple()))
+                    js_time = datetime.datetime.fromtimestamp(js_time)
+                    js_time = js_time.strftime('%Y-%m-%d')
+                    js = get_chart_js(item['app_name'], item['app_platform'],js_time+' 00:00:00',js_time+' 23:59:59')
                     file_object.write(js)
                     file_object.close()
                     os.system(common.phantomjs_path + ' static/js/highcharts-convert.js '
                                                   '-infile ' + path + file_name + '.js -outfile ' + path + file_name + '.png')
             puzzle_db.insert('qa_jobtime',start=start,end=end)
         except Exception as err:
-            error = '错误信息：' + error + str(err)
+            error = str(err)+'<br>'
             data['result'] = error
-            print error
             send_mail('[' + start + ']crash信息更新失败', error, 'Crash No-Reply')
         if error == '':
             result += start+'至'+end+ '更新成功<br>'
         else:
-            result += start+'至'+end+ '更新失败 '+error+'<br>'
+            result += start+'至'+end+ '更新失败,错误信息：'+error
 
         start_tmp = start_tmp + datetime.timedelta(seconds=600)
         end_tmp = end_tmp + datetime.timedelta(seconds=600)
@@ -224,8 +227,6 @@ def get_chart_js(app_name, app_platform, start=None, end=None):
         end = dt_date
         start = start + ' 00:00:00'
         end = end + ' 23:59:59'
-    from controllers.Monitor import get_all_data
-
     result = get_all_data(app_name, app_platform, start, end)
     js = "\
         Highcharts.theme = {\
@@ -325,6 +326,7 @@ def get_chart_js(app_name, app_platform, start=None, end=None):
         utc = get_utc(i[0])
 
         js += "[" + utc + "," + str(i[1]) + "],"
+        puzzle_db.query("select * from qa_jobtime limit 1")
     js += "]\
                 },\
                 {\
@@ -347,5 +349,37 @@ def get_chart_js(app_name, app_platform, start=None, end=None):
 
 def get_utc(timestamp, days=0):
     utc = str((timestamp + days * 24 * 60 * 60) * 1000)
+    return utc
 
+def get_data(value):
+    crashs = puzzle_db.select('qa_crashcount',
+                              where="app_name=$app_name AND app_platform=$app_platform "
+                                    "AND end_time >=$start AND end_time < $end ORDER BY end_time",
+                              vars=value
+    )
+    result = []
+    for item in crashs:
+        time_tmp=str(item['end_time'])[:-3]
+        dt = datetime.datetime.strptime(time_tmp, '%Y-%m-%d %H:%M')
+        list = [int(time.mktime(dt.timetuple()))]
+        list.append(int(item['crash_count']))
+        result.append(list)
+    return result
+
+def get_all_data(app_name,app_platform,start,end):
+    lastweek = 7;
+    value = {'app_name': app_name, 'app_platform': app_platform, 'start': start, 'end': end}
+    result = []
+    today = get_data(value)
+
+    pre_end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M:%S')
+    pre_end = str(pre_end - datetime.timedelta(days=lastweek))
+
+    pre_start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
+    pre_start = str(pre_start - datetime.timedelta(days=lastweek))
+    value = {'app_name': app_name, 'app_platform': app_platform, 'start': pre_start, 'end': pre_end}
+    pre_week = get_data(value)
+    result.append(today)
+    result.append(pre_week)
+    return result
 

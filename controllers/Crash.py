@@ -54,13 +54,14 @@ class Job:
             job_start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com","clairyin@anjuke.com","angelazhang@anjuke.com"]
             mail_to = ["yuetingqian@anjuke.com"]
-            data['result'] = ''
+            data['result'] = '缺少参数'
             error =''
             start = ''
             params = web.input()
             start = params.get('start')
             end = params.get('end')
             is_old = params.get('is_old')
-            from PuzzleBackGround import PuzzleBackGroundCommands
-            data['result'] = PuzzleBackGroundCommands.doWork_calculateCrashCount({'start':start,'end':end,'is_old':is_old})
+            if end:
+                from PuzzleBackGround import PuzzleBackGroundCommands
+                data['result'] = PuzzleBackGroundCommands.doWork_calculateCrashCount({'start':start,'end':end,'is_old':is_old})
             return render.crashJob(data=data)

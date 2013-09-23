@@ -445,15 +445,3 @@ def datetime_to_timestamp(dt):
     #将"2012-03-28 06:53:40"转化为时间戳
     s = time.mktime(time.strptime(str(dt), '%Y-%m-%d %H:%M:%S'))
     return int(s)
-
-
-
-
-
-
-
-
-
-
-
-
