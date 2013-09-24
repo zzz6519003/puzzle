@@ -63,7 +63,6 @@ def getPackageInfoForBuild(projectId, category, type=1):
 def buildPackage(packageInfo):
     print "buildPackage is here"
     print packageInfo
-    #package(packageInfo)
     PuzzleBackGroundCommands.doWork_packageByPackageInfo(packageInfo)
     return True
 

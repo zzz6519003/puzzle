@@ -84,6 +84,7 @@ class BuildPackage:
                 u'mailContent' : u'hello world',
                 u'projectId': u'4',
                 u'isDebug': True,
+                u'versionForPackage': u'5.0.1',
                 u'dependencyArray': [
                     {
                         u'sha1': u'90123',

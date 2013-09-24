@@ -342,6 +342,7 @@ function SelectVersion()
         $(".J_channelBox:checked").each(function(index, value){
             data['channelIdList'].push($(value).val());
         });
+        data['versionForPackage'] = $("#J_versionNumber").val();
 
         console.log(data);
 
