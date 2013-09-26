@@ -303,7 +303,7 @@ def doWork(gearmanWorker, job):
                                vars=dev_value)[0]['count']
 
             puzzle_db.insert('rp_developer', staff_no=devs[i]['staff_no'], chinese_name=devs[i]['chinese_name'],
-                             total=dev_count, workload=devs[i]['workload_plan'] / 8, unclose=unclose, reject=reject,
+                             total=dev_count, workload=devs[i]['workload'] / 8, unclose=unclose, reject=reject,
                              reopen=reopen, repair_time=repair_time, major_bug=major_bug, daily_to_rc=daily_to_rc,
                              rc=rc, user_from=devs[i]['from'], pmtId=pmt_id)
 
@@ -338,7 +338,7 @@ def doWork(gearmanWorker, job):
                 qa_priority[name] = priority['count']
 
             puzzle_db.insert('rp_qa', staff_no=qas[i]['staff_no'], chinese_name=qas[i]['chinese_name'],
-                             total=qa_count, workload=qas[i]['workload_plan'] / 8, p1=qa_priority['p1'],
+                             total=qa_count, workload=qas[i]['workload'] / 8, p1=qa_priority['p1'],
                              p2=qa_priority['p2'], p3=qa_priority['p3'], p4=qa_priority['p4'],
                              dailybuild=dailybuild, user_from=qas[i]['from'], pmtId=pmt_id)
         rp_projectList = puzzle_db.select('rp_projectList', where='pmtId=$pmt_id', vars={'pmt_id': pmt_id})
@@ -358,9 +358,10 @@ def doWork(gearmanWorker, job):
 def get_task_owners_from_pmt(pmt_id):
     dev = {}
     qa = {}
-    owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload_plan) AS workload_plan,s.chinese_name AS chinese_name "
+    owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload) AS workload,s.chinese_name AS chinese_name "
                         "FROM task AS t,staff AS s "
-                        "WHERE project_id = $pmt_id AND t.owner = s.id AND (stage=107 OR stage=108)"
+                        "WHERE project_id = $pmt_id AND t.owner = s.id "
+                        "AND ((stage=107 AND task_type_id IN (2,3))  OR (stage=108 AND task_type_id =4)) "
                         "GROUP BY staff_no",vars ={'pmt_id':pmt_id})
     for owner in owners:
         if owner['stage'] == 107:
@@ -394,7 +395,7 @@ def get_ticket_owners_from_ibug(pmt_id):
         tmp = get_user_from_pmt(value)
         if len(tmp) > 0:
             id = len(owners)
-            owners[id] ={'workload_plan':0,'from':2}
+            owners[id] ={'workload':0,'from':2}
             user_tmp = tmp[0]
             for key in user_tmp:
                 owners[id][key] = user_tmp[key]
@@ -414,7 +415,7 @@ def get_ticket_reporters_from_ibug(pmt_id):
         tmp = get_user_from_pmt(value)
         if len(tmp) > 0:
             id = len(reporters)
-            reporters[id] ={'workload_plan':0,'from':2}
+            reporters[id] ={'workload':0,'from':2}
             user_tmp = tmp[0]
             for key in user_tmp:
                 reporters[id][key] = user_tmp[key]
@@ -429,6 +430,13 @@ def get_user_from_pmt(value):
     return tmp
 
 
+
+def datetime_to_timestamp(dt):
+    ## time.struct_time(tm_year=2012, tm_mon=3, tm_mday=28, tm_hour=6, tm_min=53, tm_sec=40, tm_wday=2, tm_yday=88, tm_isdst=-1)
+    #将"2012-03-28 06:53:40"转化为时间戳
+    s = time.mktime(time.strptime(str(dt), '%Y-%m-%d %H:%M:%S'))
+    return int(s)
+
 def get_compose_users(pmt,ibug):
     for i in ibug:
         res = False
@@ -440,8 +448,4 @@ def get_compose_users(pmt,ibug):
             pmt[id] = ibug[i]
     return pmt
 
-def datetime_to_timestamp(dt):
-    ## time.struct_time(tm_year=2012, tm_mon=3, tm_mday=28, tm_hour=6, tm_min=53, tm_sec=40, tm_wday=2, tm_yday=88, tm_isdst=-1)
-    #将"2012-03-28 06:53:40"转化为时间戳
-    s = time.mktime(time.strptime(str(dt), '%Y-%m-%d %H:%M:%S'))
-    return int(s)
+

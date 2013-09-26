@@ -4,7 +4,14 @@
 
 <%block name='body'>
     <div class='container'>
-    <%include file='/components/reportSelect.html'/>
+        <%include file='/components/reportSelect.html'/>
+        <form>
+            <div class="control-group J_mileStoneRow">
+            <font color="blue">查询时间:</font>
+            <input type="text" class="J_pickTime J_formData" id="time" name="project_time" placeholder="填写时间" autocomplete="off"/>
+            <input type="submit" value="查询" /><br>
+            </div>
+        </form>
     <% title ="计算公式"%>
     <table class='table table-bordered'>
     <%  
@@ -100,8 +107,17 @@
     % endfor
     </table>
     </div>
-    <script type="text/javascript" src="/static/js/jquery.js"></script>
     <script type="text/javascript" src="/static/js/pages/report_qa.js"></script>
     <link href="/static/js/plugins/tinytip/tinyTips.css" rel="stylesheet">
     <script type="text/javascript" src="/static/js/plugins/tinytip/jquery.tinyTips.js"></script>
+    <script>    
+        $(document).ready(function(){
+            var jq = $.noConflict();
+            $("#time").datepicker({
+                dateFormat:"yymm",
+                inline:true
+            });
+            }
+        );
+    </script>
 </%block>
