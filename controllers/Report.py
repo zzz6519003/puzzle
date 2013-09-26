@@ -196,10 +196,12 @@ class Developer:
 
         category = params.get('category')
         version =params.get('version')
-        data['params'] = {'appName':appName,'category':category,'version':version}
+        project_time = params.get('project_time')
+        if not project_time:
+            project_time = ''
+        data['params'] = {'appName':appName,'category':category,'version':version,'project_time':project_time}
 
         data['data'] = {}
-        project_time = params.get('project_time')
         project_list = get_project_list(appName,category,version,project_time)
 
         index = 0
@@ -289,9 +291,12 @@ class Qa:
 
         category = params.get('category')
         version =params.get('version')
-        data['params'] = {'appName':appName,'category':category,'version':version}
-
         project_time = params.get('project_time')
+        if not project_time:
+            project_time = ''
+
+        data['params'] = {'appName':appName,'category':category,'version':version,'project_time':project_time}
+
         project_list = get_project_list(appName,category,version,project_time)
 
         data['data'] = {}
