@@ -14,7 +14,8 @@ import common
 import settings
 import time
 
-sys.path.append("../model")
+path = "%s/model" % os.getcwd()
+sys.path.append(path)
 from GlobalFunc import send_mail
 
 data = {}
