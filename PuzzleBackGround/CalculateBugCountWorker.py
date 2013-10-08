@@ -350,8 +350,9 @@ def doWork(gearmanWorker, job):
 
         send_mail(pmt_id + '项目统计信息更新失败', '错误信息：' + str(err)+error)
     close_db(puzzle_db)
+    close_db(pmt_db)
     close_db(ibug_db)
-    close_db(puzzle_db)
+
     return result
 
 def get_task_owners_from_pmt(pmt_db,pmt_id):
@@ -459,4 +460,4 @@ def get_compose_users(pmt,ibug):
 def close_db(db):
     connection = db.ctx['db']
     connection.close()
-    return
+    pass
