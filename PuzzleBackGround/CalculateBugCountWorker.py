@@ -354,7 +354,7 @@ def doWork(gearmanWorker, job):
     except Exception as err:
         result = pmt_id+'统计信息更新失败,错误信息：' +str(err)+error
 
-        send_mail(pmt_id + '项目统计信息更新失败', '错误信息：' + str(err))
+        send_mail(pmt_id + '项目统计信息更新失败', '错误信息：' + str(err)+error)
     return result
 
 def get_task_owners_from_pmt(pmt_id):
