@@ -19,11 +19,15 @@ sys.path.append("../model")
 from GlobalFunc import send_mail
 
 data = {}
-puzzle_db = settings.puzzle_db
-pmt_db = settings.pmt_db
-ibug_db = settings.ibug_db
+#puzzle_db = settings.puzzle_db
+#pmt_db = settings.pmt_db
+#ibug_db = settings.ibug_db
 
 def doWork(gearmanWorker, job):
+    puzzle_db = settings.puzzle_db
+    pmt_db = settings.pmt_db
+    ibug_db = settings.ibug_db
+
     params = json.loads(job.data)
     pmt_id = params['pmt_id']
 
@@ -305,6 +309,7 @@ def doWork(gearmanWorker, job):
         puzzle_db.delete('rp_qa', where='pmtId = $pmt_id', vars=value)
         error += "================qa start===============<br>"
 
+        pmt_to_ibug_user_sql = ' AND chinese_name =$chinese_name '
         for i in qas:
             #user_name = qas[i]['email'].split('@')[0]+'@%'
             qa_value = {'pmt_id': pmt_id, 'chinese_name': qas[i]['chinese_name']}
@@ -353,6 +358,11 @@ def doWork(gearmanWorker, job):
     return result
 
 def get_task_owners_from_pmt(pmt_id):
+    puzzle_db = settings.puzzle_db
+    pmt_db = settings.pmt_db
+    ibug_db = settings.ibug_db
+
+
     dev = {}
     qa = {}
     owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload) AS workload,s.chinese_name AS chinese_name "
@@ -376,6 +386,11 @@ def get_task_owners_from_pmt(pmt_id):
 
 
 def get_ticket_owners_from_ibug(pmt_id):
+    puzzle_db = settings.puzzle_db
+    pmt_db = settings.pmt_db
+    ibug_db = settings.ibug_db
+
+
     owners = {}
     owners_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email \
             FROM ticket AS t \
@@ -399,6 +414,11 @@ def get_ticket_owners_from_ibug(pmt_id):
 
     return owners
 def get_ticket_person_liable_from_ibug(pmt_id):
+    puzzle_db = settings.puzzle_db
+    pmt_db = settings.pmt_db
+    ibug_db = settings.ibug_db
+
+
     person_liable = {}
     value = {'pmt_id':pmt_id}
     sql = "SELECT DISTINCT person_liable FROM ticket \
@@ -427,6 +447,11 @@ def get_ticket_person_liable_from_ibug(pmt_id):
 
 
 def get_ticket_reporters_from_ibug(pmt_id):
+    puzzle_db = settings.puzzle_db
+    pmt_db = settings.pmt_db
+    ibug_db = settings.ibug_db
+
+
     reporters = {}
     reporters_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email FROM ticket AS t  \
             LEFT JOIN user AS u \
@@ -447,6 +472,11 @@ def get_ticket_reporters_from_ibug(pmt_id):
     return reporters
 
 def get_user_from_pmt(value):
+    puzzle_db = settings.puzzle_db
+    pmt_db = settings.pmt_db
+    ibug_db = settings.ibug_db
+
+
     tmp = pmt_db.query("SELECT staff_no,email,chinese_name \
             FROM staff \
             WHERE chinese_name=$chinese_name \
