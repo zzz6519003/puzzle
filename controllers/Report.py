@@ -548,46 +548,46 @@ def get_qa_dailybuild_bugs_from_puzzle(pmt_id,cn_name,is_daily):
 
 def get_dev_bugs_from_puzzle(pmt_id,cn_name):
     if cn_name =='total':
-        tickets = puzzle_db.select('ticket', where="pmtId=$pmt_id AND environment !='test' AND component NOT LIKE '%api%' AND reason !='产品设计'",vars ={'pmt_id':pmt_id})
+        tickets = puzzle_db.select('ticket', where="pmtId=$pmt_id AND environment !='test' AND component NOT LIKE '%api%' AND reason !='产品设计' AND person_liable !=''",vars ={'pmt_id':pmt_id})
     else:
-        tickets = puzzle_db.select('ticket', where=" pmtId=$pmt_id AND owner = $cn_name AND environment !='test' AND reason !='产品设计' ",vars ={'pmt_id':pmt_id,'cn_name':cn_name})
+        tickets = puzzle_db.select('ticket', where=" pmtId=$pmt_id AND person_liable LIKE $cn_name AND environment !='test' AND reason !='产品设计' ",vars ={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 def get_dev_unclose_bugs_from_puzzle(pmt_id,cn_name):
     sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND status !='closed' AND environment!='test' "
     if cn_name !='total':
-        sql += " AND owner = $cn_name"
+        sql += " AND person_liable LIKE $cn_name"
     else:
         sql +=" AND component NOT LIKE '%api%'"
-    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 def get_dev_reject_bugs_from_puzzle(pmt_id,cn_name):
     sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND is_reject=1 AND environment!='test' AND reason !='产品设计' "
     if cn_name !='total':
-        sql += " AND owner = $cn_name"
+        sql += " AND person_liable LIKE $cn_name"
     else:
         sql +=" AND component NOT LIKE '%api%'"
-    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 
 def get_dev_reopen_bugs_from_puzzle(pmt_id,cn_name):
     sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND is_reopen=1 AND environment!='test' AND reason !='产品设计' "
     if cn_name !='total':
-        sql += " AND owner = $cn_name"
+        sql += " AND person_liable LIKE $cn_name"
     else:
         sql +=" AND component NOT LIKE '%api%'"
-    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 def get_dev_daily_to_rc_bugs_from_puzzle(pmt_id,cn_name):
     sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id  AND is_daily_to_rc=1 AND reason !='产品设计' "
     if cn_name !='total':
-        sql += " AND owner = $cn_name"
+        sql += " AND person_liable LIKE $cn_name"
     else:
         sql +=" AND component NOT LIKE '%api%'"
-    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 

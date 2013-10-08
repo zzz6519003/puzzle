@@ -11,8 +11,8 @@ CreateProjectWorkerPidFilePath        =  "/tmp/CreateProjectWorkerPid"
 PackageWorkerPidFilePath              =  "/tmp/PackageWorkerPid"
 TranslateCrashLogWorkerPidFilePath    =  "/tmp/TranslateWorkerPid"
 FetchDependencyInfoWorkerPidFilePath  =  "/tmp/FetchDependencyInfoWorkerPid"
-CaculateCrashCountPidFilePath         =  "/tmp/CaculateCrashCountWorkerPid"
-CaculateBugCountPidFilePath           =  "/tmp/CaculateBugCountWorkerPid"
+CalculateCrashCountPidFilePath         =  "/tmp/CalculateCrashCountWorkerPid"
+CalculateBugCountPidFilePath           =  "/tmp/CalculateBugCountWorkerPid"
 
 #do work
 def doWork_packageByPackageInfo(packageInfo):
@@ -207,11 +207,11 @@ def startCalculateCrashCountWorkers():
     if result == 0:
         workerPid = os.getpid()
 
-        fp = open(CaculateCrashCountPidFilePath, "a")
+        fp = open(CalculateCrashCountPidFilePath, "a")
         fp.write(" %s" % workerPid)
         fp.close()
 
-        print "caculate crash job  worker started, pid# %s" % workerPid
+        print "calculate crash job  worker started, pid# %s" % workerPid
         print "task name is %s" % JobList.Job_calculateCrashCount
 
         worker = GearmanWorker([GearmanConfig.gearmanConnection])
@@ -227,11 +227,11 @@ def startCalculateBugCountWorkers():
     if result == 0:
         workerPid = os.getpid()
 
-        fp = open(CaculateBugCountPidFilePath, "a")
+        fp = open(CalculateBugCountPidFilePath, "a")
         fp.write(" %s" % workerPid)
         fp.close()
 
-        print "caculate bug job  worker started, pid# %s" % workerPid
+        print "calculate bug job  worker started, pid# %s" % workerPid
         print "task name is %s" % JobList.Job_calculateBugCount
 
         worker = GearmanWorker([GearmanConfig.gearmanConnection])
@@ -263,11 +263,11 @@ def stopTranslateCrashLogWorkers():
     pass
 
 def stopCalculateCrashCountWorkers():
-    print "stopping caculate crash count worker"
-    killWorkersByPidFile(CaculateCrashCountPidFilePath)
+    print "stopping calculate crash count worker"
+    killWorkersByPidFile(CalculateCrashCountPidFilePath)
     pass
 
 def stopCalculateBugCountWorkers():
-    print "stopping caculate bug count worker"
-    killWorkersByPidFile(CaculateBugCountPidFilePath)
+    print "stopping calculate bug count worker"
+    killWorkersByPidFile(CalculateBugCountPidFilePath)
     pass
