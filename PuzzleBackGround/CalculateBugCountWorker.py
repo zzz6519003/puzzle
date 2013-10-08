@@ -9,24 +9,18 @@ sys.setdefaultencoding('utf8')
 import os
 import datetime
 
-sys.path.append("../config")
-import common
-import settings
 import time
-
+import settings
 #path = "%s/model" % os.getcwd()
 sys.path.append("../model")
 from GlobalFunc import send_mail
 
 data = {}
-#puzzle_db = settings.puzzle_db
-#pmt_db = settings.pmt_db
-#ibug_db = settings.ibug_db
 
 def doWork(gearmanWorker, job):
-    puzzle_db = settings.puzzle_db
-    pmt_db = settings.pmt_db
-    ibug_db = settings.ibug_db
+    puzzle_db = settings.getConnectionV2('puzzle')
+    pmt_db = settings.getConnectionV2('pmt')
+    ibug_db = settings.getConnectionV2('ibug')
 
     params = json.loads(job.data)
     pmt_id = params['pmt_id']
@@ -209,11 +203,11 @@ def doWork(gearmanWorker, job):
         error += "================dev start===============<br>"
 
         #dev,qa模块
-        task_owners = get_task_owners_from_pmt(pmt_id)
-        ticket_owners = get_ticket_person_liable_from_ibug(pmt_id)
+        task_owners = get_task_owners_from_pmt(pmt_db,pmt_id)
+        ticket_owners = get_ticket_person_liable_from_ibug(pmt_db,ibug_db,pmt_id)
         devs = get_compose_users(task_owners['dev'], ticket_owners)
         data['devs'] = ticket_owners
-        ticket_reporters = get_ticket_reporters_from_ibug(pmt_id)
+        ticket_reporters = get_ticket_reporters_from_ibug(pmt_db,ibug_db,pmt_id)
         qas = get_compose_users(task_owners['qa'], ticket_reporters)
 
         puzzle_db.delete('rp_developer', where='pmtId=$pmt_id', vars=value)
@@ -355,12 +349,12 @@ def doWork(gearmanWorker, job):
         result = pmt_id+'统计信息更新失败,错误信息：' +str(err)+error
 
         send_mail(pmt_id + '项目统计信息更新失败', '错误信息：' + str(err)+error)
+    close_db(puzzle_db)
+    close_db(ibug_db)
+    close_db(puzzle_db)
     return result
 
-def get_task_owners_from_pmt(pmt_id):
-    puzzle_db = settings.puzzle_db
-    pmt_db = settings.pmt_db
-    ibug_db = settings.ibug_db
+def get_task_owners_from_pmt(pmt_db,pmt_id):
 
 
     dev = {}
@@ -385,39 +379,7 @@ def get_task_owners_from_pmt(pmt_id):
 
 
 
-def get_ticket_owners_from_ibug(pmt_id):
-    puzzle_db = settings.puzzle_db
-    pmt_db = settings.pmt_db
-    ibug_db = settings.ibug_db
-
-
-    owners = {}
-    owners_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email \
-            FROM ticket AS t \
-            LEFT JOIN user AS u \
-            ON t.owner = u.user_name \
-            LEFT JOIN dd_component AS c \
-            ON t.component = c.int \
-            WHERE pmt_id =$pmt_id \
-            AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) \
-            ",vars={'pmt_id':pmt_id})
-    for owner in owners_tmp:
-        #user = owner['email'].split('@')[0]
-        value ={'chinese_name':owner['chinese_name']}
-        tmp = get_user_from_pmt(value)
-        if len(tmp) > 0:
-            id = len(owners)
-            owners[id] ={'workload':0,'from':2}
-            user_tmp = tmp[0]
-            for key in user_tmp:
-                owners[id][key] = user_tmp[key]
-
-    return owners
-def get_ticket_person_liable_from_ibug(pmt_id):
-    puzzle_db = settings.puzzle_db
-    pmt_db = settings.pmt_db
-    ibug_db = settings.ibug_db
-
+def get_ticket_person_liable_from_ibug(pmt_db,ibug_db,pmt_id):
 
     person_liable = {}
     value = {'pmt_id':pmt_id}
@@ -433,7 +395,7 @@ def get_ticket_person_liable_from_ibug(pmt_id):
             continue
         person = person_tmp[0].split()
         value ={'chinese_name':person[0]}
-        users = get_user_from_pmt(value)
+        users = get_user_from_pmt(pmt_db,value)
         if len(users) > 0 :
             id = len(person_liable)
             person_liable[id] = {'workload':0,'from':2}
@@ -446,10 +408,7 @@ def get_ticket_person_liable_from_ibug(pmt_id):
 
 
 
-def get_ticket_reporters_from_ibug(pmt_id):
-    puzzle_db = settings.puzzle_db
-    pmt_db = settings.pmt_db
-    ibug_db = settings.ibug_db
+def get_ticket_reporters_from_ibug(pmt_db,ibug_db,pmt_id):
 
 
     reporters = {}
@@ -461,7 +420,7 @@ def get_ticket_reporters_from_ibug(pmt_id):
     for reporter in reporters_tmp:
         #user = reporter['email'].split('@')[0]
         value ={'chinese_name':reporter['chinese_name']}
-        tmp = get_user_from_pmt(value)
+        tmp = get_user_from_pmt(pmt_db,value)
         if len(tmp) > 0:
             id = len(reporters)
             reporters[id] ={'workload':0,'from':2}
@@ -471,12 +430,7 @@ def get_ticket_reporters_from_ibug(pmt_id):
 
     return reporters
 
-def get_user_from_pmt(value):
-    puzzle_db = settings.puzzle_db
-    pmt_db = settings.pmt_db
-    ibug_db = settings.ibug_db
-
-
+def get_user_from_pmt(pmt_db,value):
     tmp = pmt_db.query("SELECT staff_no,email,chinese_name \
             FROM staff \
             WHERE chinese_name=$chinese_name \
@@ -502,4 +456,7 @@ def get_compose_users(pmt,ibug):
             pmt[id] = ibug[i]
     return pmt
 
-
+def close_db(db):
+    connection = db.ctx['db']
+    connection.close()
+    return
