@@ -10,7 +10,7 @@ import os
 import datetime
 
 import time
-import settings
+import dbSettings
 #path = "%s/model" % os.getcwd()
 sys.path.append("../model")
 from GlobalFunc import send_mail
@@ -18,9 +18,9 @@ from GlobalFunc import send_mail
 data = {}
 
 def doWork(gearmanWorker, job):
-    puzzle_db = settings.getConnectionV2('puzzle')
-    pmt_db = settings.getConnectionV2('pmt')
-    ibug_db = settings.getConnectionV2('ibug')
+    puzzle_db = dbSettings.getConnectionV2('puzzle')
+    pmt_db = dbSettings.getConnectionV2('pmt')
+    ibug_db = dbSettings.getConnectionV2('ibug')
 
     params = json.loads(job.data)
     pmt_id = params['pmt_id']
