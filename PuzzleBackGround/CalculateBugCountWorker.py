@@ -9,28 +9,29 @@ sys.setdefaultencoding('utf8')
 import os
 import datetime
 
-sys.path.append("../config")
-import common
-import settings
 import time
-
+import dbSettings
+#path = "%s/model" % os.getcwd()
 sys.path.append("../model")
 from GlobalFunc import send_mail
 
 data = {}
-puzzle_db = settings.puzzle_db
-pmt_db = settings.pmt_db
-ibug_db = settings.ibug_db
 
 def doWork(gearmanWorker, job):
+    puzzle_db = dbSettings.getConnectionV2('puzzle')
+    pmt_db = dbSettings.getConnectionV2('pmt')
+    ibug_db = dbSettings.getConnectionV2('ibug')
+
     params = json.loads(job.data)
     pmt_id = params['pmt_id']
 
     value = {'pmt_id': pmt_id}
     try:
+        error = ""
         data['ticket'] = ibug_db.select('ticket', where='pmt_id=' + pmt_id)
         puzzle_db.delete('ticket', where='pmtId=' + pmt_id)
-        ticket_detail = ibug_db.query("SELECT t.resolution,t.id AS ticket_id,created_at , \
+        error = "================ticket start===============<br>"
+        ticket_detail = ibug_db.query("SELECT t.resolution,t.id AS ticket_id,created_at ,person_liable, \
                     updated_at,closed_at,p.name AS priority,\
                     r.chinese_name AS reporter,o.chinese_name AS owner,\
                     status,summary,pmt_id,e.name AS environment ,\
@@ -76,13 +77,15 @@ def doWork(gearmanWorker, job):
                     vars={'ticket_id': item['ticket_id']})
                 if len(daily_to_rc_tmp) > 0:
                     is_daily_to_rc = 1
-
             puzzle_db.insert('ticket', ticket_id=item['ticket_id'], created_at=item['created_at'],
                              updated_at=item['updated_at'], closed_at=item['closed_at'], priority=item['priority'],
                              reporter=item['reporter'], owner=item['owner'], status=item['status'],
                              summary=item['summary'], pmtId=item['pmt_id'], environment=item['environment'],
                              component=item['component'], resolution=item['resolution'], reason=item['reason'],
-                             is_reopen=is_reopen, is_reject=is_reject, is_daily_to_rc=is_daily_to_rc)
+                             person_liable=item['person_liable'],is_reopen=is_reopen, is_reject=is_reject, is_daily_to_rc=is_daily_to_rc)
+        error += "================ticket end===============<br>"
+        error += "================project start===============<br>"
+
         total = ibug_db.query("SELECT count(id) AS count  FROM ticket "
                               "WHERE pmt_id = $pmt_id AND environment <> 17 "
                               "AND (status <> 'closed' OR status = 'closed' "
@@ -153,6 +156,10 @@ def doWork(gearmanWorker, job):
                              prerelease=environments['prerelease'], production=environments['production'],
                              pmtId=pmt_id)
 
+        error += "================project end===============<br>"
+        error += "================reason start===============<br>"
+
+
         reasons_tmp = ibug_db.query("SELECT reason ,count(*) AS count  FROM ticket AS t "
                                     "LEFT JOIN dd_common AS d "
                                     "ON t.reason = d.id "
@@ -178,6 +185,7 @@ def doWork(gearmanWorker, job):
         for reason_id in reason:
             puzzle_db.insert('rp_projectbug_type', type='reason', com_id=reason_id,
                              count=reason[reason_id]['count'], pmtId=pmt_id)
+        error += "================component start===============<br>"
 
         component_tmp = ibug_db.query("SELECT component ,count(t.id) AS count FROM ticket AS t "
                                       "LEFT JOIN dd_common AS d "
@@ -192,34 +200,31 @@ def doWork(gearmanWorker, job):
         for b in component_tmp:
             puzzle_db.insert('rp_projectbug_type', type='component', com_id=b['component'], count=b['count'],
                              pmtId=pmt_id)
+        error += "================dev start===============<br>"
 
         #dev,qa模块
-        task_owners = get_task_owners_from_pmt(pmt_id)
-        ticket_owners = get_ticket_owners_from_ibug(pmt_id)
+        task_owners = get_task_owners_from_pmt(pmt_db,pmt_id)
+        ticket_owners = get_ticket_person_liable_from_ibug(pmt_db,ibug_db,pmt_id)
         devs = get_compose_users(task_owners['dev'], ticket_owners)
         data['devs'] = ticket_owners
-        ticket_reporters = get_ticket_reporters_from_ibug(pmt_id)
+        ticket_reporters = get_ticket_reporters_from_ibug(pmt_db,ibug_db,pmt_id)
         qas = get_compose_users(task_owners['qa'], ticket_reporters)
 
         puzzle_db.delete('rp_developer', where='pmtId=$pmt_id', vars=value)
-        pmt_to_ibug_user_sql = ' AND chinese_name =$chinese_name '
+        pmt_to_ibug_user_sql = ' AND person_liable like $chinese_name '
         for i in devs:
             #user_name = devs[i]['email'].split('@')[0]+'@%'
             chinese_name = devs[i]['chinese_name']
-            dev_value = {'pmt_id': pmt_id, 'chinese_name': chinese_name}
+            dev_value = {'pmt_id': pmt_id, 'chinese_name':chinese_name+'%'}
             dev_count = ibug_db.query("SELECT count(*) AS count FROM ticket AS t "
                                       "LEFT JOIN dd_common AS d "
                                       "ON t.reason = d.id "
-                                      "LEFT JOIN user AS u "
-                                      "ON t.owner = u.user_name "
                                       "WHERE pmt_id = $pmt_id AND t.environment <>17 "
                                       "AND (status<>'closed' OR status ='closed' "
                                       "AND resolution NOT IN(20,27)) AND (d.name is null or d.name not like '%产品设计%') " + pmt_to_ibug_user_sql,
                                       vars=dev_value)[0][
                 'count']
             unclose = ibug_db.query("SELECT count(*) AS count FROM ticket AS t "
-                                    "LEFT JOIN user AS u "
-                                    "ON t.owner = u.user_name "
                                     "WHERE pmt_id = $pmt_id AND t.environment<>17 "
                                     "AND status <>'closed' AND resolution NOT IN(20,27) "
                                     + pmt_to_ibug_user_sql, vars=dev_value)[0]['count']
@@ -229,8 +234,6 @@ def doWork(gearmanWorker, job):
                                    "ON t.reason = d.id "
                                    "LEFT JOIN ticket_log  AS l "
                                    "ON t.id =l.ticket_id "
-                                   "LEFT JOIN user AS u "
-                                   "ON owner = u.user_name "
                                    "WHERE pmt_id = $pmt_id AND t.environment<>17 "
                                    "AND l.newvalue = 'opened' "
                                    "AND l.field='status' AND l.rlog='Ticket_ActionReject'"
@@ -243,17 +246,14 @@ def doWork(gearmanWorker, job):
                                    "ON t.reason = d.id "
                                    "LEFT JOIN ticket_relation  AS r "
                                    "ON t.id =r.ticket_id "
-                                   "LEFT JOIN user AS u "
-                                   "ON owner = u.user_name "
                                    "WHERE pmt_id = $pmt_id AND t.environment<>17 AND r.ticket_id is not null "
                                    "AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) "
                                    "AND (d.name is null or d.name not like '%产品设计%') "
                                    + pmt_to_ibug_user_sql, vars=dev_value)[0]['count']
 
             major_bug_all = ibug_db.query(
-                "SELECT user_name as name,b.id AS id,b.status AS status,b.created_at AS created_at,b.verified_at AS verified_at "
-                "FROM user AS u"
-                "LEFT JOIN (SELECT t.id AS id,t.owner AS owner,t.created_at AS created_at,t.status AS status,MAX(l.created_at) AS verified_at "
+                "SELECT t.status AS status,t.created_at AS created_at,"
+                " t.id AS id,t.owner AS owner,t.created_at AS created_at,t.status AS status,MAX(l.created_at) AS verified_at "
                 "FROM ticket AS t "
                 "LEFT JOIN dd_common AS d "
                 "ON t.reason = d.id "
@@ -261,8 +261,7 @@ def doWork(gearmanWorker, job):
                 "ON t.id = l.ticket_id "
                 "WHERE t.pmt_id =$pmt_id AND priority IN (6,7,8) "
                 "AND (t.status !='closed' OR t.status ='closed' AND resolution NOT IN(20,27)) "
-                "AND environment <>17 AND (d.name is null or d.name not like '%产品设计%')  GROUP BY id ) AS b "
-                "ON b.owner = user_name " + pmt_to_ibug_user_sql, vars=dev_value)
+                "AND environment <>17 AND (d.name is null or d.name not like '%产品设计%')"+pmt_to_ibug_user_sql+"  GROUP BY id", vars=dev_value)
             major_bug = len(major_bug_all)
             repair_time = 0
             aday = 3600 * 24
@@ -281,8 +280,6 @@ def doWork(gearmanWorker, job):
                                         "ON t.reason = d.id "
                                         "LEFT JOIN ticket_log AS l "
                                         "ON t.id = l.ticket_id "
-                                        "LEFT JOIN user AS u "
-                                        "ON owner=u.user_name "
                                         "WHERE  t.id = l.ticket_id "
                                         "AND pmt_id=$pmt_id AND environment = 16 "
                                         "AND (t.status !='closed' OR t.status ='closed' AND t.resolution NOT IN(20,27)) "
@@ -294,20 +291,19 @@ def doWork(gearmanWorker, job):
                                "FROM ticket AS t "
                                "LEFT JOIN dd_common AS d "
                                "ON t.reason = d.id "
-                               "LEFT JOIN user AS u "
-                               "ON t.owner = u.user_name "
-                               "WHERE t.owner=u.user_name "
-                               "AND pmt_id=$pmt_id AND environment = 16 "
+                               "WHERE  pmt_id=$pmt_id AND environment = 16 "
                                "AND (t.status !='closed' OR t.status ='closed' AND t.resolution NOT IN(20,27)) "
                                "AND (d.name is null or d.name not like '%产品设计%') " + pmt_to_ibug_user_sql,
                                vars=dev_value)[0]['count']
 
             puzzle_db.insert('rp_developer', staff_no=devs[i]['staff_no'], chinese_name=devs[i]['chinese_name'],
-                             total=dev_count, workload=devs[i]['workload_plan'] / 8, unclose=unclose, reject=reject,
+                             total=dev_count, workload=devs[i]['workload'] / 8, unclose=unclose, reject=reject,
                              reopen=reopen, repair_time=repair_time, major_bug=major_bug, daily_to_rc=daily_to_rc,
                              rc=rc, user_from=devs[i]['from'], pmtId=pmt_id)
-
         puzzle_db.delete('rp_qa', where='pmtId = $pmt_id', vars=value)
+        error += "================qa start===============<br>"
+
+        pmt_to_ibug_user_sql = ' AND chinese_name =$chinese_name '
         for i in qas:
             #user_name = qas[i]['email'].split('@')[0]+'@%'
             qa_value = {'pmt_id': pmt_id, 'chinese_name': qas[i]['chinese_name']}
@@ -338,7 +334,7 @@ def doWork(gearmanWorker, job):
                 qa_priority[name] = priority['count']
 
             puzzle_db.insert('rp_qa', staff_no=qas[i]['staff_no'], chinese_name=qas[i]['chinese_name'],
-                             total=qa_count, workload=qas[i]['workload_plan'] / 8, p1=qa_priority['p1'],
+                             total=qa_count, workload=qas[i]['workload'] / 8, p1=qa_priority['p1'],
                              p2=qa_priority['p2'], p3=qa_priority['p3'], p4=qa_priority['p4'],
                              dailybuild=dailybuild, user_from=qas[i]['from'], pmtId=pmt_id)
         rp_projectList = puzzle_db.select('rp_projectList', where='pmtId=$pmt_id', vars={'pmt_id': pmt_id})
@@ -350,17 +346,24 @@ def doWork(gearmanWorker, job):
 
         result = '统计信息更新成功'
     except Exception as err:
-        result = pmt_id+'统计信息更新失败,错误信息：' +str(err)
+        result = pmt_id+'统计信息更新失败,错误信息：' +str(err)+error
 
-        send_mail(pmt_id + '项目统计信息更新失败', '错误信息：' + str(err))
+        send_mail(pmt_id + '项目统计信息更新失败', '错误信息：' + str(err)+error)
+    close_db(puzzle_db)
+    close_db(pmt_db)
+    close_db(ibug_db)
+
     return result
 
-def get_task_owners_from_pmt(pmt_id):
+def get_task_owners_from_pmt(pmt_db,pmt_id):
+
+
     dev = {}
     qa = {}
-    owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload_plan) AS workload_plan,s.chinese_name AS chinese_name "
+    owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload) AS workload,s.chinese_name AS chinese_name "
                         "FROM task AS t,staff AS s "
-                        "WHERE project_id = $pmt_id AND t.owner = s.id AND (stage=107 OR stage=108)"
+                        "WHERE project_id = $pmt_id AND t.owner = s.id "
+                        "AND ((stage=107 AND task_type_id IN (2,3))  OR (stage=108 AND task_type_id =4)) "
                         "GROUP BY staff_no",vars ={'pmt_id':pmt_id})
     for owner in owners:
         if owner['stage'] == 107:
@@ -377,31 +380,38 @@ def get_task_owners_from_pmt(pmt_id):
 
 
 
-def get_ticket_owners_from_ibug(pmt_id):
-    owners = {}
-    owners_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email \
-            FROM ticket AS t \
-            LEFT JOIN user AS u \
-            ON t.owner = u.user_name \
-            LEFT JOIN dd_component AS c \
-            ON t.component = c.int \
-            WHERE pmt_id =$pmt_id \
-            AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) \
-            ",vars={'pmt_id':pmt_id})
-    for owner in owners_tmp:
-        #user = owner['email'].split('@')[0]
-        value ={'chinese_name':owner['chinese_name']}
-        tmp = get_user_from_pmt(value)
-        if len(tmp) > 0:
-            id = len(owners)
-            owners[id] ={'workload_plan':0,'from':2}
-            user_tmp = tmp[0]
+def get_ticket_person_liable_from_ibug(pmt_db,ibug_db,pmt_id):
+
+    person_liable = {}
+    value = {'pmt_id':pmt_id}
+    sql = "SELECT DISTINCT person_liable FROM ticket \
+        WHERE pmt_id = $pmt_id \
+        AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27))"
+    tickets = ibug_db.query(sql,value)
+    for item in tickets:
+        if item['person_liable']=='':
+            continue
+        person_tmp = item['person_liable'].split(';')
+        if len(person_tmp) <1:
+            continue
+        person = person_tmp[0].split()
+        value ={'chinese_name':person[0]}
+        users = get_user_from_pmt(pmt_db,value)
+        if len(users) > 0 :
+            id = len(person_liable)
+            person_liable[id] = {'workload':0,'from':2}
+            user_tmp = users[0]
             for key in user_tmp:
-                owners[id][key] = user_tmp[key]
+                person_liable[id][key] = user_tmp[key]
 
-    return owners
+    return person_liable
 
-def get_ticket_reporters_from_ibug(pmt_id):
+
+
+
+def get_ticket_reporters_from_ibug(pmt_db,ibug_db,pmt_id):
+
+
     reporters = {}
     reporters_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email FROM ticket AS t  \
             LEFT JOIN user AS u \
@@ -411,23 +421,30 @@ def get_ticket_reporters_from_ibug(pmt_id):
     for reporter in reporters_tmp:
         #user = reporter['email'].split('@')[0]
         value ={'chinese_name':reporter['chinese_name']}
-        tmp = get_user_from_pmt(value)
+        tmp = get_user_from_pmt(pmt_db,value)
         if len(tmp) > 0:
             id = len(reporters)
-            reporters[id] ={'workload_plan':0,'from':2}
+            reporters[id] ={'workload':0,'from':2}
             user_tmp = tmp[0]
             for key in user_tmp:
                 reporters[id][key] = user_tmp[key]
 
     return reporters
 
-def get_user_from_pmt(value):
+def get_user_from_pmt(pmt_db,value):
     tmp = pmt_db.query("SELECT staff_no,email,chinese_name \
             FROM staff \
             WHERE chinese_name=$chinese_name \
             ORDER BY id DESC ",vars=value)
     return tmp
 
+
+
+def datetime_to_timestamp(dt):
+    ## time.struct_time(tm_year=2012, tm_mon=3, tm_mday=28, tm_hour=6, tm_min=53, tm_sec=40, tm_wday=2, tm_yday=88, tm_isdst=-1)
+    #将"2012-03-28 06:53:40"转化为时间戳
+    s = time.mktime(time.strptime(str(dt), '%Y-%m-%d %H:%M:%S'))
+    return int(s)
 
 def get_compose_users(pmt,ibug):
     for i in ibug:
@@ -440,8 +457,7 @@ def get_compose_users(pmt,ibug):
             pmt[id] = ibug[i]
     return pmt
 
-def datetime_to_timestamp(dt):
-    ## time.struct_time(tm_year=2012, tm_mon=3, tm_mday=28, tm_hour=6, tm_min=53, tm_sec=40, tm_wday=2, tm_yday=88, tm_isdst=-1)
-    #将"2012-03-28 06:53:40"转化为时间戳
-    s = time.mktime(time.strptime(str(dt), '%Y-%m-%d %H:%M:%S'))
-    return int(s)
+def close_db(db):
+    connection = db.ctx['db']
+    connection.close()
+    pass

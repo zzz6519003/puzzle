@@ -9,18 +9,14 @@ $(document).ready(function(){
 
     $('select#appName').attr("selected","selected");
 
-    $("#appName").change(function(){ 
-        $("#appName option").each(function(i,o){ 
-            if($(this).attr("selected")) 
-            { 
-                $(".version").hide(); 
-                $(".version").removeAttr("name");
-                $(".version").removeAttr("id");
-                $(".version").eq(i).show();
-                $(".version").eq(i).attr("name","version");
-                $(".version").eq(i).attr("id","version");
-            } 
-        }); 
+    $("#appName").change(function(){
+        var i = $("#appName").get(0).selectedIndex;
+        $(".version").hide(); 
+        $(".version").removeAttr("name");
+        $(".version").removeAttr("id");
+        $(".version").eq(i).show();
+        $(".version").eq(i).attr("name","version");
+        $(".version").eq(i).attr("id","version");
     }); 
     $("#appName").change();
 

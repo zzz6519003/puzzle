@@ -49,10 +49,10 @@ class Detail:
         dt_date = now.strftime('%Y-%m-%d')
         data['dt_date'] = dt_date
         yesterday = (now - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
-        three = (now -datetime.timedelta(days=3)).strftime('%Y-%m-%d')
-        seven = (now -datetime.timedelta(days=7)).strftime('%Y-%m-%d')
-        fifteen =(now -datetime.timedelta(days=15)).strftime('%Y-%m-%d')
-        thirty = (now -datetime.timedelta(days=30)).strftime('%Y-%m-%d')
+        three = (now -datetime.timedelta(days=2)).strftime('%Y-%m-%d')
+        seven = (now -datetime.timedelta(days=6)).strftime('%Y-%m-%d')
+        fifteen =(now -datetime.timedelta(days=14)).strftime('%Y-%m-%d')
+        thirty = (now -datetime.timedelta(days=29)).strftime('%Y-%m-%d')
 
         data['yesterday'] = yesterday
         data['three'] = three

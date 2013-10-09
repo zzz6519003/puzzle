@@ -196,10 +196,14 @@ class Developer:
 
         category = params.get('category')
         version =params.get('version')
-        data['params'] = {'appName':appName,'category':category,'version':version}
+        project_time = params.get('project_time')
+        if not project_time:
+            project_time = ''
+        data['params'] = {'appName':appName,'category':category,'version':version,'project_time':project_time}
 
         data['data'] = {}
-        project_list = get_project_list(appName,category,version)
+        project_list = get_project_list(appName,category,version,project_time)
+
         index = 0
         for project in project_list:
             pmt_id = project['pmtId']
@@ -287,9 +291,13 @@ class Qa:
 
         category = params.get('category')
         version =params.get('version')
-        data['params'] = {'appName':appName,'category':category,'version':version}
+        project_time = params.get('project_time')
+        if not project_time:
+            project_time = ''
 
-        project_list = get_project_list(appName,category,version)
+        data['params'] = {'appName':appName,'category':category,'version':version,'project_time':project_time}
+
+        project_list = get_project_list(appName,category,version,project_time)
 
         data['data'] = {}
         index = 0
@@ -540,46 +548,46 @@ def get_qa_dailybuild_bugs_from_puzzle(pmt_id,cn_name,is_daily):
 
 def get_dev_bugs_from_puzzle(pmt_id,cn_name):
     if cn_name =='total':
-        tickets = puzzle_db.select('ticket', where="pmtId=$pmt_id AND environment !='test' AND component NOT LIKE '%api%' AND reason !='产品设计'",vars ={'pmt_id':pmt_id})
+        tickets = puzzle_db.select('ticket', where="pmtId=$pmt_id AND environment !='test' AND component NOT LIKE '%api%' AND reason !='产品设计' AND person_liable !=''",vars ={'pmt_id':pmt_id})
     else:
-        tickets = puzzle_db.select('ticket', where=" pmtId=$pmt_id AND owner = $cn_name AND environment !='test' AND reason !='产品设计' ",vars ={'pmt_id':pmt_id,'cn_name':cn_name})
+        tickets = puzzle_db.select('ticket', where=" pmtId=$pmt_id AND person_liable LIKE $cn_name AND environment !='test' AND reason !='产品设计' ",vars ={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 def get_dev_unclose_bugs_from_puzzle(pmt_id,cn_name):
     sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND status !='closed' AND environment!='test' "
     if cn_name !='total':
-        sql += " AND owner = $cn_name"
+        sql += " AND person_liable LIKE $cn_name"
     else:
         sql +=" AND component NOT LIKE '%api%'"
-    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 def get_dev_reject_bugs_from_puzzle(pmt_id,cn_name):
     sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND is_reject=1 AND environment!='test' AND reason !='产品设计' "
     if cn_name !='total':
-        sql += " AND owner = $cn_name"
+        sql += " AND person_liable LIKE $cn_name"
     else:
         sql +=" AND component NOT LIKE '%api%'"
-    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 
 def get_dev_reopen_bugs_from_puzzle(pmt_id,cn_name):
     sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id AND is_reopen=1 AND environment!='test' AND reason !='产品设计' "
     if cn_name !='total':
-        sql += " AND owner = $cn_name"
+        sql += " AND person_liable LIKE $cn_name"
     else:
         sql +=" AND component NOT LIKE '%api%'"
-    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 def get_dev_daily_to_rc_bugs_from_puzzle(pmt_id,cn_name):
     sql = "SELECT * FROM ticket WHERE pmtId = $pmt_id  AND is_daily_to_rc=1 AND reason !='产品设计' "
     if cn_name !='total':
-        sql += " AND owner = $cn_name"
+        sql += " AND person_liable LIKE $cn_name"
     else:
         sql +=" AND component NOT LIKE '%api%'"
-    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':cn_name})
+    tickets = puzzle_db.query(sql,vars={'pmt_id':pmt_id,'cn_name':'%'+cn_name+'%'})
     return tickets
 
 
@@ -615,89 +623,6 @@ def get_created_time(pmt_id):
 
 
 
-def get_task_owners_from_pmt(pmt_id):
-    dev = {}
-    qa = {}
-    owners = pmt_db.query("SELECT s.staff_no AS staff_no,s.email AS email, t.stage AS stage,SUM(t.workload_plan) AS workload_plan,s.chinese_name AS chinese_name "
-                        "FROM task AS t,staff AS s "
-                        "WHERE project_id = $pmt_id AND t.owner = s.id AND (stage=107 OR stage=108)"
-                        "GROUP BY staff_no",vars ={'pmt_id':pmt_id})
-    for owner in owners:
-        if owner['stage'] == 107:
-            id = len(dev)
-            dev[id] = owner
-            dev[id]['from'] = 1
-        elif owner['stage'] == 108:
-            id = len(qa)
-            qa[id] = owner
-            qa[id]['from'] = 1
-
-    return {'dev':dev,'qa':qa}
-
-def get_ticket_owners_from_ibug(pmt_id):
-    owners = {}
-    owners_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email \
-            FROM ticket AS t \
-            LEFT JOIN user AS u \
-            ON t.owner = u.user_name \
-            LEFT JOIN dd_component AS c \
-            ON t.component = c.int \
-            WHERE pmt_id =$pmt_id \
-            AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27)) \
-            ",vars={'pmt_id':pmt_id})
-    for owner in owners_tmp:
-        #user = owner['email'].split('@')[0]
-        value ={'chinese_name':owner['chinese_name']}
-        tmp = get_user_from_pmt(value)
-        if len(tmp) > 0:
-            id = len(owners)
-            owners[id] ={'workload_plan':0,'from':2}
-            user_tmp = tmp[0]
-            for key in user_tmp:
-                owners[id][key] = user_tmp[key]
-
-    return owners
-
-def get_ticket_reporters_from_ibug(pmt_id):
-    reporters = {}
-    reporters_tmp = ibug_db.query("SELECT distinct u.user_name,u.chinese_name AS chinese_name,u.email AS email FROM ticket AS t  \
-            LEFT JOIN user AS u \
-            ON t.reporter = u.user_name \
-            WHERE pmt_id =$pmt_id  \
-            AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27))",vars={'pmt_id':pmt_id})
-    for reporter in reporters_tmp:
-        #user = reporter['email'].split('@')[0]
-        value ={'chinese_name':reporter['chinese_name']}
-        tmp = get_user_from_pmt(value)
-        if len(tmp) > 0:
-            id = len(reporters)
-            reporters[id] ={'workload_plan':0,'from':2}
-            user_tmp = tmp[0]
-            for key in user_tmp:
-                reporters[id][key] = user_tmp[key]
-
-    return reporters
-
-def get_user_from_pmt(value):
-    tmp = pmt_db.query("SELECT staff_no,email,chinese_name \
-            FROM staff \
-            WHERE chinese_name=$chinese_name \
-            ORDER BY id DESC ",vars=value)
-    return tmp
-
-
-def get_compose_users(pmt,ibug):
-    for i in ibug:
-        res = False
-        for j in pmt:
-            if pmt[j]['email']  == ibug[i]['email']:
-                res = True
-        if res == False :
-            id = len(pmt)
-            pmt[id] = ibug[i]
-    return pmt
-
-
 def get_owners(pmt_id,type):
     if type =='dev':
         table = 'rp_developer'
@@ -718,9 +643,10 @@ def get_owner_str(owners):
         str += '<span style="background-color:'+bgcolor+';">'+ owner['chinese_name'] +'<br></span>'
     return str
 
-def get_project_list(appName,category,version):
-    if not appName and not category and not version:
+def get_project_list(appName,category,version,project_time=None):
+    if not appName and not category and not version and not project_time:
         return {}
+
     sql = "SELECT b.pmtId AS pmtId,b.version AS version,\
     b.appName AS appName,b.category AS category,e.startDate AS endDate \
     FROM (SELECT p.id AS id,p.pmtId AS pmtId,\
@@ -728,6 +654,7 @@ def get_project_list(appName,category,version):
     FROM projectlist AS p ,applist AS a \
     WHERE p.appId = a.id "
     value ={}
+
     if appName :
         sql += "AND a.appGroup = $appName "
         value['appName'] = appName
@@ -740,7 +667,12 @@ def get_project_list(appName,category,version):
     sql += ") as b \
     LEFT JOIN projectevent AS e \
     ON b.id = e.projectId AND e.category =10  \
-    GROUP BY  appName,category,version,pmtId ORDER BY pmtId DESC "
+    LEFT JOIN rp_projectList AS rp \
+    ON b.pmtId = rp.pmtId "
+    if project_time:
+        sql += "WHERE rp.project_time = $project_time "
+        value['project_time'] = project_time
+    sql +="GROUP BY  appName,category,version,pmtId ORDER BY pmtId DESC "
     project_list = puzzle_db.query(sql,vars = value)
     return project_list
 
