@@ -30,6 +30,9 @@ run `python server.py`
 
 *mako文档地址: [Mako Document](http://docs.makotemplates.org/en/latest/)*
 
+###辅助环境
+[pma](http://myadmin.ios.dev.anjuke.com/)
+
 ###开发规则
 Controller里在头部请添加
 
