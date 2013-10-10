@@ -186,11 +186,22 @@ class Component:
 
 class Developer:
     def GET(self):
-        data = {'pageIndex':'report'}
+        data = {'pageIndex':'report','info':''}
         data = get_select(data)
 
         params = web.input()
         appName = params.get('appName')
+
+        is_updated = params.get('is_updated')
+        pmt_id = params.get('pmt_id')
+
+        if pmt_id and is_updated and int(is_updated) == 1:
+            value = {'pmt_id':pmt_id}
+            from PuzzleBackGround import PuzzleBackGroundCommands
+            data['info'] = PuzzleBackGroundCommands.doWork_calculateBugCount(value)
+
+
+
         if appName :
             appName = urllib.unquote(appName)
 
@@ -199,7 +210,9 @@ class Developer:
         project_time = params.get('project_time')
         if not project_time:
             project_time = ''
-        data['params'] = {'appName':appName,'category':category,'version':version,'project_time':project_time}
+        if not pmt_id:
+            pmt_id = ''
+        data['params'] = {'appName':appName,'category':category,'version':version,'project_time':project_time,'pmt_id':pmt_id}
 
         data['data'] = {}
         project_list = get_project_list(appName,category,version,project_time)
@@ -219,6 +232,12 @@ class Developer:
             project_info['endtime'] = format_time(project['endDate'])
             project_info['developer'] = dev_str
             project_info['qa'] = qa_str
+
+            update = puzzle_db.query("SELECT is_updated FROM rp_projectList WHERE pmtId = $pmt_id AND is_updated=1",vars={'pmt_id':pmt_id})
+            if len(update)==1:
+                project_info['is_updated'] = 1
+            else:
+                project_info['is_updated'] = 0
             data['data'][index] ={'project':project_info}
 
 

@@ -73,7 +73,15 @@
     %>
     <tr bgcolor=${bgcolor}>
         <td><a href="${pmt_url}" target="_blank">${project['pmt_id']}</a></td>
-        <td>${project['name']}&nbsp<a class="label label-info tTip" rel="popover" tt="${project['created']}">注</a></td>
+        <td>${project['name']}&nbsp
+            <a class="label label-info tTip" rel="popover" tt="${project['created']}">注</a>
+            % if project['is_updated']==1:
+            <a href="/report/developer?appName=${data['params']['appName']}&version=${data['params']['version']}&category=${data['params']['category']}&pmt_id=${project['pmt_id']}&is_updated=1"><button class="btn btn-info btn-small">更新</button></a>
+            % endif
+            % if project['pmt_id'] == data['params']['pmt_id']:
+                ${data['info']}
+            % endif
+        </td>
         <td>${project['endtime']}</td>
         <td>${report_html(bug,'chinese_name',project['pmt_id'],'developer',False,1,0)}</td>
         <td>${report_html(bug,'total',project['pmt_id'],'developer',True,100,0)}</td>
