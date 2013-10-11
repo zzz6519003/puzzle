@@ -204,10 +204,17 @@ class Developer:
 
         if appName :
             appName = urllib.unquote(appName)
+        else:
+            appName =''
 
         category = params.get('category')
         version =params.get('version')
         project_time = params.get('project_time')
+        if not category:
+            category =''
+        if not version:
+            version = ''
+
         if not project_time:
             project_time = ''
         if not pmt_id:
