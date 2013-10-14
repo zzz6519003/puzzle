@@ -2,9 +2,9 @@
 
 from config import settings
 from PuzzleBackGround import PuzzleBackGroundCommands
-render = setting.render
+render = settings.render
 
-class GitCorpDidFinishedMerge:
+class GitCorpDidMergePullRequest:
     def GET(self):
         print "here i am"
         pass

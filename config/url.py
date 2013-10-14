@@ -53,5 +53,5 @@ urls = (
         "/monitor/detail", pre_fix + "Monitor.Detail",
         "/monitor/chartlist", pre_fix + "Monitor.ChartList",
 
-        "/notification/gitcorpDidMergePullRequest", pre_fix + "NotificationCenter.GitcorpDidMergePullRequest",
+        "/notification/gitcorpDidMergePullRequest", pre_fix + "NotificationCenter.GitCorpDidMergePullRequest",
         )
