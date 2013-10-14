@@ -46,11 +46,12 @@ urls = (
         "/report/detail",pre_fix + "Report.Detail",
         "/report/job",pre_fix + "Report.Job",
 
-
         "/crash/job", pre_fix + "Crash.Job",
         "/crash/set", pre_fix + "Crash.Set",
 
-        "/monitor/getdata", pre_fix +"Monitor.GetData",
-        "/monitor/detail", pre_fix +"Monitor.Detail",
-        "/monitor/chartlist", pre_fix +"Monitor.ChartList",
+        "/monitor/getdata", pre_fix + "Monitor.GetData",
+        "/monitor/detail", pre_fix + "Monitor.Detail",
+        "/monitor/chartlist", pre_fix + "Monitor.ChartList",
+
+        "/notification/gitcorpDidMergePullRequest", pre_fix + "NotificationCenter.GitcorpDidMergePullRequest",
         )
