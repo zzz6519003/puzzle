@@ -3,7 +3,7 @@
 from config import settings
 from PuzzleBackGround import PuzzleBackGroundCommands
 from iostools.tools.ConfigHelper import ConfigHelper
-render = settings.render
+from model import Package as PackageModel
 
 """
 package info:
@@ -32,6 +32,13 @@ class GitCorpDidMergePullRequest:
 
     def GET(self):
         packageInfo = ConfigHelper().initWithBranchName("develop_p-anjuke_3.1").getConfigData()
-        print packageInfo
+        if packageInfo["category"] == '0':
+            return
+
+        if packageInfo["category"] != '7' and packageInfo["category"] != '8':
+            packageInfo["category"] = '7'
+
+        packageInfo["mailContent"] = "测试puzzle和gitcorp是否能够合并"
+        PackageModel.buildPackage(packageInfo)
         pass
 
