@@ -40,21 +40,24 @@ def getPackageInfoForBuild(projectId, category, type=1):
 
     result = PuzzleBackGroundCommands.doWork_fetchDependencyInfo(params)
 
+    print result
+
     data['dependencyArray'] = json.loads(result)
 
     lastPackageInfo = ConfigHelper().initWithProjectPath(params["projectPath"]).getConfigData()
 
-    if lastPackageInfo['category'] != '0':
-        for dependencyInfo in lastPackageInfo['dependencyArray']:
-            depRepoName = dependencyInfo['repoName']
-            depSha1 = dependencyInfo['sha1']
-            for depInfo in data['dependencyArray']:
-                if depInfo['name'] == depRepoName:
-                    for sha1 in depInfo["SHA1Array"]:
-                        if sha1['hash'] == depSha1:
-                            sha1["isCurrent"] = 1
-                        else:
-                            sha1["isCurrent"] = 0
+    if category != "7":
+        if lastPackageInfo['category'] != '0':
+            for dependencyInfo in lastPackageInfo['dependencyArray']:
+                depRepoName = dependencyInfo['repoName']
+                depSha1 = dependencyInfo['sha1']
+                for depInfo in data['dependencyArray']:
+                    if depInfo['name'] == depRepoName:
+                        for sha1 in depInfo["SHA1Array"]:
+                            if sha1['hash'] == depSha1:
+                                sha1["isCurrent"] = 1
+                            else:
+                                sha1["isCurrent"] = 0
 
     #data['dependencyArray'] = [{
     #        'name':'RTApiProxy',
