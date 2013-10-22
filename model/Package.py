@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from config import settings
 import web
 from iostools.commandLine import *
