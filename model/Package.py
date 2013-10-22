@@ -46,6 +46,7 @@ def getPackageInfoForBuild(projectId, category, type=1):
 
     lastPackageInfo = ConfigHelper().initWithProjectPath(params["projectPath"]).getConfigData()
 
+    #非DailyBuild的时候才使用上一次打包的sha1
     if category != "7":
         if lastPackageInfo['category'] != '0':
             for dependencyInfo in lastPackageInfo['dependencyArray']:
