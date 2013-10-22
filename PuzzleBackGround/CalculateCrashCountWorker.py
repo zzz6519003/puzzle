@@ -21,6 +21,7 @@ def doWork(gearmanWorker, job):
     params = json.loads(job.data)
     job_start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com","clairyin@anjuke.com","angelazhang@anjuke.com"]
+    mail_to = ["yuetingqian@anjuke.com"]
     data['result'] = ''
     error = ''
     start = params['start']
@@ -73,7 +74,7 @@ def doWork(gearmanWorker, job):
             crash = ama_db.query("SELECT c.AppName AS app_name ,c.AppPlatform AS app_platform, \
                                      count(*) AS count \
                                      FROM (SELECT DISTINCT CrashTitle,CrashDetail,AppPlatform, \
-                                     AppName,AppVer,DeviceID,NewID,CrashTime \
+                                     AppName,AppVer,DeviceID,NewID,AppPM,Model,OSVer,CrashTime \
 	        		                 FROM crashdata  \
                                      WHERE edt < $end AND	edt >= $start ) c \
                                      LEFT JOIN bs_appid b \
@@ -125,13 +126,14 @@ def doWork(gearmanWorker, job):
                                    + str(item['count']) + ' , 超过设定值 ' + str(limit_count) + \
                                    ', <a href="http://puzzle.corp.anjuke.com/monitor/detail?app_name=' + item['app_name'] + \
                                    '&app_platform=' + item['app_platform'] + '">查看</a><br>'
-                        crash_context = ama_db.query("SELECT DISTINCT c.CrashTitle AS title,c.AppVer AS ver,"
-                                                     "c.DeviceID AS DeviceID,c.NewID AS NewId,c.CrashTime AS crashTime "
-                                                     "FROM crashdata c "
-                                                     "LEFT JOIN bs_appid b "
-                                                     "ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer "
-                                                     "WHERE c.edt < $end AND	c.edt >= $start AND b.isShow = 1 "
-                                                     "AND c.AppName = $app_name AND c.AppPlatform=$app_platform",
+                        crash_context = ama_db.query("SELECT DISTINCT c.CrashTitle AS title,c.CrashDetail AS detail,c.AppVer AS ver,\
+                                                    FROM_UNIXTIME(c.CrashTime) AS crashTime,c.DeviceID AS DeviceID,c.NewID AS NewID,\
+                                                    c.AppPM AS pm,c.Model AS model,c.OSVer AS os \
+                                                    FROM crashdata c \
+                                                    LEFT JOIN bs_appid b \
+                                                    ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer \
+                                                    WHERE c.edt < $end AND	c.edt >= $start AND b.isShow = 1 \
+                                                    AND c.AppName = $app_name AND c.AppPlatform=$app_platform",
                                                      vars={'start': start, 'end': end, 'app_name': item['app_name'],
                                                            'app_platform': item['app_platform']})
                         style = 'style="font-size:13px;font-family:Arial;background:#F7F7F0;border:1px solid #D7D7D7;' \
@@ -141,8 +143,7 @@ def doWork(gearmanWorker, job):
                         context += '<tr><td ' + style + '>id</td><td ' + style + '>app</td><td ' + style + '>os</td>' \
                                                                                                            '<td ' + style + '>version</td><td  ' + style + ' width="10%">title</td><td  ' + style + '>time</td></tr>'
                         i = 1
-
-                        for detail in crash_context:
+                        for detail in crash_context :
                             context += '<tr><td ' + style + '>' + str(i) + '</td><td ' + style + '>' + item['app_name'] + \
                                        '</td><td ' + style + '>' + item[
                                            'app_platform'] + '</td ' + style + '><td ' + style + '>' \
