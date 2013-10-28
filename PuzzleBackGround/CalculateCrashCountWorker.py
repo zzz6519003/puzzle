@@ -187,7 +187,7 @@ def doWork(gearmanWorker, job):
                 apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit ORDER BY id")
                 for item in apps_tmp:
                     file_name = str(item['id'])
-                    path = 'static/chart/'
+                    path = '/Users/anjuke/project/puzzle/static/chart/'
                     file_object = open(path + file_name + '.js', 'w')
                     js_time = datetime.datetime.strptime(start,'%Y-%m-%d %H:%M:%S')
                     js_time = int(time.mktime(js_time.timetuple()))
