@@ -203,8 +203,6 @@ def doWork(gearmanWorker, job):
             dbSettings.close_db(puzzle_db)
             dbSettings.close_db(ama_db)
             error = str(err)+'<br>'
-            data['result'] = error
-            send_mail('[' + start + ']crash信息更新失败', error, 'Crash No-Reply')
         if error == '':
             result += start+'至'+end+ '更新成功<br>'
         else:
@@ -213,9 +211,11 @@ def doWork(gearmanWorker, job):
         start_tmp = start_tmp + datetime.timedelta(seconds=600)
         end_tmp = end_tmp + datetime.timedelta(seconds=600)
 
-        print result
     if lack_context !='':
         send_mail('补Crash数据',lack_context,'Crash No-Reply')
+
+    if result !='':
+        send_mail('crash信息更新失败', result, 'Crash No-Reply')
 
     dbSettings.close_db(puzzle_db)
     dbSettings.close_db(ama_db)
