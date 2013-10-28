@@ -23,6 +23,7 @@ def doWork(gearmanWorker, job):
     mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com","clairyin@anjuke.com","angelazhang@anjuke.com"]
     data['result'] = ''
     error = ''
+    error_all = ''
     start = params['start']
     end_actual = params['end']
     end_tmp = end_actual
@@ -207,6 +208,7 @@ def doWork(gearmanWorker, job):
             result += start+'至'+end+ '更新成功<br>'
         else:
             result += start+'至'+end+ '更新失败,错误信息：'+error
+            error_all += error
 
         start_tmp = start_tmp + datetime.timedelta(seconds=600)
         end_tmp = end_tmp + datetime.timedelta(seconds=600)
@@ -214,8 +216,8 @@ def doWork(gearmanWorker, job):
     if lack_context !='':
         send_mail('补Crash数据',lack_context,'Crash No-Reply')
 
-    if result !='':
-        send_mail('crash信息更新失败', result, 'Crash No-Reply')
+    if error_all !='':
+        send_mail('crash信息更新失败', error_all, 'Crash No-Reply')
 
     dbSettings.close_db(puzzle_db)
     dbSettings.close_db(ama_db)
