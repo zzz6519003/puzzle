@@ -11,13 +11,13 @@ sys.path.append("../model")
 from GlobalFunc import send_mail
 sys.path.append("../config")
 import common
-import settings
+import dbSettings
 import time
-puzzle_db = settings.puzzle_db
-ama_db = settings.ama_db
 data={}
 
 def doWork(gearmanWorker, job):
+    puzzle_db = dbSettings.getConnectionV2('puzzle')
+    ama_db = dbSettings.getConnectionV2('ama')
     params = json.loads(job.data)
     job_start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     mail_to = ["yuetingqian@anjuke.com","vingowang@anjukeinc.com","clairyin@anjuke.com","angelazhang@anjuke.com"]
@@ -193,13 +193,15 @@ def doWork(gearmanWorker, job):
                     js_time = int(time.mktime(js_time.timetuple()))
                     js_time = datetime.datetime.fromtimestamp(js_time)
                     js_time = js_time.strftime('%Y-%m-%d')
-                    js = get_chart_js(item['app_name'], item['app_platform'],js_time+' 00:00:00',js_time+' 23:59:59')
+                    js = get_chart_js(puzzle_db,item['app_name'], item['app_platform'],js_time+' 00:00:00',js_time+' 23:59:59')
                     file_object.write(js)
                     file_object.close()
                     os.system(common.phantomjs_path + ' static/js/highcharts-convert.js '
                                                   '-infile ' + path + file_name + '.js -outfile ' + path + file_name + '.png')
             puzzle_db.insert('qa_jobtime',start=start,end=end)
         except Exception as err:
+            dbSettings.close_db(puzzle_db)
+            dbSettings.close_db(ama_db)
             error = str(err)+'<br>'
             data['result'] = error
             send_mail('[' + start + ']crash信息更新失败', error, 'Crash No-Reply')
@@ -214,10 +216,13 @@ def doWork(gearmanWorker, job):
         print result
     if lack_context !='':
         send_mail('补Crash数据',lack_context,'Crash No-Reply')
+
+    dbSettings.close_db(puzzle_db)
+    dbSettings.close_db(ama_db)
     return result
 
 
-def get_chart_js(app_name, app_platform, start=None, end=None):
+def get_chart_js(puzzle_db,app_name, app_platform, start=None, end=None):
     now = datetime.datetime.now()
     dt_date = now.strftime('%Y-%m-%d')
     if not start or not end:
@@ -227,7 +232,7 @@ def get_chart_js(app_name, app_platform, start=None, end=None):
         end = dt_date
         start = start + ' 00:00:00'
         end = end + ' 23:59:59'
-    result = get_all_data(app_name, app_platform, start, end)
+    result = get_all_data(puzzle_db,app_name, app_platform, start, end)
     js = "\
         Highcharts.theme = {\
             colors: ['#c0c0c0','#4572a7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],\
@@ -350,7 +355,7 @@ def get_utc(timestamp, days=0):
     utc = str((timestamp + days * 24 * 60 * 60) * 1000)
     return utc
 
-def get_data(value):
+def get_data(puzzle_db,value):
     crashs = puzzle_db.select('qa_crashcount',
                               where="app_name=$app_name AND app_platform=$app_platform "
                                     "AND end_time >=$start AND end_time < $end ORDER BY end_time",
@@ -365,11 +370,11 @@ def get_data(value):
         result.append(list)
     return result
 
-def get_all_data(app_name,app_platform,start,end):
+def get_all_data(puzzle_db,app_name,app_platform,start,end):
     lastweek = 7;
     value = {'app_name': app_name, 'app_platform': app_platform, 'start': start, 'end': end}
     result = []
-    today = get_data(value)
+    today = get_data(puzzle_db,value)
 
     pre_end = datetime.datetime.strptime(end, '%Y-%m-%d %H:%M:%S')
     pre_end = str(pre_end - datetime.timedelta(days=lastweek))
@@ -377,7 +382,7 @@ def get_all_data(app_name,app_platform,start,end):
     pre_start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
     pre_start = str(pre_start - datetime.timedelta(days=lastweek))
     value = {'app_name': app_name, 'app_platform': app_platform, 'start': pre_start, 'end': pre_end}
-    pre_week = get_data(value)
+    pre_week = get_data(puzzle_db,value)
     result.append(today)
     result.append(pre_week)
     return result

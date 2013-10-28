@@ -10,3 +10,7 @@ def getConnectionV2(name):
     }[name]()
     return db
 
+def close_db(db):
+    connection = db.ctx['db']
+    connection.close()
+    pass
