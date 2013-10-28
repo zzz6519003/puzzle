@@ -187,7 +187,7 @@ def doWork(gearmanWorker, job):
                 apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit ORDER BY id")
                 for item in apps_tmp:
                     file_name = str(item['id'])
-                    path = '/Users/anjuke/project/puzzle/static/chart/'
+                    path = os.path.abspath('..')+'/static/chart/'
                     file_object = open(path + file_name + '.js', 'w')
                     js_time = datetime.datetime.strptime(start,'%Y-%m-%d %H:%M:%S')
                     js_time = int(time.mktime(js_time.timetuple()))
@@ -196,7 +196,7 @@ def doWork(gearmanWorker, job):
                     js = get_chart_js(puzzle_db,item['app_name'], item['app_platform'],js_time+' 00:00:00',js_time+' 23:59:59')
                     file_object.write(js)
                     file_object.close()
-                    os.system(common.phantomjs_path + ' static/js/highcharts-convert.js '
+                    os.system(common.phantomjs_path +' '+os.path.abspath('..') +'/static/js/highcharts-convert.js '
                                                   '-infile ' + path + file_name + '.js -outfile ' + path + file_name + '.png')
             puzzle_db.insert('qa_jobtime',start=start,end=end)
         except Exception as err:
