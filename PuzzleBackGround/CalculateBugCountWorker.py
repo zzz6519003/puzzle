@@ -389,7 +389,7 @@ def get_ticket_person_liable_from_ibug(pmt_db,ibug_db,pmt_id):
         AND (status <> 'closed' OR status ='closed' AND resolution NOT IN(20,27))"
     tickets = ibug_db.query(sql,value)
     for item in tickets:
-        if item['person_liable']=='':
+        if not item['person_liable'] or item['person_liable']=='':
             continue
         person_tmp = item['person_liable'].split(';')
         if len(person_tmp) <1:
