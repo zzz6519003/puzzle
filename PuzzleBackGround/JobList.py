@@ -1,14 +1,14 @@
 #test
-Job_test            =  "testtesttest"
+Job_test                =  "testtesttest"
 
 #CreateProjectWorker
-Job_createProject   =  "createProject"
+Job_createProject       =  "createProject"
 
 #PackageWorker
-Job_package         =  "buildPackage"
+Job_package             =  "buildPackage"
 
 #TranslateCrashLogWorker
-Job_translate       =  "translateLog"
+Job_translate           =  "translateLog"
 
 #TranslateCrashLogWorker
 Job_fetchDependencyInfo =  "fetchDepInfo"
@@ -17,4 +17,7 @@ Job_fetchDependencyInfo =  "fetchDepInfo"
 Job_calculateCrashCount = "calculateCrashCount"
 
 #CaculateBugCountWorker
-Job_calculateBugCount = "calculateBugCount"
+Job_calculateBugCount   = "calculateBugCount"
+
+#WarningCrashWorker
+Job_warningCrash        = "warningCrash"

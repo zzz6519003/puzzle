@@ -29,7 +29,7 @@ def doWork(gearmanWorker, job):
     end_tmp = end_actual
     is_old = params['is_old']
     result = ''
-    db_end_obj = puzzle_db.query("SELECT end FROM qa_jobtime WHERE end <=$end ORDER BY end DESC LIMIT 1",
+    db_end_obj = puzzle_db.query("SELECT end FROM qa_jobtime WHERE end <=$end and type=1 ORDER BY end DESC LIMIT 1",
             vars={'end':end_tmp})
     date_end = datetime.datetime.strptime(end_tmp,'%Y-%m-%d %H:%M:%S')
     if len(db_end_obj)==0:
@@ -76,7 +76,7 @@ def doWork(gearmanWorker, job):
                                      FROM (SELECT DISTINCT CrashTitle,CrashDetail,AppPlatform, \
                                      AppName,AppVer,DeviceID,NewID,AppPM,Model,OSVer,CrashTime \
 	        		                 FROM crashdata  \
-                                     WHERE edt < $end AND	edt >= $start ) c \
+                                     WHERE edt <= $end AND	edt >= $start ) c \
                                      LEFT JOIN bs_appid b \
                                      ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer \
                                      WHERE  b.isShow = 1 \
@@ -132,7 +132,7 @@ def doWork(gearmanWorker, job):
                                                     FROM crashdata c \
                                                     LEFT JOIN bs_appid b \
                                                     ON c.AppName = b.AppName AND c.AppPlatform=b.AppPlatform AND c.AppVer = b.AppVer \
-                                                    WHERE c.edt < $end AND	c.edt >= $start AND b.isShow = 1 \
+                                                    WHERE c.edt <= $end AND	c.edt >= $start AND b.isShow = 1 \
                                                     AND c.AppName = $app_name AND c.AppPlatform=$app_platform",
                                                      vars={'start': start, 'end': end, 'app_name': item['app_name'],
                                                            'app_platform': item['app_platform']})
@@ -199,7 +199,7 @@ def doWork(gearmanWorker, job):
                     file_object.close()
                     os.system(common.phantomjs_path +' '+os.path.abspath('..') +'/static/js/highcharts-convert.js '
                                                   '-infile ' + path + file_name + '.js -outfile ' + path + file_name + '.png')
-            puzzle_db.insert('qa_jobtime',start=start,end=end)
+            puzzle_db.insert('qa_jobtime', start=start, end=end, type=1)
         except Exception as err:
             dbSettings.close_db(puzzle_db)
             dbSettings.close_db(ama_db)

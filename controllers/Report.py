@@ -677,7 +677,7 @@ def get_project_list(appName,category,version,project_time=None):
     b.appName AS appName,b.category AS category,e.startDate AS endDate \
     FROM (SELECT p.id AS id,p.pmtId AS pmtId,\
     p.version AS version,a.appGroup as appName,a.category AS category \
-    FROM projectlist AS p ,applist AS a \
+    FROM projectList AS p ,appList AS a \
     WHERE p.appId = a.id "
     value ={}
 
@@ -691,7 +691,7 @@ def get_project_list(appName,category,version,project_time=None):
         sql += "AND p.version = $version "
         value['version'] = version
     sql += ") as b \
-    LEFT JOIN projectevent AS e \
+    LEFT JOIN projectEvent AS e \
     ON b.id = e.projectId AND e.category =10  \
     LEFT JOIN rp_projectList AS rp \
     ON b.pmtId = rp.pmtId "
@@ -715,7 +715,7 @@ def get_select(data):
         index +=1
 
     versions = puzzle_db.query("SELECT DISTINCT a.appGroup as appName ,p.version as version \
-                                FROM applist AS a,projectlist AS p \
+                                FROM appList AS a,projectList AS p \
                                 WHERE a.id = p.appId AND appGroup <> '' ORDER BY version DESC")
     for item in versions:
         index = dict_index[item['appName']]
