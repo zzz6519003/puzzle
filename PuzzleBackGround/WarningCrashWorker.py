@@ -33,7 +33,6 @@ def doWork(gearmanWorker, job):
     if len(db_end_obj) == 0:
         db_end_time = end_time - datetime.timedelta(seconds=time_interval)
     else:
-        print 1233
         db_end_time = time_rounding(str(db_end_obj[0]['end']), time_interval)
 
     if end_time <= db_end_time:
@@ -51,7 +50,8 @@ def doWork(gearmanWorker, job):
         if i != count -1:
             lack_context = '%s-%s缺少数据' % (start, end)
 
-        apps = puzzle_db.query("SELECT l.app_name AS app_name, l.app_platform AS app_platform, t.crash_title AS crash_title \
+        apps = puzzle_db.query("SELECT l.app_name AS app_name, l.app_platform AS app_platform, \
+                                t.crash_title AS crash_title, t.crash_count AS crash_count \
                                 FROM qa_crashtitle AS t, qa_crashcount_limit AS l \
                                 WHERE t.app_id = l.id")
         for app in apps:
@@ -74,8 +74,9 @@ def doWork(gearmanWorker, job):
                     AND c.CrashTitle LIKE $crash_title AND b.isShow = 1",vars=value)
 
             crash_count = len(crashes)
-            if crash_count > 0:
-                mail_body += '%s-%s %s%s重要crash共有%d个，具体如下:<br>' % (start, end, app['app_name'], app['app_platform'], crash_count)
+            if crash_count > app['crash_count']:
+                mail_body += '【%s-%s】%s%s重要crash(title:%s)共有%d个，超过设置值%d个，具体如下:<br>' \
+                        % (start, end, app['app_name'], app['app_platform'], app['crash_title'], crash_count, app['crash_count'])
                 style = 'style="font-size:13px;font-family:Arial;background:#F7F7F0;border:1px solid #D7D7D7;' \
                         'border-collapse: collapse;font-weight:bold;padding:2px 8px;vertical-align:bottom;' \
                         'white-space:nowrap;border-image:initial;text-align:left;"'
@@ -91,10 +92,10 @@ def doWork(gearmanWorker, job):
                     i = i + 1
 
                 mail_body += '</table><br>'
-            puzzle_db.insert('qa_jobtime', start=start, end=end, type=2, updated_at=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     if mail_body != '':
         send_mail('Important Crash', mail_body, 'Crash No-Replay')
 
+    puzzle_db.insert('qa_jobtime', start=start, end=end, type=2, updated_at=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     result += mail_body
     dbSettings.close_db(puzzle_db)
     dbSettings.close_db(ama_db)
