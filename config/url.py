@@ -55,4 +55,5 @@ urls = (
         "/monitor/chartlist", pre_fix + "Monitor.ChartList",
 
         "/notification/gitcorpDidMergePullRequest", pre_fix + "NotificationCenter.GitCorpDidMergePullRequest",
+        "/whereIsMengZhi", pre_fix + "WhereIsMengZhi.Location"
         )
