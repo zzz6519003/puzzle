@@ -164,7 +164,7 @@ CREATE TABLE `rp_projectbug` (
   `pmtId` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `NewIndex1` (`pmtId`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='项目报表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='项目报表';
 
 /*Table structure for table `rp_projectbug_type` */
 
@@ -178,7 +178,7 @@ CREATE TABLE `rp_projectbug_type` (
   `pmtId` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `NewIndex1` (`type`,`com_id`,`pmtId`)
-) ENGINE=InnoDB AUTO_INCREMENT=515 DEFAULT CHARSET=utf8 COMMENT='bug 原因和component统计';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='bug 原因和component统计';
 
 /*Table structure for table `rp_qa` */
 
@@ -199,7 +199,7 @@ CREATE TABLE `rp_qa` (
   `user_from` int(11) NOT NULL COMMENT '1是pmt 2是ibug',
   PRIMARY KEY (`id`),
   UNIQUE KEY `NewIndex1` (`staff_no`,`pmtId`)
-) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8 COMMENT='qa报表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='qa报表';
 
 /*Table structure for table `ticket` */
 
@@ -228,7 +228,7 @@ CREATE TABLE `ticket` (
   PRIMARY KEY (`id`,`ticket_id`),
   KEY `reporter` (`reporter`),
   KEY `owner` (`owner`)
-) ENGINE=InnoDB AUTO_INCREMENT=1760 DEFAULT CHARSET=utf8 COMMENT='ticket信息';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='ticket信息';
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -247,7 +247,7 @@ CREATE TABLE `qa_crashcount` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `NewIndex1` (`app_name`,`app_platform`,`start_time`,`end_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 /*Table structure for table `qa_crashcount_limit` */
 
@@ -261,7 +261,7 @@ CREATE TABLE `qa_crashcount_limit` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `NewIndex1` (`app_name`,`app_platform`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `qa_jobtime`;
 CREATE TABLE `qa_jobtime` (
@@ -281,7 +281,6 @@ CREATE TABLE `qa_crashtitle` (
       `crash_count` int(11) NOT NULL DEFAULT '0',
       `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
-SELECT * FROM puzzle.qa_crashtitle;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
