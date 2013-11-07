@@ -55,12 +55,12 @@ def doWork(gearmanWorker, job):
     end_tmp = db_end + datetime.timedelta(seconds=600)
     if count < 1:
         result = str(start_tmp)+'至'+str(end_actual)+'时间小于10分钟，不更新<br>'
-    for i in range(0,count):
+    for index in range(0,count):
         try:
             start = str(start_tmp)
             end = str(end_tmp)
 
-            if i !=(count-1):
+            if index !=(count-1):
                 lack_context += start+'至'+end+'缺少记录<br>'
             apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit")
             apps = {}
@@ -184,7 +184,7 @@ def doWork(gearmanWorker, job):
             if context != '':
                 send_mail(sub, context, 'Crash No-Reply', mail_to)
             data['result'] = context
-            if not is_old:
+            if not is_old and index == count-1:
                 apps_tmp = puzzle_db.query("SELECT * FROM qa_crashcount_limit ORDER BY id")
                 for item in apps_tmp:
                     file_name = str(item['id'])

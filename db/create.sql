@@ -263,13 +263,25 @@ CREATE TABLE `qa_crashcount_limit` (
   UNIQUE KEY `NewIndex1` (`app_name`,`app_platform`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
+DROP TABLE IF EXISTS `qa_jobtime`;
 CREATE TABLE `qa_jobtime` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-              `update_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              `type` int(11) NOT NULL DEFAULT '1',
+              `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
               PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
+DROP TABLE IF EXISTS 'qa_crashtitle';
+CREATE TABLE `qa_crashtitle` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `app_id` int(11) NOT NULL,
+      `crash_title` varchar(200) NOT NULL,
+      `crash_count` int(11) NOT NULL DEFAULT '0',
+      `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+SELECT * FROM puzzle.qa_crashtitle;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
