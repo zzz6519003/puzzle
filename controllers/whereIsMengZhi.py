@@ -8,10 +8,10 @@ import os
 
 data = {'pageIndex':'index'}
 render = settings.render
-db = settings.dbig import settings
+db = settings.db
 
 class Location:
-
     def GET(self):
-        render.whereIsMengZhi(data="不在座位上")
-        pass
+        data['location'] = "孟智在位置上"
+        print data
+        return render.whereIsMengZhi(data=data)
