@@ -41,6 +41,7 @@ def getPackageInfoForBuild(projectId, category, type=1):
 
     result = PuzzleBackGroundCommands.doWork_fetchDependencyInfo(params)
 
+    print "\n this is the result from background"
     print result
 
     data['dependencyArray'] = json.loads(result)

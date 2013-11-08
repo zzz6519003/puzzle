@@ -31,6 +31,9 @@ package info:
 class GitCorpDidMergePullRequest:
 
     def GET(self):
+        print "here is get"
+        return
+
         packageInfo = ConfigHelper().initWithBranchName("develop_p-anjuke_3.1").getConfigData()
         if packageInfo["category"] == '0':
             return
@@ -42,3 +45,6 @@ class GitCorpDidMergePullRequest:
         PackageModel.buildPackage(packageInfo)
         pass
 
+    def POST(self):
+        print "here is post"
+        pass
