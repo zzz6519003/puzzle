@@ -76,8 +76,8 @@ def doWork(gearmanWorker, job):
                         AND c.CrashTitle LIKE $crash_title AND b.isShow = 1",vars=value)
 
                 crash_count = len(crashes)
-                if crash_count > app['crash_count']:
-                    mail_body += '【%s-%s】%s%s重要crash(title:%s)共有%d个，超过设置值%d个，具体如下:<br>' \
+                if crash_count >= app['crash_count']:
+                    mail_body += '【%s-%s】%s%s重要crash(title:%s)共有%d个，达到或超过设置值%d个，具体如下:<br>' \
                             % (start, end, app['app_name'], app['app_platform'], app['crash_title'], crash_count, app['crash_count'])
                     style = 'style="font-size:13px;font-family:Arial;background:#F7F7F0;border:1px solid #D7D7D7;' \
                             'border-collapse: collapse;font-weight:bold;padding:2px 8px;vertical-align:bottom;' \

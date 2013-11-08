@@ -121,9 +121,9 @@ def doWork(gearmanWorker, job):
 
                 if len(crash_limit) == 1:
                     limit_count = crash_limit[0]['crash_count']
-                    if item['count'] > limit_count:
+                    if item['count'] >= limit_count:
                         context += item['app_name'] + item['app_platform'] + ' crash 实际量为' \
-                                   + str(item['count']) + ' , 超过设定值 ' + str(limit_count) + \
+                                   + str(item['count']) + ' , 达到或超过设定值 ' + str(limit_count) + \
                                    ', <a href="http://puzzle.corp.anjuke.com/monitor/detail?app_name=' + item['app_name'] + \
                                    '&app_platform=' + item['app_platform'] + '">查看</a><br>'
                         crash_context = ama_db.query("SELECT DISTINCT c.CrashTitle AS title,c.CrashDetail AS detail,c.AppVer AS ver,\

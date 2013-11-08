@@ -71,6 +71,7 @@ class SetTitle:
         crash_title = params.get('crash_title','')
         is_del = params.get('is_del')
         title_id = params.get('title_id')
+        data['error'] = ''
 
         if is_del and id:
             puzzle_db.delete('qa_crashtitle',where="id=$title_id",vars={'title_id': title_id})
@@ -98,11 +99,13 @@ class SetTitle:
                 app = puzzle_db.select('qa_crashcount_limit', where="app_name=$app_name AND app_platform=$app_platform", vars=value)
                 if len(app) > 0:
                     puzzle_db.insert('qa_crashtitle', app_id=app[0]['id'], crash_title=crash_title,crash_count=crash_count)
+                else:
+                    data['error'] = "db中缺少{0}{1}的信息".format(app_name, app_platform)
         data['params'] = {'app_name': app_name, 'app_platform': app_platform, 'crash_count': crash_count, 'crash_title': crash_title}
         data['crash_titles'] = puzzle_db.query(
                                         "SELECT t.id, app_name, app_platform, crash_title, t.crash_count \
                                         FROM qa_crashcount_limit l, qa_crashtitle t \
-                                        WHERE l.id = t.app_id"
+                                        WHERE l.id = t.app_id ORDER BY l.id, crash_title, t.crash_count"
                                         )
 
 

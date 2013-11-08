@@ -6,27 +6,29 @@
     <div class="container">
       <form method ="GET" id="form">
         <div class="row">
-    <div class="span8">
-    app：<select id="app_name" name="app_name">
-    % for item in data['apps']:
-        <option value="${item['app_name']}">${item['app_name']}</option>
-    % endfor
-        </select>
-    &nbsp&nbsp
-    platform：<select id="app_platform" name="app_platform" class="span1">
-        <option value="ios">ios</option>
-        <option value="android">android</option>
-    </select>
-    &nbsp&nbsp
-    crash_count：<input type="text" class="span2" id="crash_count" name="crash_count" >
-    <div style="display:block">title：<textarea class="span7" id="crash_title" name="crash_title" rows="4"></textarea></div> 
-</div>
-<div class="span2" style="margin-top:60px">
-    <button id="save" class="btn-info" type="button">保存</button>
-  </div>
-</div>
-     </form>
-    <table class="table table-bordered">
+          <div class="span8">
+            app：<select id="app_name" name="app_name">
+            % for item in data['apps']:
+                <option value="${item['app_name']}">${item['app_name']}</option>
+            % endfor
+                </select>
+            &nbsp&nbsp
+            platform：<select id="app_platform" name="app_platform" class="span1">
+                <option value="ios">ios</option>
+                <option value="android">android</option>
+            </select>
+            &nbsp&nbsp
+            crash_count：<input type="text" class="span2" id="crash_count" name="crash_count" >
+            <div style="display:block">title：<textarea class="span7" id="crash_title" name="crash_title" rows="4"></textarea></div> 
+          </div>
+          <div class="span2" style="margin-top:60px">
+            <button id="save" class="btn-info" type="button">保存</button>
+          </div>
+        </div>
+      </form>
+      <font color="red">${data['error']}</font><br><br>
+
+      <table class="table table-bordered">
 
         <tr>
             <td>app</td>
