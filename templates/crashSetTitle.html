@@ -44,7 +44,7 @@
               <td>${item['crash_count']}</td>
               <td>${item['crash_title']}</td>
               <td>
-                <form id="form_del" method="GET">
+                <form method="GET">
                   <input name="is_del" name="is_del" value="1" type="hidden">
                   <input name="title_id" name="title_id" value="${item['id']}" type="hidden">
                   <button class="btn btn-danger" type="button" id="del" name="del">删除</button>
@@ -78,7 +78,7 @@ $(document).ready(function(){
 
     $('.btn.btn-danger').click(function(){
       if (confirm("确定要删除？")){
-      $('#form_del').submit();
+      $(this).parent().submit();
       }
      });
 

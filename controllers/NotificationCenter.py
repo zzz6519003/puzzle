@@ -4,6 +4,7 @@ from config import settings
 from PuzzleBackGround import PuzzleBackGroundCommands
 from iostools.tools.ConfigHelper import ConfigHelper
 from model import Package as PackageModel
+import web
 
 """
 package info:
@@ -29,12 +30,30 @@ package info:
 """
 
 class GitCorpDidMergePullRequest:
-
     def GET(self):
-        print "here is get"
-        return
+        return "hello world"
 
-        packageInfo = ConfigHelper().initWithBranchName("develop_p-anjuke_3.1").getConfigData()
+    def POST(self):
+        postData = web.input()
+        print "here is post, %s" % postData
+        print "user is %s" % postData["user"]
+        print "repo is %s" % postData["repo"]
+        print "ref is %s" % postData["ref"]
+
+        """
+            user is weiyutian
+            repo is weiyutian/shake
+            ref is master
+        """
+
+        branchName = postData["ref"]
+        repo = postData["repo"]
+
+        if "develop" not in branchName:
+            return
+
+        packageInfo = ConfigHelper().initWithBranchName(branchName).getConfigData()
+
         if packageInfo["category"] == '0':
             return
 
@@ -42,9 +61,7 @@ class GitCorpDidMergePullRequest:
             packageInfo["category"] = '7'
 
         packageInfo["mailContent"] = "测试puzzle和gitcorp是否能够合并"
+        print packageInfo
         PackageModel.buildPackage(packageInfo)
-        pass
-
-    def POST(self):
-        print "here is post"
+        print "building package"
         pass
