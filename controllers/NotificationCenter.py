@@ -41,13 +41,14 @@ class GitCorpDidMergePullRequest:
         print "ref is %s" % postData["ref"]
 
         """
-            user is weiyutian
-            repo is weiyutian/shake
+            user is mobile
+            repo is mobile/ios_AnjukeHD
             ref is master
         """
 
         branchName = postData["ref"]
-        repo = postData["repo"]
+        repoInfo = postData["repo"].split("/")
+        repoName = repoInfo[1]
         user = postData["user"]
 
         if user == "wadecong":
@@ -66,7 +67,7 @@ class GitCorpDidMergePullRequest:
         if packageInfo["category"] != '7' and packageInfo["category"] != '8':
             packageInfo["category"] = '7'
 
-        packageInfo["mailContent"] = "测试puzzle和gitcorp是否能够合并"
+        packageInfo["mailContent"] = "puzzle自动打包."
         print packageInfo
         PackageModel.buildPackage(packageInfo)
         print "notification building package"
