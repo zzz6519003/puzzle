@@ -227,7 +227,7 @@ function SelectVersion()
                 onClosed:function(){
                     $.colorbox.close();
                     clearInterval(intervalId);
-                    window.location.href="/project";
+                    //window.location.href="/project";
                 },
             });
         }else{

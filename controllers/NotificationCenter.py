@@ -62,6 +62,6 @@ class GitCorpDidMergePullRequest:
 
         packageInfo["mailContent"] = "测试puzzle和gitcorp是否能够合并"
         print packageInfo
-        PackageModel.buildPackage(packageInfo)
+        #PackageModel.buildPackage(packageInfo)
         print "building package"
         pass
