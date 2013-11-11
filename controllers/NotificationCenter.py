@@ -48,8 +48,14 @@ class GitCorpDidMergePullRequest:
 
         branchName = postData["ref"]
         repo = postData["repo"]
+        user = postData["user"]
+
+        if user == "wadecong":
+            print "user is wadecong, do nothing"
+            return
 
         if "develop" not in branchName:
+            print "this is not develop, do nothing"
             return
 
         packageInfo = ConfigHelper().initWithBranchName(branchName).getConfigData()
@@ -62,6 +68,6 @@ class GitCorpDidMergePullRequest:
 
         packageInfo["mailContent"] = "测试puzzle和gitcorp是否能够合并"
         print packageInfo
-        #PackageModel.buildPackage(packageInfo)
-        print "building package"
+        PackageModel.buildPackage(packageInfo)
+        print "notification building package"
         pass
