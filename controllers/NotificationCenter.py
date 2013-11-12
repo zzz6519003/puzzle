@@ -69,7 +69,6 @@ class GitCorpDidMergePullRequest:
             packageInfo["category"] = '7'
 
         packageInfo["mailContent"] = configHelper.getMailContent(packageInfo["projectPath"], repoName, branchName)
-        packageInfo["mailContent"] = "puzzle自动打包"
         print packageInfo
         PackageModel.buildPackage(packageInfo)
         print "notification building package"
