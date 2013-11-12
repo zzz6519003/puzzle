@@ -59,7 +59,8 @@ class GitCorpDidMergePullRequest:
             print "this is not develop, do nothing"
             return
 
-        packageInfo = ConfigHelper().initWithBranchName(branchName).getConfigData()
+        configHelper = ConfigHelper().initWithBranchName(branchName)
+        packageInfo = configHelper.getConfigData()
 
         if packageInfo["category"] == '0':
             return
@@ -67,7 +68,7 @@ class GitCorpDidMergePullRequest:
         if packageInfo["category"] != '7' and packageInfo["category"] != '8':
             packageInfo["category"] = '7'
 
-        packageInfo["mailContent"] = "puzzle自动打包."
+        packageInfo["mailContent"] = configHelper.getMailContent(packageInfo["projectPath"], repoName, branchName)
         print packageInfo
         PackageModel.buildPackage(packageInfo)
         print "notification building package"
