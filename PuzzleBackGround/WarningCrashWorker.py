@@ -84,12 +84,14 @@ def doWork(gearmanWorker, job):
                             'white-space:nowrap;border-image:initial;text-align:left;"'
                     mail_body += '<table style="TABLE-LAYOUT: fixed;; WORD-BREAK: break-all;;border-collapse: collapse">'
                     mail_body += '<tr><td ' + style + '>id</td><td ' + style + '>app</td><td ' + style + '>os</td>' \
-                                 '<td ' + style + '>version</td><td  ' + style + ' width="10%">title</td><td  ' + style + '>time</td></tr>'
+                                 '<td ' + style + '>version</td><td  ' + style + ' width="10%">title</td><td ' + style + '>DeviceID' \
+                                 + '</td><td ' + style + '>NewID</td><td '+ style + '>time</td></tr>'
                     i = 1
                     for detail in crashes:
                         mail_body += '<tr><td ' + style + '>' + str(i) + '</td><td ' + style + '>' + detail['app_name'] + \
                                    '</td><td ' + style + '>' + detail['app_platform'] + '</td ' + style + '><td ' + style + '>' \
                                    + detail['app_ver'] + '</td><td ' + style + ' nowrap>' + detail['crash_title'] \
+                                   + '</td><td ' + style + '>' + detail['DeviceID'] + '</td><td ' + style + '>' + detail['NewID'] \
                                    + '</td><td ' + style + '>' + str(detail['crash_time']) + '</td></tr>'
                         i = i + 1
 
