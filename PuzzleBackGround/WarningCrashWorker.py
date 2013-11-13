@@ -81,18 +81,18 @@ def doWork(gearmanWorker, job):
                             % (start, end, app['app_name'], app['app_platform'], app['crash_title'], crash_count, app['crash_count'])
                     style = 'style="font-size:13px;font-family:Arial;background:#F7F7F0;border:1px solid #D7D7D7;' \
                             'border-collapse: collapse;font-weight:bold;padding:2px 8px;vertical-align:bottom;' \
-                            'white-space:nowrap;border-image:initial;text-align:left;"'
+                            'border-image:initial;text-align:left;word-break: break-all; word-wrap:break-word;"'
                     mail_body += '<table style="TABLE-LAYOUT: fixed;; WORD-BREAK: break-all;;border-collapse: collapse">'
                     mail_body += '<tr><td ' + style + '>id</td><td ' + style + '>app</td><td ' + style + '>os</td>' \
-                                 '<td ' + style + '>version</td><td  ' + style + ' width="10%">title</td><td ' + style + '>DeviceID' \
-                                 + '</td><td ' + style + '>NewID</td><td '+ style + '>time</td></tr>'
+                                 '<td ' + style + '>version</td><td  ' + style + ' width="30%">title</td><td ' + style + '>DeviceID/NewID' \
+                                 + '</td><td '+ style + '>time</td></tr>'
                     i = 1
                     for detail in crashes:
                         mail_body += '<tr><td ' + style + '>' + str(i) + '</td><td ' + style + '>' + detail['app_name'] + \
                                    '</td><td ' + style + '>' + detail['app_platform'] + '</td ' + style + '><td ' + style + '>' \
-                                   + detail['app_ver'] + '</td><td ' + style + ' nowrap>' + detail['crash_title'] \
-                                   + '</td><td ' + style + '>' + detail['DeviceID'] + '</td><td ' + style + '>' + detail['NewID'] \
-                                   + '</td><td ' + style + '>' + str(detail['crash_time']) + '</td></tr>'
+                                   + detail['app_ver'] + '</td><td ' + style + '>' + detail['crash_title'] \
+                                   + '</td><td ' + style + '><span>' + detail['DeviceID'] + '<br><br>' + detail['NewID'] \
+                                   + '</span></td><td ' + style + '>' + str(detail['crash_time']) + '</td></tr>'
                         i = i + 1
 
                     mail_body += '</table><br>'

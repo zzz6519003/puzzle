@@ -138,20 +138,20 @@ def doWork(gearmanWorker, job):
                                                            'app_platform': item['app_platform']})
                         style = 'style="font-size:13px;font-family:Arial;background:#F7F7F0;border:1px solid #D7D7D7;' \
                                 'border-collapse: collapse;font-weight:bold;padding:2px 8px;vertical-align:bottom;' \
-                                'white-space:nowrap;border-image:initial;text-align:left;"'
+                                'border-image:initial;text-align:left;word-break:break-all;word-wrap:break-word;"'
                         context += '<table style="TABLE-LAYOUT: fixed;; WORD-BREAK: break-all;;border-collapse: collapse">'
                         context += '<tr><td ' + style + '>id</td><td ' + style + '>app</td><td ' + style + '>os</td>' \
-                                    '<td ' + style + '>version</td><td ' + style + ' width="10%">title</td><td ' + style \
-                                    + '>DeviceID</td><td '+ style +'>NewID</td><td ' + style + '>time</td></tr>'
+                                    '<td ' + style + '>version</td><td ' + style + ' width="30%">title</td><td ' + style \
+                                    + '>DeviceID/NewID</td><td ' + style + '>time</td></tr>'
                         i = 1
                         for detail in crash_context :
                             context += '<tr><td ' + style + '>' + str(i) + '</td><td ' + style + '>' + item['app_name'] + \
                                        '</td><td ' + style + '>' + item[
                                            'app_platform'] + '</td ' + style + '><td ' + style + '>' \
-                                       + detail['ver'] + '</td><td ' + style + ' nowrap>' + detail[
-                                           'title'] + '</td><td ' + style + '>' + str(detail['DeviceID']) \
-                                       + '</td><td '+ style + '>' + str(detail['NewID']) + '</td><td ' + style\
-                                       + '>' + str(detail['crashTime']) + '</td></tr>'
+                                       + detail['ver'] + '</td><td ' + style + '>' + detail['title'] \
+                                       + '</td><td ' + style + '><span>' + detail['DeviceID'] + '<br><br>' \
+                                       + detail['NewID'] + '</span></td><td ' + style + '>' \
+                                       + str(detail['crashTime']) + '</td></tr>'
                             i = i + 1
 
                         context += '</table><br>'
