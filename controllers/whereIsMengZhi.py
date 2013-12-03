@@ -12,6 +12,8 @@ db = settings.db
 
 class Location:
     def GET(self):
-        data['location'] = "孟智在位置上"
+        handler = os.popen("curl 'http://api.dreambuff.com/whereiam/'")
+        result = handler.readlines()
+        data['location'] = result[0]
         print data
         return render.whereIsMengZhi(data=data)
