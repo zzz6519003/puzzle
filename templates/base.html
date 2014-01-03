@@ -91,30 +91,18 @@ if data == None:
                     <a class = "brand" href="#">Puzzle - 安居客移动协作平台</a>
                     <div class="nav-collapse collapse">
                         <p class="navbar-text pull-right">
-                        
+
                         </p>
                         <ul class="nav">
 
-                            <%def name="generateNavigation()"> 
+                            <%def name="generateNavigation()">
                             <%
                             navData = [
                             ["Home","/index"],
                             ["Project","/project"],
                             #['UIComponent',"/mobileUi"],
-                            ["Report","/report/index"],
                             #["AboutUs","/aboutUs"],
-                            ["Monitor","/monitor/chartlist"],
                             ["AppStore","/appStore"],
-                            ]
-                            report = [
-                            ["Project","/report/index"],
-                            ["Reason","/report/reason"],
-                            ["Component","/report/component"],
-                            ["Developer","/report/developer"],
-                            ["QA","/report/qa"],
-                            ]
-                            monitor =[
-                            ["Crash","/monitor/chartlist"]
                             ]
                             %>
 
@@ -125,22 +113,8 @@ if data == None:
                             % endif
                             ">
                             <a href="${item[1]}"  class="dropdown-toggle" data-toggle="dropdown">${item[0]}</a>
-                            %if item[0] == "Report":
-                             <ul class="dropdown-menu">
-                                %for value in report:
-                                <li><a href="${value[1]}">${value[0]}</a></li>
-                                % endfor
-                             </ul>
-                            % endif
-                            %if item[0] == "Monitor":
-                            <ul class="dropdown-menu">
-                                %for value in monitor:
-                                <li><a href="${value[1]}">${value[0]}</a></li>
-                                 % endfor
-                            </ul>
-                            % endif
                             </li>
-                            % endfor    
+                            % endfor
                             </%def>
 
                             ${generateNavigation()}

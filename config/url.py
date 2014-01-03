@@ -37,23 +37,6 @@ urls = (
         "/progressNumber", pre_fix + "BuildProgress.ProgressNumber",
         "/initProjectProgress", pre_fix + "BuildProgress.InitProjectProgressBar",
 
-        "/report/update" , pre_fix +"Report.Update",
-        "/report/index",pre_fix + "Report.Index",
-        "/report/reason",pre_fix + "Report.Reason",
-        "/report/component",pre_fix + "Report.Component",
-        "/report/developer", pre_fix + "Report.Developer",
-        "/report/qa",pre_fix + "Report.Qa",
-        "/report/detail",pre_fix + "Report.Detail",
-        "/report/job",pre_fix + "Report.Job",
-
-        "/crash/job", pre_fix + "Crash.Job",
-        "/crash/set", pre_fix + "Crash.Set",
-        "/crash/setTitle", pre_fix + "Crash.SetTitle",
-
-        "/monitor/getdata", pre_fix + "Monitor.GetData",
-        "/monitor/detail", pre_fix + "Monitor.Detail",
-        "/monitor/chartlist", pre_fix + "Monitor.ChartList",
-
         "/notification/gitcorpDidMergePullRequest", pre_fix + "NotificationCenter.GitCorpDidMergePullRequest",
         "/whereIsMengZhi", pre_fix + "WhereIsMengZhi.Location"
         )

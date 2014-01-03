@@ -13,11 +13,3 @@ Job_translate           =  "translateLog"
 #TranslateCrashLogWorker
 Job_fetchDependencyInfo =  "fetchDepInfo"
 
-#CaculateCrashCountWorker
-Job_calculateCrashCount = "calculateCrashCount"
-
-#CaculateBugCountWorker
-Job_calculateBugCount   = "calculateBugCount"
-
-#WarningCrashWorker
-Job_warningCrash        = "warningCrash"

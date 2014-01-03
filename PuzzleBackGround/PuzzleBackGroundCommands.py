@@ -11,9 +11,6 @@ CreateProjectWorkerPidFilePath        =  "/tmp/CreateProjectWorkerPid"
 PackageWorkerPidFilePath              =  "/tmp/PackageWorkerPid"
 TranslateCrashLogWorkerPidFilePath    =  "/tmp/TranslateWorkerPid"
 FetchDependencyInfoWorkerPidFilePath  =  "/tmp/FetchDependencyInfoWorkerPid"
-CalculateCrashCountWorkerPidFilePath  =  "/tmp/CalculateCrashCountWorkerPid"
-CalculateBugCountWorkerPidFilePath    =  "/tmp/CalculateBugCountWorkerPid"
-WarningCrashWorkerPidFilePath         =  "/tmp/WarningCrashWorkerPid"
 
 #do work
 def doWork_packageByPackageInfo(packageInfo):
@@ -36,26 +33,6 @@ def doWork_fetchDependencyInfo(params):
     request = client.submit_job(JobList.Job_fetchDependencyInfo, data, wait_until_complete=True)
     return request.result
 
-def doWork_calculateCrashCount(params):
-    client = GearmanClient([GearmanConfig.gearmanConnection])
-    data = json.dumps(params)
-    request = client.submit_job(JobList.Job_calculateCrashCount, data,wait_until_complete=True)
-    return request.result
-
-def doWork_calculateBugCount(params):
-    client = GearmanClient([GearmanConfig.gearmanConnection])
-    data = json.dumps(params)
-    request = client.submit_job(JobList.Job_calculateBugCount, data,wait_until_complete=True)
-    return request.result
-
-def doWork_warningCrashCount(params):
-    client = GearmanClient([GearmanConfig.gearmanConnection])
-    data = json.dumps(params)
-    request = client.submit_job(JobList.Job_warningCrash, data,wait_until_complete=True)
-    print request
-    return request.result
-
-
 #status functions
 def getStatus():
     adminClient = GearmanAdminClient([GearmanConfig.gearmanConnection])
@@ -75,9 +52,6 @@ def startAllWorkers():
     startPackageWorkers()
     startTranslateCrashLogWorkers()
     startFetchDependencyInfoWorkers()
-    startCalculateCrashCountWorkers()
-    startCalculateBugCountWorkers()
-    startWarningCrashCountWorkers()
     pass
 
 def stopAllWorkers():
@@ -85,9 +59,6 @@ def stopAllWorkers():
     stopPackageWorkers()
     stopTranslateCrashLogWorkers()
     stopFetchDependencyInfoWorker()
-    stopCalculateCrashCountWorkers()
-    stopCalculateBugCountWorkers()
-    stopWarningCrashWorkers()
     pass
 
 
@@ -209,68 +180,6 @@ def startFetchDependencyInfoWorkers():
             worker.work()
     pass
 
-def startCalculateCrashCountWorkers():
-    import CalculateCrashCountWorker
-    stopCalculateCrashCountWorkers()
-    result = os.fork()
-
-    if result == 0:
-        workerPid = os.getpid()
-
-        fp = open(CalculateCrashCountWorkerPidFilePath, "a")
-        fp.write(" %s" % workerPid)
-        fp.close()
-
-        print "calculate crash job  worker started, pid# %s" % workerPid
-        print "task name is %s" % JobList.Job_calculateCrashCount
-
-        worker = GearmanWorker([GearmanConfig.gearmanConnection])
-        worker.register_task(JobList.Job_calculateCrashCount, CalculateCrashCountWorker.doWork)
-        worker.work()
-    pass
-
-def startCalculateBugCountWorkers():
-    import CalculateBugCountWorker
-    stopCalculateBugCountWorkers()
-    result = os.fork()
-
-    if result == 0:
-        workerPid = os.getpid()
-
-        fp = open(CalculateBugCountWorkerPidFilePath, "a")
-        fp.write(" %s" % workerPid)
-        fp.close()
-
-        print "calculate bug job  worker started, pid# %s" % workerPid
-        print "task name is %s" % JobList.Job_calculateBugCount
-
-        worker = GearmanWorker([GearmanConfig.gearmanConnection])
-        worker.register_task(JobList.Job_calculateBugCount, CalculateBugCountWorker.doWork)
-        worker.work()
-    pass
-
-def startWarningCrashCountWorkers():
-    import WarningCrashWorker
-    stopWarningCrashWorkers()
-    result = os.fork()
-
-    if result == 0:
-        workerPid = os.getpid()
-
-        fp = open(WarningCrashWorkerPidFilePath, "a")
-        fp.write(" %s" % workerPid)
-        fp.close()
-
-        print "warning crash job  worker started, pid# %s" % workerPid
-        print "task name is %s" % JobList.Job_warningCrash
-
-        worker = GearmanWorker([GearmanConfig.gearmanConnection])
-        worker.register_task(JobList.Job_warningCrash, WarningCrashWorker.doWork)
-        worker.work()
-    pass
-
-
-
 def stopFetchDependencyInfoWorker():
     print "stopping fetch dependency info worker"
     killWorkersByPidFile(FetchDependencyInfoWorkerPidFilePath)
@@ -292,17 +201,3 @@ def stopTranslateCrashLogWorkers():
     killWorkersByPidFile(TranslateCrashLogWorkerPidFilePath)
     pass
 
-def stopCalculateCrashCountWorkers():
-    print "stopping calculate crash count worker"
-    killWorkersByPidFile(CalculateCrashCountWorkerPidFilePath)
-    pass
-
-def stopCalculateBugCountWorkers():
-    print "stopping calculate bug count worker"
-    killWorkersByPidFile(CalculateBugCountWorkerPidFilePath)
-    pass
-
-def stopWarningCrashWorkers():
-    print "stopping warning crash worker"
-    killWorkersByPidFile(WarningCrashWorkerPidFilePath)
-    pass
